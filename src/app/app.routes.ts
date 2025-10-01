@@ -1,4 +1,5 @@
-import { Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import {  RouterModule, Routes } from '@angular/router';
 import { PrincipalComponent } from './pages/principal/principal.component';   
 import { NocturnaComponent } from './pages/nocturna/nocturna.component';
 
@@ -20,4 +21,8 @@ export const routes: Routes = [
     {path: '**', redirectTo:''}
 ];
 
-// hoal
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}
