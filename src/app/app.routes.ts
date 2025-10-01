@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+<<<<<<< HEAD
 
 import { Home } from './pages/home/home';
 import { About } from './pages/about/about';
@@ -13,4 +14,10 @@ export const routes: Routes = [
     {path: 'about', component: About},
     {path: 'contact', component: Contact},
     {path: '**', redirectTo:''}
+=======
+import { Home } from './pages/home/home';
+export const routes: Routes = [
+    {path: '', component: Home},
+    {path: 'Home', component: Home}
+>>>>>>> feature-karol
 ];

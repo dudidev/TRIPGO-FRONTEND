@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 html,
 body {
     margin: 0;
@@ -13,4 +14,146 @@ body {
     flex: 1;
     padding: 16px;
     box-sizing: border-box;
+=======
+
+nav{
+    width: 100%;
+    background-color: #0F3B3E;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+nav img{
+    width: 60%; 
+}
+nav a{
+    margin-right: 20px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+.logo{
+    width: 15%;
+}
+
+.registro{
+    width: 32%;
+    display: flex;
+    justify-content: flex-end;
+}
+.subNav{
+    width: 100%;
+    height: 50px;
+    background-color:052b2f ;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.subNav a{
+    margin: 0 15px;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+.subNav button{
+    margin-left: 15px;
+    padding: 12px 12px;
+    background-color:#0F3B3E ;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+.contenido {
+  width: 100%;
+  height: calc(100vh - 130px);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: 
+    linear-gradient(to right, rgba(0,0,0,0) 30%, rgba(0,0,0,10) 100%), 
+    url('https://res.cloudinary.com/dtyvd3fim/image/upload/v1759323111/PresentacionValle_y9sz48.jpg') center/cover no-repeat;
+}
+.contenido h2{
+    color: white;
+    font-size: 4rem;
+    margin-right: 10%;
+    text-align: right;
+    font-weight: bold;
+    width: 50%;
+}
+.Nosotros{
+    padding: 50px 10%;
+    color: black;
+    display: flex;
+    justify-content: space-around;
+}
+.Nosotros h2{
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: #0F3B3E;
+}
+.info1
+{
+    width: 50%;
+    margin-right: 5%;
+}
+.info2
+{
+    width: 40%;
+    margin-left: 5%;
+}
+.info2 li{
+    color: #0F3B3E;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+.panel-funciona {
+    padding: 60px 10%;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.panel-funciona h2 {
+    font-size: 3rem;
+    color: #0F3B3E;
+    margin-bottom: 40px;
+    font-weight: bold;
+}
+
+.funciona-grid {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.funciona-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px 20px;
+    width: 280px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.funciona-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
+}
+
+.funciona-card h3 {
+    font-size: 1.5rem;
+    color: #0F3B3E;
+    margin-bottom: 15px;
+}
+
+.funciona-card p {
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.5;
+>>>>>>> feature-karol
 }
