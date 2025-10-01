@@ -10,4 +10,5 @@ import { Footer } from '../../shared/footer/footer';
 })
 export class Register {
 
+ /*yy*/
 }
