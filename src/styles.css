@@ -8,8 +8,8 @@
 
 :root{
     /*Colores principales*/
-    --primary-color: #00B4D8;
-    --secondary-color: #00B4D8;
+    --primary-color: #0F3B3E;
+    --secondary-color: #052b2f;
 
     /*Colores neutros*/
     --bg-color: #F8F9FA;
@@ -38,7 +38,6 @@
 body{
     font-family: var(--font-primary);
     background-color: var(--bg-color);
-    color: var(--text-color);
     font-size: var(--font-size-base);
     line-height: 1.6;
 }
