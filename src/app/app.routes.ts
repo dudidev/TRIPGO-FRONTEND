@@ -19,3 +19,5 @@ export const routes: Routes = [
     {path : 'nocturna', component: NocturnaComponent},
     {path: '**', redirectTo:''}
 ];
+
+// hoal
