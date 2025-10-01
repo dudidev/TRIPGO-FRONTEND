@@ -15,8 +15,7 @@ export const routes: Routes = [
     {path: 'register', component: Register},
     {path: 'about', component: About},
     {path: 'contact', component: Contact},
-    { path : '', component: PrincipalComponent},
     {path : 'principal', component: PrincipalComponent},
-    {path : 'nocturna', component: NocturnaComponent}
+    {path : 'nocturna', component: NocturnaComponent},
     {path: '**', redirectTo:''}
 ];
