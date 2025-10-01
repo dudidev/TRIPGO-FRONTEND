@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
+import { Nav } from '../../shared/nav/nav';
+import { Footer } from '../../shared/footer/footer';
 
 @Component({
   selector: 'app-login',
-  imports: [],
+  imports: [Nav,Footer],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
