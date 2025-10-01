@@ -9,5 +9,5 @@ import { Footer } from '../../shared/footer/footer';
   styleUrl: './register.css'
 })
 export class Register {
-
+/*holaismiskinsj*/
 }
