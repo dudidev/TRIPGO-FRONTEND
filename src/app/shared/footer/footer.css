@@ -1,0 +1,12 @@
+.footer{
+    padding: var(--padding-lg);
+    background-color: var(--secondary-color);
+    p{
+        color: var(--light-text-color);
+        text-align: center;
+    }
+}
+
+.footer span{
+    color: orange;
+}
