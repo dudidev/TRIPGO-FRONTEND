@@ -1,0 +1,73 @@
+.img-portada {
+    background: 
+    linear-gradient(to right, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0)100%),
+    url('https://res.cloudinary.com/dshqbl8d1/image/upload/v1759328063/img_disco_portada2_k1ts1w.jpg') center/cover no-repeat;
+    background-size: cover;
+    background-position: -10px ;
+    height: 500px;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    color: white;
+    font-size: 24px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    margin-bottom: 20px;
+ 
+}  
+
+.titulo-nocturna{
+    text-align: center;
+    font-size: 30px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: black;
+}
+
+
+.img-portada p {
+   font-size: 3rem;
+    padding: 20px;
+    max-width: 600px;
+    display: flex;
+    text-align: left;
+    margin-top: 250px;
+
+}
+.discotecas{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid black;
+    
+}
+
+.discos{
+    display: flex;
+    justify-content: space-around;
+    border: 1px solid black;
+    /* gap: 20px; */
+    background-color: #c4d9db;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.lista-discos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background-color: #c4d9db;
+}
+.lista-discos img{
+    width: 200px;        
+    height:200px;      
+    object-fit: cover;  
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
