@@ -18,7 +18,7 @@ export const routes: Routes = [
     {path: 'contact', component: Contact},
     {path : 'principal', component: PrincipalComponent},
     {path : 'nocturna', component: NocturnaComponent},
-    {path: '**', redirectTo:''}
+    {path: '', redirectTo:'/login', pathMatch: 'full'}
 ];
 
 @NgModule({
