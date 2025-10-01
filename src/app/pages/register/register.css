@@ -15,7 +15,6 @@
 .left {
   position: relative;
   padding: 56px 48px;
-  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -35,6 +34,7 @@
   position: relative;
   z-index: 2;
   max-width: 320px;
+  color: white;
 }
 
 .left h1 {
