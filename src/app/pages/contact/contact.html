@@ -1,1 +1,29 @@
-<p>contact works!</p>
+<app-nav></app-nav>
+<div class="content">
+    <section class="contact-section">
+        <h2>Contáctanos</h2>
+        <p>¿Tienes alguna pregunta o comentario? ¡Estamos aquí para ayudarte! :)</p>
+        <form class="contact-form">
+            <div class="form-group">
+                <label for="name">Nombre</label>
+                <input type="text" id="name" name="name" required placeholder="Tu nombre">
+            </div>
+            <div class="form-group">
+                <label for="email">Correo electrónico</label>
+                <input type="email" id="email" name="email" required placeholder="tucorreo@ejemplo.com">
+            </div>
+            <div class="form-group">
+                <label for="message">Mensaje</label>
+                <textarea id="message" name="message" rows="5" required placeholder="Escribe tu mensaje aquí"></textarea>
+            </div>
+            <button type="submit">Enviar</button>
+        </form>
+        <div class="contact-info">
+            <h3>Información</h3>
+            <p><strong>Email:</strong> contact@tripgo.com</p>
+            <p><strong>Teléfono:</strong> +57 300 123 4567</p>
+            <p><strong>Dirección:</strong> Calle 123 #45-67, Amenia, Colombia</p>
+        </div>
+    </section>
+</div>
+<app-footer></app-footer>
