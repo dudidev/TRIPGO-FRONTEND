@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Nav } from '../../shared/nav/nav';
 import { Footer } from '../../shared/footer/footer';
 
-import { Router } from '@angular/router';
+import { Router, RouterLink, } from '@angular/router';
 import { User } from '../../service/user';
 import { FormsModule } from '@angular/forms';
 
@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
-  imports: [Nav, Footer, FormsModule],
+  imports: [Nav, Footer, FormsModule,RouterLink],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
