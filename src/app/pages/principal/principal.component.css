@@ -1,0 +1,113 @@
+
+.titulo{
+    background-color:  #0F3B3E;;
+    text-align: center;
+    height: 70px;
+    font-size: 15px;
+    color: white;
+    display: flex;
+    justify-content: center;
+}
+.contenido{
+    /* background-color: #052b2f; */
+    text-align: center;
+    font-size: 15px;
+
+}
+
+.container{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 2px solid #0F3B3E;
+    border-radius: 10px;
+    background-color: #F8F9FA;
+    height: 300px;
+}
+.info-container{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #0F3B3E;
+    border-radius: 10px;
+    background-color: #c4d9db;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+}
+
+.info-container .input-buscar{
+    width: 300px;
+    height: 60px;
+    border-radius: 5px;
+    border: 1px solid gray;
+    padding: 5px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.container-eventos{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 40px;
+    border: 2px solid black;
+    border-radius: 10px;
+    /* background-color:  #c4d9db; */
+    height: auto;
+}
+.titulo2{
+    /* background-color: antiquewhite; */
+    padding: 10px ;
+    text-align: center;
+    font-size: 20px;
+    /* margin-bottom: 10px; */
+}
+
+.eventos{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    height: auto;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid black;
+    background-color: #c4d9db;
+}
+
+.evento{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.evento img{
+    width: 200px;        
+    height:200px;      
+    object-fit: cover;  
+    border-radius: 10px;
+}
+
+.evento h3{
+    margin: 10px 0;
+}
+
+.evento p{
+    font-size: 14px;
+    color: black;
+}
+.button{
+    background-color:  #2c5d60;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.button:hover{
+    background-color:  #0F3B3E;
+}
