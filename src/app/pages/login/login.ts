@@ -4,26 +4,30 @@ import { Footer } from '../../shared/footer/footer';
 
 import { Router } from '@angular/router';
 import { User } from '../../service/user';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
-  imports: [Nav,Footer],
+  imports: [Nav,Footer,FormsModule],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
 export class Login {
 
-   constructor(private userService: User, private router: Router) {}
+  email = '';
+  password = '';
+  errorMessage = '';
 
-  onLogin(form: any) {
-    const success = this.userService.login(form.email, form.password);
+  constructor(private userService: User, private router: Router) {}
+
+  onSubmit() {
+    const success = this.userService.login(this.email, this.password);
 
     if (success) {
-      alert('Bienvenido');
+      alert('Login exitoso');
       this.router.navigate(['/principal']);
     } else {
-      alert('Usuario o contraseña incorrectos');
+      this.errorMessage = 'Usuario o contraseña inválidos';
     }
   }
-
 }

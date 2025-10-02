@@ -4,31 +4,26 @@ import { Footer } from '../../shared/footer/footer';
 
 import { Router } from '@angular/router';
 import { User } from '../../service/user';
+import { FormsModule } from '@angular/forms';
 
 
 
 @Component({
   selector: 'app-register',
-  imports: [Nav,Footer],
+  imports: [Nav,Footer,FormsModule],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
 export class Register {
+   name = '';
+  email = '';
+  password = '';
+
   constructor(private userService: User, private router: Router) {}
 
-  onRegister(form: any) {
-    const success = this.userService.register({
-      name: form.first,
-      email: form.email,
-      password: form.password
-    });
-
-    if (success) {
-      alert('Usuario registrado con éxito');
-      this.router.navigate(['/login']);
-    } else {
-      alert('El correo ya está registrado');
+  onSubmit() {
+    this.userService.register({ name: this.name, email: this.email, password: this.password });
+    alert('Usuario registrado con éxito');
+    this.router.navigate(['/login']);
     }
-  }
- 
 }
