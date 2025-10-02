@@ -9,33 +9,33 @@
     </div>
   </section>
 
- 
+
   <aside class="right">
     <div class="carta">
       <h2>Sign Up</h2>
 
-  <form (ngSubmit)="onSubmit()">
-      <div class="field">
-        <label for="first">Name</label>
-        <input id="first" [(ngModel)]="name" name="first" type="text" required>
-      </div>
+      <form (ngSubmit)="onSubmit()">
+        <div class="field">
+          <label for="first">Name</label>
+          <input id="first" [(ngModel)]="name" name="first" type="text" required>
+        </div>
 
-      <div class="field">
-        <label for="email">Email address</label>
-        <input id="email" [(ngModel)]="email" name="email" type="email" required>
-      </div>
+        <div class="field">
+          <label for="email">Email address</label>
+          <input id="email" [(ngModel)]="email" name="email" type="email" required>
+        </div>
 
-      <div class="field">
-        <label for="password">Password</label>
-        <input id="password" [(ngModel)]="password" name="password" type="password" required>
-      </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" [(ngModel)]="password" name="password" type="password" required>
+        </div>
 
-      <button class="btn btn-primary" type="submit">Join us →</button>
+        <button class="btn btn-primary" type="submit">Join us →</button>
 
 
         <p class="account">
           Already have an account?
-          <a  routerLink="/login">Log in</a>
+          <a routerLink="/login">Log in</a>
         </p>
       </form>
     </div>

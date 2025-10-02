@@ -10,20 +10,20 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
-  imports: [Nav,Footer,FormsModule],
+  imports: [Nav, Footer, FormsModule],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
 export class Register {
-   name = '';
+  name = '';
   email = '';
   password = '';
 
-  constructor(private userService: User, private router: Router) {}
+  constructor(private userService: User, private router: Router) { }
 
   onSubmit() {
     this.userService.register({ name: this.name, email: this.email, password: this.password });
     alert('Usuario registrado con éxito');
     this.router.navigate(['/login']);
-    }
+  }
 }
