@@ -1,6 +1,13 @@
 <div class="nav-bar">
-    <a routerLink='/'>Home</a>
+    <a [routerLink]="isLoggedIn ? '/principal' : '/'">Home</a>
     <a routerLink='/contact'>Contact</a>
-    <a routerLink='/login'>Login</a>
-    <a routerLink='/register'>Register</a>
+
+    @if(!isLoggedIn){
+        <a routerLink="/login">Login</a>
+        <a routerLink="/register">Register</a>
+    }
+    @if(isLoggedIn){
+        <a routerLink="/principal">Mi perfil</a>
+        <a (click)="logout()" style="color: red;">Logout</a>
+    }
 </div>
