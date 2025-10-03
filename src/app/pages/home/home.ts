@@ -1,10 +1,11 @@
 import { Component, signal} from '@angular/core';
-import { Nav } from '../../shared/nav/nav';
+
 import { Footer } from '../../shared/footer/footer';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
-  imports: [Nav,Footer],
+  imports: [Footer,RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
