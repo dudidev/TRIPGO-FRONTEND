@@ -114,24 +114,3 @@ export class PrincipalComponent implements OnInit, OnDestroy {
     }
   }
 }
-
-  // ==========================
-  // API CALL
-  // ==========================
-//   private loadTowns() {
-//     this.loadingTowns = true;
-//     this.errorTowns = null;
-
-//     this.api.getUbicaciones().subscribe({
-//       next: (data) => {
-//         this.towns = data;
-//         this.loadingTowns = false;
-//       },
-//       error: (err) => {
-//         console.error(err);
-//         this.errorTowns = 'No se pudieron cargar los lugares';
-//         this.loadingTowns = false;
-//       }
-//     });
-//   }
-// }

@@ -47,14 +47,14 @@ const CATEGORIAS_DATA: Record<string, CategoriaData> = {
     ],
     itinerarios: [
       { titulo: 'Aventura entre palmas y colores', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729518/cocora_3_blygia.jpg' },
-      { titulo: 'Naturaleza en el Valle de Cocora', img: 'https://via.placeholder.com/80?text=2' },
-      { titulo: 'Miradores + atardecer', img: 'https://via.placeholder.com/80?text=3' },
-      { titulo: 'Ruta de café y cata', img: 'https://via.placeholder.com/80?text=4' },
-      { titulo: 'Calle Real + artesanías', img: 'https://via.placeholder.com/80?text=5' },
-      { titulo: 'Cabalgata por senderos', img: 'https://via.placeholder.com/80?text=6' },
-      { titulo: 'Avistamiento de aves temprano', img: 'https://via.placeholder.com/80?text=7' },
-      { titulo: 'Gastronomía típica del Quindío', img: 'https://via.placeholder.com/80?text=8' },
-      { titulo: 'Plan relax: cafés y fotos', img: 'https://via.placeholder.com/80?text=9' },
+      { titulo: 'Naturaleza en el Valle de Cocora', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765685157/salento_1-portada_zkh8fr.jpg' },
+      { titulo: 'Miradores + atardecer', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722352/Colombia_a5gesq.jpg' },
+      { titulo: 'Ruta de café y cata', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729552/tour_cafe_-_categoria_be5nev.jpg' },
+      { titulo: 'Calle Real + artesanías', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729515/calle_real_-_categoria_hudaar.jpg' },
+      { titulo: 'Cabalgata por senderos', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733201/portada_-_categoria_5_t7pmpz.jpg' },
+      { titulo: 'Avistamiento de aves temprano', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765725175/avistamento_aves_portada_-_suge_kpizdw.jpg' },
+      { titulo: 'Gastronomía típica del Quindío', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729535/portada_-_categorias_ooyums.jpg' },
+      { titulo: 'Plan relax: cafés y fotos', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729523/mirador_-_categoria_omagyv.jpg' },
     ]
   },
 
