@@ -1,25 +1,29 @@
 <div class="navPrincipal">
     <div class="contLogo">
         <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764678577/ChatGPT_Image_12_nov_2025_17_33_14_1_hj26hs.png" alt="">
-        <h2>TRIPGO</h2>
+        <a routerlink="/principal">TRIPGO</a>
     </div>
-    <div>
+    <div class="OpLaterales">
         <a href="">Salir</a>
+        <a routerLink="/EditarCuenta">Perfil</a>
     </div>
 
 </div>
 
 <div class="nav-bar">
-    <a [routerLink]="isLoggedIn ? '/principal' : '/'">Home</a>
-    <a routerLink='/contact'>Contact</a>   
-    <a routerLink='/contact'></a>   
     
     @if(!isLoggedIn){
+        <a [routerLink]="isLoggedIn ? '/principal' : '/'">Home</a>
+        <a routerLink='/contact'>Contact</a>   
         <a routerLink="/login">Login</a>
         <a routerLink="/register">Register</a>
     }
     @if(isLoggedIn){
-        <a routerLink="/principal">Mi perfil</a>
+        <a routerLink="/principal">Lugares</a>
+        <a routerLink="/principal">Recomendaciones</a>
+        <a routerLink='/About'>Soporte</a>
         <a (click)="logout()" style="color: rgb(255, 254, 254);">Logout</a>
+        
     }
+
 </div>

@@ -2,6 +2,9 @@
   <nav class="navPublicidad"> 
     <div class="logo">
         <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764678577/ChatGPT_Image_12_nov_2025_17_33_14_1_hj26hs.png" alt="">
+        <div class="contTrip"> 
+          <a href="home.html">TRIPGO</a>
+        </div>
     </div>
     <div class="registro">
         <a routerLink="/login">Login</a>
@@ -12,17 +15,29 @@
     <div class="comoFunciona">
       <a href="#Nosotros">¿Quienes somos?</a>
       <a href="#comoFunciona">Como funciona</a>
-      <a href="">Algunos planes</a>
-      <button>Comienza hoy</button>
+      <a href="#planes">Algunos planes</a>
+      <button routerLink="/register">Comienza hoy</button>
     </div>
   </div>
   <div class="contenido">
+    <div class="carousel">
+      <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1759323111/PresentacionValle_y9sz48.jpg" class="carousel-img active">
+      <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1765547958/comida2_g2tlvg.avif" class="carousel-img">
+      <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1765547930/lugar3_zbqsc7.jpg" class="carousel-img">
+      <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1765547956/comida_pisgdu.avif" class="carousel-img">
+      <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1765547930/lugar2_d4mutv.webp" class="carousel-img">
+      <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1765547957/comida3_np95d8.avif" class="carousel-img">
+      <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1765547930/lugar1_k5auyf.webp" class="carousel-img">
+      <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764684142/Img_Parque_del_cafe_p5j2gi.jpg" class="carousel-img">
+      <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1765548533/lugar4_jr19vo.jpg" class="carousel-img">
+      <img src="" class="carousel-img">
+  </div>
     <h2>CONOCE LOS MEJORES LUGARES TURISTICOS AL MEJOR PRECIO</h2>
   </div>
   <div class="aliados">
-    <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764686351/Captura_de_pantalla_2025-11-12_111109_xieyvy.png" alt="">
+    <h3>¡DISFRUTA LA COMODIDAD DE VIAJAR CON NOSOTROS!</h3>
   </div>
-  <div class="planes">
+  <div id="planes">
   <h2>Algunos planes</h2>
 
   <div class="planes-grid">
@@ -76,19 +91,22 @@
       <h3>Emprendimientos</h3>
       <p class="precio">¿Tienes un negocio?</p>
       <p>¡Busca el exito en tu emprendimiento!</p>
-      <button>Contactanos</button>
+      <button routerLink="/contact">Contactar</button>
+
     </div>
 
     <div class="plan-simple premium">
-      <h3>Plan Premium</h3>
-      <p class="precio">$15.000 / mes</p>
-      <p>Perfecto para viajeros frecuentes.</p>
+      <h3>Plan Junior</h3>
+      <p class="precio">$12.000 / mes   </p>
+      <p>Aprovecha mas de 50 itinerarios personalizados</p>
+      <br>
       <button>Obtener</button>
     </div>
     <div class="plan-simple premium">
       <h3>Plan Premium</h3>
       <p class="precio">$15.000 / mes</p>
-      <p>Perfecto para viajeros frecuentes.</p>
+      <p>Disfruta itinerarios ilimitados al mejor precio </p>
+      <br>
       <button>Obtener</button>
     </div>
   </div>

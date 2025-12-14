@@ -8,9 +8,9 @@ nav{
     justify-content: space-between;
     padding: 20px;
     padding-top: 30px;
-    position: relative;    /* NECESARIO */
-    z-index: 10;           /* Para que quede por encima */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.5); /* Sombra ligera */
+    position: relative;
+    z-index: 10;           
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
 }
 nav img{
     width: 60%; 
@@ -23,8 +23,21 @@ nav a{
 }
 .logo{
     width: 12%;
+    display: flex;
+    text-align: center;
 }
-
+.contTrip{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+}
+.contTrip a{
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+}
 .registro{
     width: 32%;
     display: flex;
@@ -55,32 +68,84 @@ nav a{
     cursor: pointer;
 }
 .contenido {
+  position: relative;
   width: 100%;
   height: calc(100vh - 130px);
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  background: 
-    linear-gradient(to right, rgba(0,0,0,0) 40%, rgba(0,0,0,10) 100%), 
-    url('https://res.cloudinary.com/dtyvd3fim/image/upload/v1764684142/Img_Parque_del_cafe_p5j2gi.jpg') center/cover no-repeat;
 }
-.contenido h2{
-    color: white;
-    font-size: 50px;
-    margin-right: 10%;
-    text-align: right;
-    font-weight: bold;
-    width: 50%;
+.contenido::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0,0,0,0) 40%, rgba(0,0,0,1) 100%);
+  z-index: 2;
+}
+.contenido h2 {
+  position: relative;
+  z-index: 3;
+  color: #fff;
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  font-weight: 800;
+  text-align: right;
+  margin-right: 60px;
+  width: 55%;
+  line-height: 1.2;
+  animation: slideFade 1s ease;
+}
+
+@keyframes slideFade {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.carousel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Imágenes */
+.carousel-img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+}
+
+.carousel-img.active {
+  opacity: 1;
 }
 .aliados{
+    background-color: #f0f0f0;
     width: 100%;
     display: flex;
     justify-content: center;
 }
-.aliados img{
-    width: 110%;
+.aliados h3{
+
+    color: var(--primary-color);
+    font-size: 1.5em;
+    padding: 20px;
+    
 }
 .Nosotros{
     padding: 50px 10%;
@@ -206,8 +271,6 @@ nav a{
     margin: 0 15px 20px 15px;
     line-height: 1.4;
 }
-
-/* BOTÓN */
 .plan-card button {
     margin: 0 15px 20px 15px;
     padding: 10px 15px;
