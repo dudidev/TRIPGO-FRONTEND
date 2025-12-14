@@ -1,0 +1,87 @@
+<app-nav></app-nav>
+
+<section class="results">
+
+  <!-- HERO SLIDER (auto, sin botones) -->
+  <header class="results__hero">
+    <img
+      class="results__heroImg"
+      [src]="currentHeroImg"
+      alt="Hero Cabalgatas"
+    />
+
+    <div class="results__heroOverlay">
+      <h1 class="results__title">CABALGATAS</h1>
+      <p class="results__subtitle">{{ slug | titlecase }} • Quindío</p>
+    </div>
+  </header>
+
+  <!-- CONTENIDO (izq + sidebar flotante) -->
+  <div class="results__panel">
+
+    <!-- IZQUIERDA -->
+    <main class="results__main">
+
+      <!-- Buscador (pill) -->
+      <form class="results__search" (ngSubmit)="onSearch()">
+        <div class="searchPill">
+          <input
+            type="text"
+            name="q"
+            [(ngModel)]="query"
+            placeholder="Encuentra el mejor lugar"
+            autocomplete="off"
+          />
+          <button type="submit">Buscar</button>
+        </div>
+      </form>
+
+      <!-- GRID -->
+      <section class="cards">
+        <button
+          class="card"
+          type="button"
+          *ngFor="let item of filtered"
+          (click)="openItem(item)"
+        >
+          <img [src]="item.img" [alt]="item.titulo">
+          <div class="card__label">{{ item.titulo }}</div>
+        </button>
+      </section>
+
+      <!-- Chips -->
+      <section class="chips">
+        <span class="chip chip--title">También hay cabalgatas en:</span>
+        <button class="chip" type="button">Filandia</button>
+        <button class="chip" type="button">Circasia</button>
+        <button class="chip" type="button">Montenegro</button>
+        <button class="chip" type="button">Quimbaya</button>
+        <button class="chip" type="button">Calarcá</button>
+      </section>
+
+    </main>
+
+    <!-- DERECHA (FLOTANTE) -->
+    <aside class="results__side">
+      <div class="sideCard">
+        <h3>Sugerencias itinerario</h3>
+        <p class="sideSub">selecciona la opción que desees</p>
+
+        <div class="itinerary">
+          <button class="itineraryItem" type="button">1. Cocora + caminata corta</button>
+          <button class="itineraryItem" type="button">2. Cabalgata 1h + fotos</button>
+          <button class="itineraryItem" type="button">3. Almuerzo típico</button>
+          <button class="itineraryItem" type="button">4. Calle Real + artesanías</button>
+          <button class="itineraryItem" type="button">5. Mirador + atardecer</button>
+          <button class="itineraryItem" type="button">6. Café de especialidad</button>
+          <button class="itineraryItem" type="button">7. Cabalgata 2h (montaña)</button>
+          <button class="itineraryItem" type="button">8. Noche tranquila + postre</button>
+          <button class="itineraryItem" type="button">9. Plan relax (mañana)</button>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+</section>
+
+<app-footer></app-footer>

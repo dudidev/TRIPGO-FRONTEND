@@ -1,55 +1,220 @@
-<!-- <app-header></app-header> -->
-<app-nav></app-nav> 
 
-<div class="titulo">
-    <h1>Bienvenido a TripGo</h1>
-</div>
 
-<div class="contenido">
-    <p>Explora nuestros servicios y encuentra la mejor opción para tu viaje.</p>
-    <h2>COMENCEMOS A NAVEGAR</h2>
-</div>
+<section class="home">
 
-<div class="container">
-    <div class="info-container">
-        <input type="text" placeholder="Cuentanos tu plan..." class="input-buscar">
+  <!-- TOP NAV -->
+  <header class="home__topbar">
+    <div class="home__brand">
+      <img class="home__logo" src="TU_LOGO" alt="TripGO">
+      <span class="home__brandText">TRIPGO</span>
     </div>
+
+    <nav class="home__actions" aria-label="Acciones">
+      <!-- cuando NO esté logueado -->
+      <a class="home__link" routerLink="/register">Regístrate</a>
+      <a class="home__btn" routerLink="/login">Login</a>
+
+      <!-- cuando esté logueado (lo habilitas con *ngIf según token) -->
+      <!--
+      <a class="home__link" routerLink="/perfil">Mi perfil</a>
+      <button class="home__btn" type="button" (click)="logout()">Salir</button>
+      -->
+    </nav>
+  </header>
+
+  <!-- SUB NAV -->
+  <div class="home__subbar">
+    <nav class="home__menu" aria-label="Menú principal">
+      <a href="#nosotros">¿Quiénes somos?</a>
+      <a href="#comoFunciona">¿Cómo funciona?</a>
+      <a href="#planes">Algunos planes</a>
+      <button class="home__pill" type="button">Comienza hoy</button>
+    </nav>
+  </div>
+
+  <!-- HERO -->
+  <!-- HERO SLIDER -->
+<!-- HERO -->
+<section class="home__hero">
+  <img
+    class="home__heroImg"
+    [src]="currentHero"
+    alt="Hero TripGO"
+  >
+</section>
+
+ <div class="home__partnersStrip">
+  <span>Compara cientos de lugares en una sola búsqueda</span>
+
+  <div class="home__partners">
+    <img src= "https://res.cloudinary.com/dshqbl8d1/image/upload/v1765716044/Logo-Parque-Del-Cafe_bh5hsr.png" alt="Logo Parque del Café">
+    <img src= "https://res.cloudinary.com/dshqbl8d1/image/upload/v1765716023/Booking.com_Logo.svg_bshdta.png" alt="Logo Booking.com">
+     <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765716786/TripAdvisor_Logo.svg_hwg548.png" alt="Logo TripAdvisor">
+    <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765717075/log_turismocity_2_qyydvt.jpg" alt="Logo Turismocity">
+    <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765716072/logo_mirum_afs1p5.png" alt="Logo Mirum">
+   
+  </div>
 </div>
 
-<div class="titulo2">
-     <h2>Eventos</h2>
-</div>
-
-<div class="container-eventos">
-    
-    <div class="eventos">
-       
-        <div class="evento">
-            <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1759164579/Img_night_otqjfr.jpg" alt="Evento 1">
-            <h3>VIDA NOCTURNA</h3>
-            <p>Disfruta de las mejores fiestas y eventos nocturnos.</p>
-             <button class="button" id="evento1" routerLink="/nocturna">Ver más</button>
-        </div>
-        <div class="evento">
-            <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1759164579/Img_park_koamvu.jpg" alt="Evento 2">
-            <h3>ATRACCIONES</h3>
-            <p>Diviértete en los mejores parques de atracciones.</p>
-            <button class="button" id="evento2">Ver más</button>
-        </div>
-        <div class="evento">
-            <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1759322094/img_2glamping_tcmynj.jpg" alt="Evento 3">
-            <h3>GLAMPINGS</h3>
-            <p>Vive una experiencia única en la naturaleza.</p>
-             <button class="button" id="evento3">Ver más</button>
-        </div>
-        <div class="evento">
-            <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1759317562/img_museo_nhnhps.jpg" alt="Evento 4">
-            <h3>MUSEOS</h3>
-            <p>Explora la historia y el arte en los museos más destacados.</p>
-             <button class="button" id="evento4">Ver más</button>
-        </div>
+<div class="home__searchWrap">
+  <form class="home__search" (ngSubmit)="onSearch()">
+    <input
+      type="text"
+      name="q"
+      [(ngModel)]="query"
+      placeholder="¿Qué quieres hacer hoy?"
+      class="home__searchInput"
+    />
+    <button class="home__searchBtn" type="submit">
+      Buscar
+    </button>
+  </form>
 </div>
 
 
 
-<app-footer></app-footer> 
+
+
+  <!-- cards horizontales -->
+   <section class="home__start">
+  <h3 class="home__sectionTitle">
+    Aquí empezamos Eje Cafetero <span class="home__accent"> </span>
+  </h3>
+
+  <!-- Carrusel 1 -->
+  <h4 class="home__subTitle"> Naturaleza y Miradores</h4>
+  <div class="home__startRow">
+    <!-- Repite -->
+    <button class="home__chip" type="button" (click)="goToTown('salento')">
+      <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765719559/Salento_Portada-_carrucel_xhjred.jpg" alt="Salento">
+      <span>Salento</span>
+    </button>
+
+    <button class="home__chip" type="button" (click)="goToTown('filandia')">
+      <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722321/filandia_portada_-_carrucel_yvkncf.jpg" alt="Filandia">
+      <span>Filandia</span>
+    </button>
+
+    <button class="home__chip" type="button" (click)="goToTown('calarca')">
+      <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722334/Parapente_wmwb6g.jpg" alt="Calarca">
+      <span>Calarca</span>
+    </button>
+
+    <button class="home__chip" type="button" (click)="goToTown('montenegro')">
+      <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722352/Colombia_a5gesq.jpg" alt="Montenegro">
+      <span>Montenegro</span>
+    </button>
+
+    <button class="home__chip" type="button" (click)="goToTown('quimbaya')">
+      <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722364/Quimbaya_xbe3wx.jpg" alt="Quimbaya">
+      <span>Quimbaya</span>
+    </button>
+
+    <button class="home__chip" type="button" (click)="goToTown('circacia')">
+      <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722223/calarca_portada-_carrucel_oiqp2z.jpg" alt="Circacia">
+      <span>Circacia</span>
+    </button>
+  </div>
+
+  <!-- Carrusel 2 -->
+
+
+  <h4 class="home__subTitle"> Café, Cultura y Pueblos Patrimonio</h4>
+  <div class="home__startRow">
+
+    <button class="home__chip" type="button" (click)="goToTown('riosucio')">
+      <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722373/armenia_ec3zfc.jpg" alt="Riosucio">
+      <span>Armenia</span>
+    </button>
+
+
+    <button class="home__chip" type="button" (click)="goToTown('buenavista')">
+      <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722223/buenavista_-_carrucel_dvsnw4.jpg" alt="Buenavista">
+      <span>Buenavista</span>
+    </button>
+
+
+    <button class="home__chip" type="button" (click)="goToTown('pijao')">
+      <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722387/pijao_portada_-_carrucel_upbjcz.jpg" alt="Aguadas">
+      <span>Pijao</span>
+    </button>
+
+    <button class="home__chip" type="button" (click)="goToTown('cordoba')">
+      <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722406/cordoba_lj5xsx.jpg" alt="Cordoba">
+      <span>Cordoba</span>
+    </button>
+
+    <button class="home__chip" type="button" (click)="goToTown('tebaida')">
+      <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722418/la_tebaida_os8mgm.jpg" alt="Tebaida">
+      <span>La Tebaida</span>
+    </button>
+
+
+    <button class="home__chip" type="button" (click)="goToTown('genova')">
+      <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722432/genova_portada_-_carrucel_gg0fm4.jpg" alt="Génova">
+      <span>Génova</span>
+    </button>
+  </div>
+</section>
+
+
+
+  <!-- Recomendaciones -->
+  <section class="home__reco">
+    <h3 class="home__sectionTitle">Algunas recomendaciones del Quindío</h3>
+
+    <div class="home__recoGrid">
+      <article class="home__card">
+        <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765723800/cocora_3_hpqpvc.jpg" alt="Recomendación">
+        <div class="home__cardBody">
+          <h4>Valle del Cocora (Salento)</h4>
+          <p>No te pierdas esta gran experiencia natural.</p>
+        </div>
+      </article>
+
+
+      <article class="home__card">
+        <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765724011/parque_del_cafe_portada_-_sugerencias_wkryck.jpg" alt="Recomendación">
+        <div class="home__cardBody">
+          <h4>Parque Nacional del Café (Montenegro)</h4>
+          <p>Mas aventuras, mas sonrisas</p>
+        </div>
+      </article>
+
+      <article class="home__card">
+        <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765725012/Encanto_-_Filandia_Quindio_Colombia_d93yqk.jpg" alt="Recomendación">
+        <div class="home__cardBody">
+          <h4>Mirador Encanto (Filandia)</h4>
+          <p>Una pisca de magia, ven por tu brillo</p>
+        </div>
+      </article>
+     
+
+      <article class="home__card">
+        <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765725175/avistamento_aves_portada_-_suge_kpizdw.jpg" alt="Recomendación">
+        <div class="home__cardBody">
+          <h4>Avistamiento de aves (Salento)</h4>
+          <p>Belleza en el movimiento silencioso</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Nuestros aliados -->
+  <section class="home__allies" id="planes">
+    <h3 class="home__sectionTitle">Nuestros aliados</h3>
+
+    <div class="home__alliesGrid">
+      <div class="home__ally"><img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765716044/Logo-Parque-Del-Cafe_bh5hsr.png" alt="Ally"></div>
+      <div class="home__ally"><img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765716023/Booking.com_Logo.svg_bshdta.png" alt="Ally"></div>
+      <div class="home__ally"><img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765716786/TripAdvisor_Logo.svg_hwg548.png" alt="Ally"></div>
+      <div class="home__ally"><img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765717075/log_turismocity_2_qyydvt.jpg" alt="Ally"></div>
+      <div class="home__ally"><img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765716072/logo_mirum_afs1p5.png" alt="Ally"></div>
+      <!-- agrega los que quieras -->
+    </div>
+  </section>
+
+</section>
+
+<app-footer></app-footer>
+

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NocturnaComponent } from './nocturna.component';
+import { Cabalgata } from './cabalgata';
 
-describe('NocturnaComponent', () => {
-  let component: NocturnaComponent;
-  let fixture: ComponentFixture<NocturnaComponent>;
+describe('Cabalgata', () => {
+  let component: Cabalgata;
+  let fixture: ComponentFixture<Cabalgata>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NocturnaComponent]
+      imports: [Cabalgata]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(NocturnaComponent);
+    fixture = TestBed.createComponent(Cabalgata);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

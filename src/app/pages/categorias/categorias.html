@@ -1,0 +1,81 @@
+<app-nav></app-nav>
+
+<section class="categorias">
+
+  <!-- HERO / SLIDER (AUTO) -->
+  <div class="hero">
+    <div class="hero__split">
+      <div class="hero__half">
+        <img [src]="slideLeft" alt="Slide izquierda" />
+      </div>
+
+      <div class="hero__half">
+        <img [src]="slideRight" alt="Slide derecha" />
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL -->
+  <div class="panel">
+
+    <!-- IZQUIERDA -->
+    <div class="panel__main">
+      <h2 class="town-title">
+        {{ data?.nombre || (slug | titlecase) }} <span class="pin">📍</span>
+      </h2>
+
+
+     <!-- BUSCADOR -->
+<div class="home__searchWrap">
+  <form class="home__search" (ngSubmit)="onSearch()">
+    <input
+      type="text"
+      name="q"
+      [(ngModel)]="query"
+      placeholder="¿Qué quieres hacer hoy?"
+      class="home__searchInput"
+    />
+    <button class="home__searchBtn" type="submit">Buscar</button>
+  </form>
+</div>
+
+
+
+      <!-- CATEGORÍAS -->
+      <div class="cats-grid">
+        <button
+          class="cat-card"
+          type="button"
+          *ngFor="let c of data?.categorias"
+          (click)="goCategory(c.key)"
+        >
+          <img [src]="c.img" [alt]="c.label" />
+          <span>{{ c.label }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- DERECHA (FLOTANTE) -->
+    <aside class="panel__side">
+      <div class="side-card">
+        <h3>Sugerencias itinerario</h3>
+        <p class="side-sub">selecciona la opción que desees</p>
+
+        <div class="itinerary">
+          <button
+            class="itinerary__item"
+            type="button"
+            *ngFor="let it of data?.itinerarios; let i = index"
+            (click)="goItinerary(i)"
+          >
+            <img [src]="it.img" alt="" />
+            <span>{{ i + 1 }}. {{ it.titulo }}</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+</section>
+
+<app-footer></app-footer>
