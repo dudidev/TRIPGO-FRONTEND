@@ -27,12 +27,13 @@ export class Cabalgata {
   query = '';
   slug = '';
 
-  // ✅ aquí pones tus imágenes reales
+  //  imágenes portada
   heroImgs: string[] = [
-    'IMG_HERO_1',
-    'IMG_HERO_2',
-    'IMG_HERO_3',
-    'IMG_HERO_4',
+    'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765731482/cabalgata_portada_-_cabal_sd9xro.jpg',
+    'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765731467/cabalgata_portada_2-_cabal_vkqbmf.jpg',
+    'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765731481/cabalgata_portada_-_5_xfwmcd.jpg',
+    'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765732072/cabalgata_portada_-_3_sysznh.jpg',
+    'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765731463/cabalgata_-_portada_4_dma1bo.jpg',
   ];
 
   private timerId: any = null;
@@ -40,12 +41,12 @@ export class Cabalgata {
 
   // Cards (tu data)
   items: CardItem[] = [
-    { titulo: 'Valle del Cocora', img: 'IMG_CARD_1' },
-    { titulo: 'Ruta de Miradores', img: 'IMG_CARD_2' },
-    { titulo: 'Atardecer en Montaña', img: 'IMG_CARD_3' },
-    { titulo: 'Cabalgata Familiar', img: 'IMG_CARD_4' },
-    { titulo: 'Café + Caballo', img: 'IMG_CARD_5' },
-    { titulo: 'Ruta Río Quindío', img: 'IMG_CARD_6' },
+    { titulo: 'Cabalgatas San Pablo', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733179/san_pablo_-_cabalgata_rio_igrhyg.jpg' },
+    { titulo: 'Cabalgatas Caminos Y Trochas', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733201/portada_-_categoria_5_t7pmpz.jpg' },
+    { titulo: 'Alquiler De Caballos Salento', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733119/alquiler_de_caballos_jxigjm.jpg' },
+    { titulo: 'Parque El Secreto', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733591/parque_el_secreto_2_dxc2be.jpg' },
+    { titulo: 'Operadora Turistica Equitou', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733157/operadora_-_equiotur_iruxok.jpg' },
+    { titulo: 'Amigos Caballiztas De Salento', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733124/amigos_caballiztas_wmm1yd.jpg' },
   ];
 
   filtered: CardItem[] = [...this.items];
@@ -75,7 +76,7 @@ export class Cabalgata {
 
     this.timerId = setInterval(() => {
       this.heroIndex = (this.heroIndex + 1) % this.heroImgs.length;
-    }, 1000); // ✅ 1 segundo
+    }, 3500); // 
   }
 
   private stopHero() {

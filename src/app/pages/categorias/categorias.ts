@@ -18,36 +18,35 @@ type CategoriaData = {
 const CATEGORIAS_DATA: Record<string, CategoriaData> = {
   salento: {
     nombre: 'Salento',
-    // Pon aquí tus 6-10 imágenes reales para que el slider rote bonito
     sliderImgs: [
-      'https://via.placeholder.com/900x500?text=SALENTO+1',
-      'https://via.placeholder.com/900x500?text=SALENTO+2',
-      'https://via.placeholder.com/900x500?text=SALENTO+3',
-      'https://via.placeholder.com/900x500?text=SALENTO+4',
-      'https://via.placeholder.com/900x500?text=SALENTO+5',
-      'https://via.placeholder.com/900x500?text=SALENTO+6'
+      "https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729535/portada_-_categorias_ooyums.jpg",
+      "https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729647/portada_-_categorias_2_zpvmbp.jpg",
+      "https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729531/portada_-_categoria_5_ulppr2.jpg",
+      "https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729542/portada_8_jrmbd6.jpg",
+      "https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729543/portada_9_ulkcgh.jpg",
+      "https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729538/portada_6_lbjntm.jpg",
+      "https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729528/portada_-_categoria_3_sl5x04.jpg",
+      "https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729524/portaa_-_categorias_4_isekut.jpg"
     ],
-    //  Más categorías (experiencias reales típicas en Salento)
     categorias: [
-      { key: 'valle-cocora', label: 'Valle del Cocora', img: 'https://via.placeholder.com/600x400?text=COCORA' },
-      { key: 'senderismo', label: 'Senderismo', img: 'https://via.placeholder.com/600x400?text=SENDERISMO' },
-      { key: 'cabalgatas', label: 'Cabalgatas', img: 'https://via.placeholder.com/600x400?text=CABALGATAS' },
+      { key: 'valle-cocora', label: 'Valle del Cocora', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729518/cocora_3_blygia.jpg' },
+      { key: 'senderismo', label: 'Senderismo', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729551/senderismo_-_categorias_sqngzv.jpg' },
+      { key: 'cabalgatas', label: 'Cabalgatas', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729510/cabalgata_-_categorias_lzojcq.jpg' },
 
-      { key: 'miradores', label: 'Miradores', img: 'https://via.placeholder.com/600x400?text=MIRADORES' },
-      { key: 'cafe-tour', label: 'Tour de Café', img: 'https://via.placeholder.com/600x400?text=CAFE+TOUR' },
-      { key: 'calle-real', label: 'Calle Real', img: 'https://via.placeholder.com/600x400?text=CALLE+REAL' },
+      { key: 'miradores', label: 'Miradores', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729523/mirador_-_categoria_omagyv.jpg' },
+      { key: 'cafe-tour', label: 'Tour de Café', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729552/tour_cafe_-_categoria_be5nev.jpg' },
+      { key: 'calle-real', label: 'Calle Real', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729515/calle_real_-_categoria_hudaar.jpg' },
 
-      { key: 'cafes', label: 'Cafés', img: 'https://via.placeholder.com/600x400?text=CAFES' },
-      { key: 'restaurantes', label: 'Restaurantes', img: 'https://via.placeholder.com/600x400?text=RESTAURANTES' },
-      { key: 'bares', label: 'Bares', img: 'https://via.placeholder.com/600x400?text=BARES' },
+      { key: 'cafes', label: 'Cafés', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729512/cafes_-_categorias_f9s1db.jpg' },
+      { key: 'restaurantes', label: 'Restaurantes', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729548/restaurante_-_categoria_prasz2.jpg' },
+      { key: 'bares', label: 'Bares', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729507/bares_-_categorias_drm5rl.jpg' },
 
-      { key: 'artesanias', label: 'Artesanías', img: 'https://via.placeholder.com/600x400?text=ARTESANIAS' },
-      { key: 'avistamiento-aves', label: 'Avistamiento de aves', img: 'https://via.placeholder.com/600x400?text=AVES' },
-      { key: 'jeep-willys', label: 'Jeep Willys', img: 'https://via.placeholder.com/600x400?text=JEEP+WILLYS' },
+      { key: 'artesanias', label: 'Artesanías', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729506/artesanias_-_categorias_cmhfdw.jpg' },
+      { key: 'avistamiento-aves', label: 'Avistamiento de aves', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765725175/avistamento_aves_portada_-_suge_kpizdw.jpg' },
+      { key: 'jeep-willys', label: 'Jeep Willys', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729520/Jeep_Willys_-_categorias_sarw7o.jpg' },
     ],
-    //  Itinerario 
     itinerarios: [
-      { titulo: 'Aventura entre palmas y colores', img: 'https://via.placeholder.com/80?text=1' },
+      { titulo: 'Aventura entre palmas y colores', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729518/cocora_3_blygia.jpg' },
       { titulo: 'Naturaleza en el Valle de Cocora', img: 'https://via.placeholder.com/80?text=2' },
       { titulo: 'Miradores + atardecer', img: 'https://via.placeholder.com/80?text=3' },
       { titulo: 'Ruta de café y cata', img: 'https://via.placeholder.com/80?text=4' },
@@ -93,9 +92,15 @@ export class Categorias implements OnInit, OnDestroy {
   query = '';
   data?: CategoriaData;
 
-  // ✅ Slider auto
+  //  Slider suave A/B (para fade)
   private timerId: any = null;
-  currentSlideIndex = 0;
+  private slideIndex = 0;
+  showA = true;
+
+  leftA = '';
+  leftB = '';
+  rightA = '';
+  rightB = '';
 
   constructor(private route: ActivatedRoute, private router: Router) {}
 
@@ -109,8 +114,8 @@ export class Categorias implements OnInit, OnDestroy {
         itinerarios: []
       };
 
-      // reinicia slider al cambiar de pueblo
-      this.currentSlideIndex = 0;
+      //  prepara capas y arranca slider suave
+      this.ensureFallbacks();
       this.startAutoSlider();
     });
   }
@@ -119,17 +124,27 @@ export class Categorias implements OnInit, OnDestroy {
     this.stopAutoSlider();
   }
 
-  // ✅ toma 2 imágenes: izquierda = actual, derecha = siguiente
-  get slideLeft(): string {
+  //  Inicializa imágenes A/B para izquierda y derecha
+  private ensureFallbacks() {
     const imgs = this.data?.sliderImgs ?? [];
-    if (!imgs.length) return 'https://via.placeholder.com/900x500?text=SLIDE';
-    return imgs[this.currentSlideIndex % imgs.length];
-  }
+    const fallback = 'https://via.placeholder.com/900x500?text=SLIDE';
 
-  get slideRight(): string {
-    const imgs = this.data?.sliderImgs ?? [];
-    if (!imgs.length) return 'https://via.placeholder.com/900x500?text=SLIDE';
-    return imgs[(this.currentSlideIndex + 1) % imgs.length];
+    if (!imgs.length) {
+      this.leftA = fallback; this.leftB = fallback;
+      this.rightA = fallback; this.rightB = fallback;
+      return;
+    }
+
+    this.slideIndex = 0;
+    this.showA = true;
+
+    // A visible
+    this.leftA = imgs[0] ?? fallback;
+    this.rightA = imgs[1] ?? imgs[0] ?? fallback;
+
+    // B pre-cargada
+    this.leftB = imgs[2] ?? imgs[0] ?? fallback;
+    this.rightB = imgs[3] ?? imgs[1] ?? imgs[0] ?? fallback;
   }
 
   private startAutoSlider() {
@@ -137,9 +152,27 @@ export class Categorias implements OnInit, OnDestroy {
     const imgs = this.data?.sliderImgs ?? [];
     if (imgs.length <= 1) return;
 
+    //  más suave que 1s (puedes moverlo a 4000 o 4500 si quieres aún más calmado)
     this.timerId = setInterval(() => {
-      this.currentSlideIndex = (this.currentSlideIndex + 1) % imgs.length;
-    }, 1000); // ✅ 1 segundo
+      // avanzamos 2 para mantener pareja izquierda/derecha
+      this.slideIndex = (this.slideIndex + 2) % imgs.length;
+
+      const nextLeft = imgs[this.slideIndex] ?? imgs[0];
+      const nextRight = imgs[(this.slideIndex + 1) % imgs.length] ?? imgs[0];
+
+      // preparamos la capa que NO está visible
+      if (this.showA) {
+        this.leftB = nextLeft;
+        this.rightB = nextRight;
+      } else {
+        this.leftA = nextLeft;
+        this.rightA = nextRight;
+      }
+
+      // dispara el fade
+      this.showA = !this.showA;
+
+    }, 3000);
   }
 
   private stopAutoSlider() {
@@ -154,29 +187,27 @@ export class Categorias implements OnInit, OnDestroy {
     // futuro: backend sugerencias + popup
   }
 
- goCategory(catKey: string) {
-  console.log('Click categoría:', catKey, 'en', this.slug);
+  goCategory(catKey: string) {
+    console.log('Click categoría:', catKey, 'en', this.slug);
 
-  if (catKey === 'cabalgatas') {
-    this.router.navigate(['/cabalgata', this.slug]);
-    return;
+    if (catKey === 'cabalgatas') {
+      //  Esto SOLO funciona si tu router tiene: { path: 'cabalgata/:slug', component: Cabalgata }
+      this.router.navigate(['/cabalgata', this.slug]);
+      return;
+    }
+
+    console.log('Categoría aún no conectada:', catKey);
   }
 
-  console.log('Categoría aún no conectada:', catKey);
-}
+  goItinerary(index: number) {
+    const it = this.data?.itinerarios?.[index];
 
-
-
-goItinerary(index: number) {
-  const it = this.data?.itinerarios?.[index];
-
-  console.log(
-    'Click itinerario:',
-    index + 1,
-    it?.titulo,
-    'en',
-    this.slug
-  );
-}
-
+    console.log(
+      'Click itinerario:',
+      index + 1,
+      it?.titulo,
+      'en',
+      this.slug
+    );
+  }
 }

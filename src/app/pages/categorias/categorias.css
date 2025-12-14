@@ -22,7 +22,7 @@
 /* HERO / SLIDER */
 .hero{
   width: 100%;
-  height: 260px;
+  height: 350px;
   overflow: hidden;
   border-bottom: 4px solid var(--primary-color);
   background: #ddd;
@@ -39,14 +39,35 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
+  position: relative;
 }
 
-.hero__half img{
+/* ✅ contenedor para superponer imágenes */
+.hero__stack{
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* ✅ imágenes apiladas */
+.hero__img{
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out; /*  suave */
+  will-change: opacity;
 }
+
+/*  la imagen visible */
+.hero__img.active{
+  opacity: 1;
+}
+
 
 /* PANEL */
 .panel{

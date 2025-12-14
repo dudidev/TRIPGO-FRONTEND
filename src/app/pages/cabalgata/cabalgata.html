@@ -4,17 +4,26 @@
 
   <!-- HERO SLIDER (auto, sin botones) -->
   <header class="results__hero">
+
+  <!-- Carrusel (imágenes apiladas con fade) -->
+  <div class="results__heroCarousel">
     <img
+      *ngFor="let img of heroImgs; let i = index"
       class="results__heroImg"
-      [src]="currentHeroImg"
+      [class.active]="i === heroIndex"
+      [src]="img"
       alt="Hero Cabalgatas"
     />
+  </div>
 
-    <div class="results__heroOverlay">
-      <h1 class="results__title">CABALGATAS</h1>
-      <p class="results__subtitle">{{ slug | titlecase }} • Quindío</p>
-    </div>
-  </header>
+  <!-- Overlay (texto encima) -->
+  <div class="results__heroOverlay">
+    <h1 class="results__title">CABALGATAS</h1>
+    <p class="results__subtitle">{{ slug | titlecase }} • Quindío</p>
+  </div>
+
+</header>
+
 
   <!-- CONTENIDO (izq + sidebar flotante) -->
   <div class="results__panel">

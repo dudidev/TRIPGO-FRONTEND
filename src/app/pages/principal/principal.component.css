@@ -64,10 +64,34 @@
 /* HERO SLIDER */
 .home__hero{
   width: 100%;
-  height: 420px;
+  height: 460px;
+  position: relative;
   overflow: hidden;
   background: #000;
 }
+
+.carousel{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.carousel-img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out; /* suave */
+  will-change: opacity;
+}
+
+.carousel-img.active{
+  opacity: 1;
+}
+
 
 .home__heroImg{
   width: 100%;

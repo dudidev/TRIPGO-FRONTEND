@@ -4,16 +4,27 @@
 
   <!-- HERO / SLIDER (AUTO) -->
   <div class="hero">
-    <div class="hero__split">
-      <div class="hero__half">
-        <img [src]="slideLeft" alt="Slide izquierda" />
-      </div>
+  <div class="hero__split">
 
-      <div class="hero__half">
-        <img [src]="slideRight" alt="Slide derecha" />
+    <!-- IZQUIERDA -->
+    <div class="hero__half">
+      <div class="hero__stack">
+        <img class="hero__img" [class.active]="showA" [src]="leftA" alt="Slide izquierda A" />
+        <img class="hero__img" [class.active]="!showA" [src]="leftB" alt="Slide izquierda B" />
       </div>
     </div>
+
+    <!-- DERECHA -->
+    <div class="hero__half">
+      <div class="hero__stack">
+        <img class="hero__img" [class.active]="showA" [src]="rightA" alt="Slide derecha A" />
+        <img class="hero__img" [class.active]="!showA" [src]="rightB" alt="Slide derecha B" />
+      </div>
+    </div>
+
   </div>
+</div>
+
 
   <!-- PANEL -->
   <div class="panel">
@@ -21,7 +32,7 @@
     <!-- IZQUIERDA -->
     <div class="panel__main">
       <h2 class="town-title">
-        {{ data?.nombre || (slug | titlecase) }} <span class="pin">📍</span>
+        {{ data?.nombre || (slug | titlecase) }} <span class="pin"></span>
       </h2>
 
 

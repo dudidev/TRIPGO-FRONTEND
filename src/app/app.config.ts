@@ -5,12 +5,15 @@ import { importProvidersFrom } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { routes } from './app.routes';
+import { provideHttpClient } from '@angular/common/http';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
+    provideHttpClient(),
     importProvidersFrom(FormsModule)
   ]
 };
