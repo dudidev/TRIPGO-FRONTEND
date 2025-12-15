@@ -8,7 +8,7 @@ import { Register } from './pages/register/register';
 import { Categorias } from './pages/categorias/categorias';
 import { Cabalgata } from './pages/cabalgata/cabalgata';
 import { Detalles } from './pages/detalles/detalles';
-
+import { EditarCuentaComponent } from './pages/editar-cuenta/editar-cuenta';
 
 
 
@@ -21,6 +21,7 @@ export const routes: Routes = [
     {path: 'categorias/:slug', component: Categorias },
     { path: 'cabalgata/:slug', component: Cabalgata }, 
     {path: 'detalles/:slug', component: Detalles},
+    {path: 'editar-cuenta', component: EditarCuentaComponent}
 ]
 
 @NgModule({
