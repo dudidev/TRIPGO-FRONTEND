@@ -1,19 +1,15 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { Nav } from '../../shared/nav/nav';
 import { Footer } from '../../shared/footer/footer';
-import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
-
 
 type CardItem = {
+  slug: string;
   titulo: string;
   img: string;
-  lugar?: string;
 };
-
 
 @Component({
   selector: 'app-cabalgata',
@@ -27,7 +23,6 @@ export class Cabalgata {
   query = '';
   slug = '';
 
-  //  imágenes portada
   heroImgs: string[] = [
     'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765731482/cabalgata_portada_-_cabal_sd9xro.jpg',
     'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765731467/cabalgata_portada_2-_cabal_vkqbmf.jpg',
@@ -36,22 +31,48 @@ export class Cabalgata {
     'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765731463/cabalgata_-_portada_4_dma1bo.jpg',
   ];
 
-  private timerId: any = null;
   heroIndex = 0;
+  private timerId: any = null;
 
-  // Cards (tu data)
   items: CardItem[] = [
-    { titulo: 'Cabalgatas San Pablo', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733179/san_pablo_-_cabalgata_rio_igrhyg.jpg' },
-    { titulo: 'Cabalgatas Caminos Y Trochas', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733201/portada_-_categoria_5_t7pmpz.jpg' },
-    { titulo: 'Alquiler De Caballos Salento', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733119/alquiler_de_caballos_jxigjm.jpg' },
-    { titulo: 'Parque El Secreto', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733591/parque_el_secreto_2_dxc2be.jpg' },
-    { titulo: 'Operadora Turistica Equitou', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733157/operadora_-_equiotur_iruxok.jpg' },
-    { titulo: 'Amigos Caballiztas De Salento', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733124/amigos_caballiztas_wmm1yd.jpg' },
+    {
+      slug: 'cabalgatas-san-pablo',
+      titulo: 'Cabalgatas San Pablo',
+      img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733179/san_pablo_-_cabalgata_rio_igrhyg.jpg'
+    },
+    {
+      slug: 'caminos-y-trochas',
+      titulo: 'Cabalgatas Caminos Y Trochas',
+      img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733201/portada_-_categoria_5_t7pmpz.jpg'
+    },
+    {
+      slug: 'alquiler-caballos-salento',
+      titulo: 'Alquiler De Caballos Salento',
+      img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733119/alquiler_de_caballos_jxigjm.jpg'
+    },
+    {
+      slug: 'parque-el-secreto',
+      titulo: 'Parque El Secreto',
+      img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733591/parque_el_secreto_2_dxc2be.jpg'
+    },
+    {
+      slug: 'equitour',
+      titulo: 'Operadora Turistica Equitou',
+      img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733157/operadora_-_equiotur_iruxok.jpg'
+    },
+    {
+      slug: 'amigos-caballistas',
+      titulo: 'Amigos Caballiztas De Salento',
+      img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733124/amigos_caballiztas_wmm1yd.jpg'
+    }
   ];
 
   filtered: CardItem[] = [...this.items];
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -62,28 +83,13 @@ export class Cabalgata {
   }
 
   ngOnDestroy(): void {
-    this.stopHero();
+    if (this.timerId) clearInterval(this.timerId);
   }
 
-  get currentHeroImg(): string {
-    if (!this.heroImgs.length) return 'https://via.placeholder.com/1400x500?text=HERO';
-    return this.heroImgs[this.heroIndex % this.heroImgs.length];
-  }
-
-  private startHero() {
-    this.stopHero();
-    if (this.heroImgs.length <= 1) return;
-
+  startHero() {
     this.timerId = setInterval(() => {
       this.heroIndex = (this.heroIndex + 1) % this.heroImgs.length;
-    }, 3500); // 
-  }
-
-  private stopHero() {
-    if (this.timerId) {
-      clearInterval(this.timerId);
-      this.timerId = null;
-    }
+    }, 3500);
   }
 
   onSearch() {
@@ -93,7 +99,8 @@ export class Cabalgata {
       : this.items.filter(x => x.titulo.toLowerCase().includes(q));
   }
 
+  // 👉 NAVEGACIÓN FUNCIONAL
   openItem(item: CardItem) {
-    console.log('Abrir detalle:', item);
+    this.router.navigate(['/detalles', item.slug]);
   }
 }

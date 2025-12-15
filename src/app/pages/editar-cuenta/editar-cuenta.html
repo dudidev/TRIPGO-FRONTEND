@@ -1,17 +1,57 @@
 <app-nav></app-nav>
 
-<h2>Editar cuenta</h2>
+<div class="perfil-container">
 
-<form [formGroup]="form" (ngSubmit)="guardar()">
+  <!-- ================== EDITAR CUENTA ================== -->
+  <section class="card">
+    <h2>Editar cuenta</h2>
 
-  <label>Nombre</label>
-  <input type="text" formControlName="nombre_usuario" />
+    <div class="perfil">
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
+        alt="Foto de perfil"
+      />
+      <button class="btn-link" type="button">Cambiar foto</button>
+    </div>
 
-  <label>Email</label>
-  <input type="email" formControlName="correo_usuario" />
+    <form [formGroup]="form" (ngSubmit)="guardar()">
 
-  <button type="submit">Guardar cambios</button>
+      <div class="campo">
+        <label>Nombre</label>
+        <input type="text" formControlName="nombre_usuario" />
+      </div>
 
-</form>
+      <div class="campo">
+        <label>Email</label>
+        <input type="email" formControlName="correo_usuario" />
+      </div>
+
+      <button class="btn-guardar" type="submit">
+        Guardar cambios
+      </button>
+
+    </form>
+  </section>
+
+  <!-- ================== EDITAR ITINERARIOS ================== -->
+  <section class="card">
+    <h2>Mis itinerarios</h2>
+
+    <div class="itinerario" *ngFor="let iti of itinerarios">
+      <div class="info">
+        <h3>{{ iti.nombre }}</h3>
+        <p>{{ iti.descripcion }}</p>
+      </div>
+
+      <div class="acciones">
+        <button class="btn-editar">Editar</button>
+        <button class="btn-eliminar">Eliminar</button>
+      </div>
+    </div>
+
+    <button class="btn-agregar">+ Agregar itinerario</button>
+  </section>
+
+</div>
 
 <app-footer></app-footer>
