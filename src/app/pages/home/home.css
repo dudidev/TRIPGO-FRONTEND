@@ -1,11 +1,16 @@
 
 nav{
     width: 100%;
-    background-color: #0F3B3E;
+    background-color: #0E6973;
     height: 70px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 20px;
+    padding-top: 30px;
+    position: relative;
+    z-index: 10;           
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
 }
 nav img{
     width: 60%; 
@@ -17,9 +22,22 @@ nav a{
     font-weight: bold;
 }
 .logo{
-    width: 15%;
+    width: 12%;
+    display: flex;
+    text-align: center;
 }
-
+.contTrip{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+}
+.contTrip a{
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+}
 .registro{
     width: 32%;
     display: flex;
@@ -28,7 +46,7 @@ nav a{
 .subNav{
     width: 100%;
     height: 50px;
-    background-color:052b2f ;
+    background-color: #E27921;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -36,37 +54,98 @@ nav a{
 .subNav a{
     margin: 0 15px;
     text-decoration: none;
-    color: black;
+    color: rgb(255, 255, 255);
     font-weight: bold;
+    font-size: 12px;
 }
 .subNav button{
     margin-left: 15px;
     padding: 12px 12px;
-    background-color:#0F3B3E ;
-    color: white;
+    background-color:#ffffff ;
+    color: rgb(161, 161, 161);
     border: none;
     border-radius: 20px;
     cursor: pointer;
 }
 .contenido {
+  position: relative;
   width: 100%;
   height: calc(100vh - 130px);
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  background: 
-    linear-gradient(to right, rgba(0,0,0,0) 30%, rgba(0,0,0,10) 100%), 
-    url('https://res.cloudinary.com/dtyvd3fim/image/upload/v1759323111/PresentacionValle_y9sz48.jpg') center/cover no-repeat;
 }
-.contenido h2{
-    color: white;
-    font-size: 4rem;
-    margin-right: 10%;
-    text-align: right;
-    font-weight: bold;
-    width: 50%;
+.contenido::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0,0,0,0) 40%, rgba(0,0,0,1) 100%);
+  z-index: 2;
+}
+.contenido h2 {
+  position: relative;
+  z-index: 3;
+  color: #fff;
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  font-weight: 800;
+  text-align: right;
+  margin-right: 60px;
+  width: 55%;
+  line-height: 1.2;
+  animation: slideFade 1s ease;
+}
+
+@keyframes slideFade {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.carousel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Imágenes */
+.carousel-img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+}
+
+.carousel-img.active {
+  opacity: 1;
+}
+.aliados{
+    background-color: #f0f0f0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.aliados h3{
+
+    color: var(--primary-color);
+    font-size: 1.5em;
+    padding: 20px;
+    
 }
 .Nosotros{
     padding: 50px 10%;
@@ -75,7 +154,7 @@ nav a{
     justify-content: space-around;
 }
 .Nosotros h2{
-    font-size: 3rem;
+    font-size: 2em;
     margin-bottom: 20px;
     color: #0F3B3E;
 }
@@ -91,7 +170,7 @@ nav a{
 }
 .info2 li{
     color: #0F3B3E;
-    font-size: 20px;
+    font-size: 17px;
     margin-bottom: 10px;
 }
 .panel-funciona {
@@ -139,4 +218,139 @@ nav a{
     color: #333;
     line-height: 1.5;
 }
-/*Hola*/
+.planes {
+    padding: 60px 10%;
+    text-align: center;
+}
+
+.planes h2 {
+    font-size: 30px;
+    color: #0E6973;
+    margin-bottom: 40px;
+    font-weight: bold;
+}
+
+
+.planes-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.plan-card {
+    width: 300px;
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+    text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.plan-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 10px 25px rgba(0,0,0,0.2);
+}
+
+.plan-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.plan-card h3 {
+    font-size: 1.4rem;
+    margin: 15px;
+    color: #0E6973;
+}
+
+.plan-card p {
+    font-size: 1rem;
+    color: #444;
+    margin: 0 15px 20px 15px;
+    line-height: 1.4;
+}
+.plan-card button {
+    margin: 0 15px 20px 15px;
+    padding: 10px 15px;
+    background-color: #0E6973;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.plan-card button:hover {
+    background-color: #08484e;
+}
+.planes-simples {
+    padding: 50px 10%;
+    text-align: center;
+}
+
+.planes-simples h2 {
+    font-size: 2.5rem;
+    color: #0F3B3E;
+    margin-bottom: 40px;
+    font-weight: bold;
+}
+
+.planes-simple-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.plan-simple {
+    width: 250px;
+    background: #ffffff;
+    padding: 25px 20px;
+    border-radius: 12px;
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.1);
+    transition: 0.3s ease;
+}
+
+.plan-simple:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 18px rgba(0,0,0,0.15);
+}
+
+.plan-simple h3 {
+    font-size: 1.3rem;
+    color: #0E6973;
+}
+
+.plan-simple .precio {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #E27921;
+    margin: 10px 0;
+}
+
+.plan-simple p {
+    color: #444;
+    margin-bottom: 15px;
+}
+
+.plan-simple button {
+    width: 100%;
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    background-color: #0E6973;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.plan-simple button:hover {
+    background-color: #09494f;
+}
+
+/* Carta Premium un poco destacada */
+.plan-simple.premium {
+    border: 2px solid #E27921;
+}

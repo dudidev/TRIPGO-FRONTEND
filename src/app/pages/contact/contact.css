@@ -1,93 +1,149 @@
-.content{
-    display: grid;
-    padding: var(--padding-lg);
-    justify-items: center;
+.content {
+  display: grid;
+  place-items: center;
+  padding: var(--padding-lg);
+  background: linear-gradient(180deg, #f8f9fb, #ffffff);
 }
 
 .contact-section {
-    max-width: 600px;
-    background: #fff;
-    border-radius: var(--radius-m);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-    padding: var(--padding-lg);
+  width: 100%;
+  max-width: 620px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.08);
+  padding: 2.5rem;
+  animation: fadeIn .4s ease;
 }
 
-.contact-section h2 {
-    color: var(--primary-color);
-    margin-bottom: 8px;
-    font-size: var(--font-size-lg);
-    text-align: center;
+/* ---------- HEADER ---------- */
+
+.contact-header {
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
-.contact-section p {
-    color: var(--text-color);
-    text-align: center;
-    margin-bottom: 24px;
+.contact-header .badge {
+  display: inline-block;
+  background: rgba(0,0,0,.05);
+  color: var(--primary-color);
+  padding: .3rem .8rem;
+  border-radius: 20px;
+  font-size: .85rem;
+  margin-bottom: .5rem;
 }
+
+.contact-header h2 {
+  font-size: 2rem;
+  margin-bottom: .5rem;
+  color: var(--primary-color)  ;
+}
+
+.contact-header p {
+  color: #6c757d;
+  font-size: 1rem;
+}
+
+/* ---------- FORM ---------- */
 
 .contact-form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--padding-m);
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
 }
 
-.form-group label {
-    font-weight: 600;
-    color: var(--secondary-color);
-    margin-bottom: 4px;
-    display: block;
+.form-group {
+  position: relative;
 }
 
 .form-group input,
 .form-group textarea {
-    width: 100%;
-    padding: var(--padding-sm) var(--padding-sm);
-    border: 1px solid #dfe6e9;
-    border-radius: 8px;
-    font-size: 1rem;
-    background: var(--bg-color);
-    transition: border-color 0.2s;
-    resize: none;
+  width: 100%;
+  padding: 1.1rem .9rem;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  font-size: 1rem;
+  background: #fafafa;
+  outline: none;
+  transition: all .2s ease;
+}
+
+/* Floating label */
+.form-group label {
+  position: absolute;
+  top: 50%;
+  left: .9rem;
+  transform: translateY(-50%);
+  font-size: .9rem;
+  color: #999;
+  pointer-events: none;
+  transition: all .2s ease;
+  background: #fff;
+  padding: 0 .4rem;
+}
+
+.form-group textarea + label {
+  top: 1.2rem;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
-    border-color: var(--primary-color);
-    outline: none;
+  border-color: var(--primary-color);
+  background: #fff;
 }
 
-button[type="submit"] {
-    background: linear-gradient(90deg, #000 0%, var(--primary-color) 100%);
-    color: var(--light-text-color);
-    border: none;
-    border-radius: var(--radius-m);
-    padding: 12px 0;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
+.form-group input:focus + label,
+.form-group textarea:focus + label,
+.form-group input:not(:placeholder-shown) + label,
+.form-group textarea:not(:placeholder-shown) + label {
+  top: -8px;
+  font-size: .75rem;
+  color: var(--primary-color);
 }
 
-button[type="submit"]:hover {
-    background: linear-gradient(90deg, var(--primary-color) 0%, #000 100%);
+/* ---------- BUTTON ---------- */
+
+.btn-primary {
+  margin-top: .5rem;
+  background: linear-gradient(135deg, var(--primary-color), #000);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0,0,0,.15);
 }
 
 .contact-info {
-    margin-top: 32px;
-    background: var(--bg-color);
-    border-radius: var(--radius-m);
-    padding: var(--padding-m);
-    text-align: left;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
 }
 
 .contact-info h3 {
-    margin-bottom: 8px;
-    color: var(--primary-color);
-    font-size: var(--font-size-m);
+  margin-bottom: .8rem;
+  color: var(--primary-color);
 }
 
 .contact-info p {
-    margin: 4px 0;
-    color: #636e72;
-    font-size: var(--font-size-base);
+  margin: .3rem 0;
+  color: #555;
+  font-size: .95rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -9,9 +9,9 @@
 
 
 :root{
-    /*Colores principales*/
-    --primary-color: #0F3B3E;
-    --secondary-color: #052b2f;
+    /*Colores primarios*/
+    --primary-color: #0E6973;
+    --secondary-color: #E27921;
 
     /*Colores neutros*/
     --bg-color: #F8F9FA;
@@ -27,7 +27,7 @@
     --radius-lg: 30px;
 
     --padding-sm: 8px;
-    --padding-m: 16px;
+    --padding-m: 14px;
     --padding-lg: 30px;
 
     /*Tamaños texto*/
@@ -45,8 +45,8 @@ body{
 }
 
 h1, h2{
-    font-family: var(--font-primary);
-    color: var(--primary-color);
+    font-family: var(--bg-color);
+    color: var(--bg-color);
     margin-bottom: var(--padding-m);
 }
 

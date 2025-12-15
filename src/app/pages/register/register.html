@@ -3,39 +3,47 @@
 
 <div class="ppal" role="main" aria-label="Registro">
 
-  <section class="left">
-    <div class="left-content">
-      <h1>Create your<br>Account</h1>
+ <section class="left">
+  <div class="left-content">
+    
+    <h1>Registro</h1>
+
+    <div class="logo-circle">
+      <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764678577/ChatGPT_Image_12_nov_2025_17_33_14_1_hj26hs.png" alt="Logo TripGO">
     </div>
-  </section>
+
+  </div>
+</section>
+
+  
 
 
   <aside class="right">
     <div class="carta">
-      <h2>Sign Up</h2>
+      <h2>Registro</h2>
 
       <form (ngSubmit)="onSubmit()">
         <div class="field">
-          <label for="first">Name</label>
+          <label for="first">Nombre</label>
           <input id="first" [(ngModel)]="name" name="first" type="text" required>
         </div>
 
         <div class="field">
-          <label for="email">Email address</label>
+          <label for="email">Correo electronico</label>
           <input id="email" [(ngModel)]="email" name="email" type="email" required>
         </div>
 
         <div class="field">
-          <label for="password">Password</label>
+          <label for="password">Contraseña</label>
           <input id="password" [(ngModel)]="password" name="password" type="password" required>
         </div>
 
-        <button class="btn btn-primary" type="submit">Join us →</button>
+        <button class="btn btn-primary" type="submit">Registrar</button>
 
 
         <p class="account">
-          Already have an account?
-          <a routerLink="/login">Log in</a>
+          Ya tienes una cuenta?
+          <a routerLink="/login">Iniciar sesión</a>
         </p>
       </form>
     </div>
