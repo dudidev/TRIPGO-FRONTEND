@@ -15,6 +15,20 @@ export class EditarCuentaComponent implements OnInit {
 
   form!: FormGroup;
 
+  itinerarios = [
+  {
+    id: 1,
+    nombre: 'Ruta del Café',
+    descripcion: 'Recorrido por fincas cafeteras del Quindío'
+  },
+  {
+    id: 2,
+    nombre: 'Valle de Cocora',
+    descripcion: 'Caminata ecológica y paisajes naturales'
+  }
+];
+
+
   constructor(private fb: FormBuilder) {}
 usuarioMock = {
   nombre_usuario: 'Karol Franco',

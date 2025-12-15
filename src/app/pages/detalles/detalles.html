@@ -1,0 +1,81 @@
+<app-nav></app-nav>
+<div class="detalle-container">
+  <h1>{{ lugar.nombre }}</h1>
+  <p class="direccion">📍 {{ lugar.direccion }}</p>
+
+  <!-- IMÁGENES -->
+  <div class="imagenes">
+    <img class="principal" [src]="lugar.imagenes[0]" />
+    <div class="secundarias">
+      <img *ngFor="let img of lugar.imagenes.slice(1)" [src]="img" />
+    </div>
+  </div>
+
+  <div class="contenido">
+
+    <!-- IZQUIERDA -->
+    <div class="col-izq">
+
+      <section>
+        <h3>Descripción general</h3>
+        <p>{{ lugar.descripcion }}</p>
+      </section>
+
+      <section>
+        <h3>Ubicación</h3>
+        <div class="mapa">
+            <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1765813714/Captura_de_pantalla_2025-11-18_091322_goc4qo.png" alt="">
+        </div>
+      </section>
+
+      <section>
+  <h3>Opiniones</h3>
+
+  <div class="opinion-card" *ngFor="let op of lugar.opiniones">
+    <div class="opinion-header">
+      <div class="avatar">
+        {{ op.usuario.charAt(0) }}
+      </div>
+
+      <div class="user-info">
+        <strong>{{ op.usuario }}</strong>
+        <div class="stars">
+          <span *ngFor="let s of [1,2,3,4,5]">
+            {{ s <= op.rating ? '★' : '☆' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <p class="opinion-text">{{ op.comentario }}</p>
+  </div>
+</section>
+
+
+    </div>
+
+    <!-- DERECHA -->
+    <div class="col-der">
+
+      <section class="box">
+        <h4>Algunas promociones</h4>
+        <p>{{ lugar.promociones }}</p>
+      </section>
+
+      <section class="box">
+        <h4>Horarios</h4>
+        <ul>
+          <li *ngFor="let h of lugar.horarios">{{ h }}</li>
+        </ul>
+      </section>
+
+      <button class="btn-itinerario" (click)="agregarItinerario()">
+        Agregar a itinerario
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+<app-footer></app-footer>
