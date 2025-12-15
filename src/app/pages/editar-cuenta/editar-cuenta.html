@@ -1,0 +1,17 @@
+<app-nav></app-nav>
+
+<h2>Editar cuenta</h2>
+
+<form [formGroup]="form" (ngSubmit)="guardar()">
+
+  <label>Nombre</label>
+  <input type="text" formControlName="nombre_usuario" />
+
+  <label>Email</label>
+  <input type="email" formControlName="correo_usuario" />
+
+  <button type="submit">Guardar cambios</button>
+
+</form>
+
+<app-footer></app-footer>
