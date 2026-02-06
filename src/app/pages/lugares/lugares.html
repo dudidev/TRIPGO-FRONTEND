@@ -18,8 +18,9 @@
 
   <!-- Overlay (texto encima) -->
   <div class="results__heroOverlay">
-    <h1 class="results__title">CABALGATAS</h1>
-    <p class="results__subtitle">{{ slug | titlecase }} • Quindío</p>
+    <h1 class="results__title">{{ titulo | uppercase }}</h1>
+    <p class="results__subtitle">{{ townSlug | titlecase }} • Quindío</p>
+
   </div>
 
 </header>
@@ -59,14 +60,14 @@
       </section>
 
       <!-- Chips -->
-      <section class="chips">
+      <!-- <section class="chips">
         <span class="chip chip--title">También hay cabalgatas en:</span>
         <button class="chip" type="button">Filandia</button>
         <button class="chip" type="button">Circasia</button>
         <button class="chip" type="button">Montenegro</button>
         <button class="chip" type="button">Quimbaya</button>
         <button class="chip" type="button">Calarcá</button>
-      </section>
+      </section> -->
 
     </main>
 

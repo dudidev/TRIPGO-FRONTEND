@@ -6,7 +6,7 @@ import { Contact } from './pages/contact/contact';
 import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
 import { Categorias } from './pages/categorias/categorias';
-import { Cabalgata } from './pages/cabalgata/cabalgata';
+import { LugaresComponent } from './pages/lugares/lugares';
 import { Detalles } from './pages/detalles/detalles';
 
 
@@ -19,7 +19,7 @@ export const routes: Routes = [
     {path: 'contact', component: Contact},
     {path : 'principal', component: PrincipalComponent},
     {path: 'categorias/:slug', component: Categorias },
-    { path: 'cabalgata/:slug', component: Cabalgata }, 
+{ path: 'lugares/:townSlug/:categoryKey', component: LugaresComponent },
     {path: 'detalles/:slug', component: Detalles},
 ]
 
