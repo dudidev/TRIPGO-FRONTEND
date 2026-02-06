@@ -1,5 +1,18 @@
 <app-nav></app-nav>
 
+@if (successMessage) {
+  <div class="toast toast-success" role="status" aria-live="polite">
+    {{ successMessage }}
+  </div>
+}
+
+@if (errorMessage) {
+  <div class="toast toast-error" role="alert" aria-live="assertive">
+    {{ errorMessage }}
+  </div>
+}
+
+
 <div class="ppal" role="main" aria-label="Login">
 
   <section class="left">
@@ -16,7 +29,7 @@
     <div class="carta">
       <h2>Inicio sesion</h2>
 
-      <form (ngSubmit)="onSubmit()">
+      <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" novalidate>
         <div class="field">
           <label for="email">Correo electronico</label>
           <input id="email" [(ngModel)]="email" name="email" type="email" required>
@@ -27,11 +40,9 @@
           <input id="password" [(ngModel)]="password" name="password" type="password" required>
         </div>
 
-        <button class="btn btn-primary" type="submit">Iniciar sesion</button>
-        @if(errorMessage){
-          <p style="color:red;">{{ errorMessage }}</p>
-        }
-
+       <button class="btn btn-primary" type="submit" [disabled]="loginForm.invalid">
+          Iniciar sesion
+        </button>
         <p class="account">
           No tienes una cuenta con nosotros?
           <a routerLink="/register">Registrarse</a>
