@@ -60,16 +60,7 @@ export class PrincipalComponent implements OnInit, OnDestroy {
   private heroIndex = 0;
   private heroTimerId: any = null;
 
-  // ==========================
-  // DATA DESDE BACKEND
-  // ==========================
-  // loadingTowns: boolean = false;
-  // errorTowns: string | null = null;
-  // towns: any[] = [];
-
-  // ==========================
-  // LIFECYCLE
-  // ==========================
+  
   ngOnInit(): void {
     // --- HERO INIT ---
     if (this.heroImages.length) {

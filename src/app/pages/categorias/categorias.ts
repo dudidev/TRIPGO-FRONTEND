@@ -71,11 +71,17 @@ const CATEGORIAS_DATA: Record<string, CategoriaData> = {
       { key: 'cafes', label: 'Cafés', img: 'https://via.placeholder.com/600x400?text=CAFES' },
       { key: 'artesanias', label: 'Artesanías', img: 'https://via.placeholder.com/600x400?text=ARTESANIAS' },
       { key: 'cultura', label: 'Cultura', img: 'https://via.placeholder.com/600x400?text=CULTURA' },
+      { key: 'cultura', label: 'Cultura', img: 'https://via.placeholder.com/600x400?text=CULTURA' },
+      { key: 'paseo', label: 'Paseo', img: 'https://via.placeholder.com/600x400?text=PASEO' },
+
+
     ],
     itinerarios: [
       { titulo: 'Ruta cultural', img: 'https://via.placeholder.com/80?text=1' },
       { titulo: 'Mirador + fotografía', img: 'https://via.placeholder.com/80?text=2' },
       { titulo: 'Plan cafetero', img: 'https://via.placeholder.com/80?text=3' },
+      { titulo: 'Plan relax: cafés y fotos', img: 'https://via.placeholder.com/80?text=4' },
+
     ]
   }
 };
@@ -188,16 +194,9 @@ export class Categorias implements OnInit, OnDestroy {
   }
 
   goCategory(catKey: string) {
-    console.log('Click categoría:', catKey, 'en', this.slug);
+  this.router.navigate(['/lugares', this.slug, catKey]);
+}
 
-    if (catKey === 'cabalgatas') {
-      //  Esto SOLO funciona si tu router tiene: { path: 'cabalgata/:slug', component: Cabalgata }
-      this.router.navigate(['/cabalgata', this.slug]);
-      return;
-    }
-
-    console.log('Categoría aún no conectada:', catKey);
-  }
 
   goItinerary(index: number) {
     const it = this.data?.itinerarios?.[index];
