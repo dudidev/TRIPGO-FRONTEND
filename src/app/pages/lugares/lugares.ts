@@ -72,19 +72,24 @@ const LUGARES_DATA: Record<string, Record<string, LugaresData>> = {
       ],
       items: [
         {
-          slug: 'sendero-principal',
-          titulo: 'Sendero Principal',
-          img: 'https://via.placeholder.com/600x400?text=Sendero+Principal'
+          slug: 'COCORATOURS1',
+          titulo: 'CocoraTours - Excursión grupal valle del cocora',
+          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770644290/Imagen2valle-cocora_w9b3ja.png'
+        }, 
+        {
+          slug: 'COCORATOURS2',
+          titulo: 'CocoraTours - Plan con hospedaje palmas Carbonera',
+          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770644278/img1valle-cocora_azfhwk.png'
         },
         {
-          slug: 'sendero-principal',
-          titulo: 'Sendero Principal',
-          img: 'https://via.placeholder.com/600x400?text=Sendero+Principal'
+          slug: 'COCORA XTREME',
+          titulo: 'Cocora Xtreme',
+          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770644280/Imagen4valle-cocora_q54j6k.png'
         },
         {
-          slug: 'sendero-principal',
-          titulo: 'Sendero Principal',
-          img: 'https://via.placeholder.com/600x400?text=Sendero+Principal'
+          slug: 'Bosques De Cocora Donde Juanb',
+          titulo: 'Bosques De Cocora Donde Juanb',
+          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770644269/Imagen3valle-cocora_w0ggkc.png'
         }
       ]
     },
