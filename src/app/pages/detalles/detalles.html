@@ -1,15 +1,28 @@
 <app-nav></app-nav>
-<div class="detalle-container">
-  <h1>{{ lugar.nombre }}</h1>
-  <p class="direccion">📍 {{ lugar.direccion }}</p>
+
+<div class="detalle-container" *ngIf="lugar as l; else notFound">
+
+  <h1>{{ l.nombre }}</h1>
+  <p class="direccion">📍 {{ l.direccion }}</p>
 
   <!-- IMÁGENES -->
-  <div class="imagenes">
-    <img class="principal" [src]="lugar.imagenes[0]" />
-    <div class="secundarias">
-      <img *ngFor="let img of lugar.imagenes.slice(1)" [src]="img" />
+  <div class="imagenes" *ngIf="l.imagenes?.length; else noImages">
+    <img class="principal" [src]="l.imagenes[0]" [alt]="l.nombre" />
+
+    <div class="secundarias" *ngIf="l.imagenes.length > 1">
+      <img
+        *ngFor="let img of l.imagenes.slice(1)"
+        [src]="img"
+        [alt]="l.nombre"
+      />
     </div>
   </div>
+
+  <ng-template #noImages>
+    <div class="imagenes imagenes--empty">
+      <p>No hay imágenes disponibles todavía.</p>
+    </div>
+  </ng-template>
 
   <div class="contenido">
 
@@ -18,64 +31,108 @@
 
       <section>
         <h3>Descripción general</h3>
-        <p>{{ lugar.descripcion }}</p>
+        <p>{{ l.descripcion }}</p>
       </section>
 
       <section>
         <h3>Ubicación</h3>
         <div class="mapa">
-            <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1765813714/Captura_de_pantalla_2025-11-18_091322_goc4qo.png" alt="">
+          <!-- Si luego quieres hacerlo dinámico, lo pasamos a l.mapaImg o l.ubicacion -->
+          <img
+            src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1765813714/Captura_de_pantalla_2025-11-18_091322_goc4qo.png"
+            alt="Mapa"
+          />
         </div>
       </section>
 
       <section>
-  <h3>Opiniones</h3>
+        <h3>Opiniones</h3>
 
-  <div class="opinion-card" *ngFor="let op of lugar.opiniones">
-    <div class="opinion-header">
-      <div class="avatar">
-        {{ op.usuario.charAt(0) }}
-      </div>
+        <ng-container *ngIf="l.opiniones?.length; else noOpinions">
+          <div class="opinion-card" *ngFor="let op of l.opiniones">
+            <div class="opinion-header">
+              <div class="avatar">
+                {{ op.usuario?.charAt(0) || '?' }}
+              </div>
 
-      <div class="user-info">
-        <strong>{{ op.usuario }}</strong>
-        <div class="stars">
-          <span *ngFor="let s of [1,2,3,4,5]">
-            {{ s <= op.rating ? '★' : '☆' }}
-          </span>
-        </div>
-      </div>
-    </div>
+              <div class="user-info">
+                <strong>{{ op.usuario }}</strong>
+                <div class="stars">
+                  <span *ngFor="let s of [1,2,3,4,5]">
+                    {{ s <= op.rating ? '★' : '☆' }}
+                  </span>
+                </div>
+              </div>
+            </div>
 
-    <p class="opinion-text">{{ op.comentario }}</p>
-  </div>
-</section>
+            <p class="opinion-text">{{ op.comentario }}</p>
+          </div>
+        </ng-container>
 
+        <ng-template #noOpinions>
+          <p>Aún no hay opiniones para este lugar.</p>
+        </ng-template>
+
+      </section>
 
     </div>
 
     <!-- DERECHA -->
     <div class="col-der">
 
-      <section class="box">
+      <section class="box" *ngIf="l.promociones; else noPromo">
         <h4>Algunas promociones</h4>
-        <p>{{ lugar.promociones }}</p>
+        <p>{{ l.promociones }}</p>
       </section>
+
+      <ng-template #noPromo>
+        <section class="box">
+          <h4>Algunas promociones</h4>
+          <p>No hay promociones disponibles por ahora.</p>
+        </section>
+      </ng-template>
 
       <section class="box">
         <h4>Horarios</h4>
-        <ul>
-          <li *ngFor="let h of lugar.horarios">{{ h }}</li>
-        </ul>
+
+        <ng-container *ngIf="l.horarios?.length; else noHours">
+          <ul>
+            <li *ngFor="let h of l.horarios">{{ h }}</li>
+          </ul>
+        </ng-container>
+
+        <ng-template #noHours>
+          <p>No hay horarios disponibles.</p>
+        </ng-template>
       </section>
 
       <button class="btn-itinerario" (click)="agregarItinerario()">
         Agregar a itinerario
       </button>
 
+      <!-- Extra opcional: volver a la lista (si guardas townSlug/categoryKey en el detalle) -->
+      <!--
+      <a
+        *ngIf="l.townSlug && l.categoryKey"
+        [routerLink]="['/lugares', l.townSlug, l.categoryKey]"
+        class="btn-volver"
+      >
+        ← Volver a la categoría
+      </a>
+      -->
+
     </div>
 
   </div>
 </div>
+
+<ng-template #notFound>
+  <div class="detalle-container">
+    <h2>No encontramos este lugar</h2>
+    <p>Puede que el enlace esté mal o aún no exista información para este lugar.</p>
+    <br>
+    <a routerLink="/" class="btn-itinerario">Volver al inicio</a>
+  </div>
+</ng-template>
 
 <app-footer></app-footer>
