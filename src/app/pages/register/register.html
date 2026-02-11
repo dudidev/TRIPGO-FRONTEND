@@ -5,17 +5,21 @@
   </div>
 }
 
+
 @if (errorMessage) {
   <div class="toast toast-error" role="alert" aria-live="assertive">
     {{ errorMessage }}
   </div>
 }
 
+
 <div class="ppal" role="main" aria-label="Registro">
+
 
   <section class="left">
     <div class="left-content">
       <h1>Registro</h1>
+
 
       <div class="logo-circle">
         <img
@@ -26,11 +30,14 @@
     </div>
   </section>
 
+
   <aside class="right">
     <div class="carta">
       <h2>Registro</h2>
 
+
       <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)" novalidate>
+
 
         <div class="field">
           <label for="name">Nombre</label>
@@ -44,10 +51,12 @@
             #nameCtrl="ngModel"
           >
 
+
           <small *ngIf="nameCtrl.invalid && (nameCtrl.touched || registerForm.submitted)">
             El nombre es obligatorio (mínimo 2 caracteres).
           </small>
         </div>
+
 
         <div class="field">
           <label for="email">Correo electrónico</label>
@@ -61,10 +70,12 @@
             #emailCtrl="ngModel"
           >
 
+
           <small *ngIf="emailCtrl.invalid && (emailCtrl.touched || registerForm.submitted)">
             Ingresa un correo válido.
           </small>
         </div>
+
 
         <div class="field">
           <label for="password">Contraseña</label>
@@ -79,24 +90,33 @@
             #passwordCtrl="ngModel"
           >
 
+
           <small *ngIf="passwordCtrl.invalid && (passwordCtrl.touched || registerForm.submitted)">
             Debe tener mínimo 8 caracteres e incluir letras y números.
           </small>
         </div>
 
-      
+
+     
+
 
         <button class="btn btn-primary" type="submit" [disabled]="registerForm.invalid">
           Registrar
         </button>
+
 
         <p class="account">
           Ya tienes una cuenta?
           <a routerLink="/login">Iniciar sesión</a>
         </p>
 
+
       </form>
     </div>
   </aside>
 </div>
 <app-footer></app-footer>
+<<<<<<< HEAD
+=======
+
+>>>>>>> Feature-karol
