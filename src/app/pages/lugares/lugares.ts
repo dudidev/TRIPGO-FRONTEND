@@ -90,7 +90,19 @@ const LUGARES_DATA: Record<string, Record<string, LugaresData>> = {
           slug: 'Bosques De Cocora Donde Juanb',
           titulo: 'Bosques De Cocora Donde Juanb',
           img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770644269/Imagen3valle-cocora_w0ggkc.png'
-        }
+        },
+        {
+          slug: 'Tour valle del cocora',
+          titulo:'Tour valle del cocora y sus alrededores',
+          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770810931/Imagen7-valle-cocora_jaaz7z.png'
+
+        },
+        {
+          slug: 'Cabañas Valle del Cocora La Truchera',
+          titulo:'Cabañas Valle del Cocora La Truchera',
+          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770646756/imagen6valle-cocora_r8sw92.jpg'
+
+        },
       ]
     },
 
@@ -99,10 +111,11 @@ const LUGARES_DATA: Record<string, Record<string, LugaresData>> = {
       heroImgs: [
         'https://via.placeholder.com/900x500?text=Senderismo+1',],
       items: [
-        {
-          slug: 'sendero-los-pinos',
-          titulo: 'Sendero Los Pinos',
-          img: 'https://via.placeholder.com/600x400?text=Sendero+Los+Pinos'
+      {
+          slug: 'Acaime',
+          titulo:'Acaime (La Casa del Colibrí)',
+          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770645717/Converging_aeomy1.jpg'
+
         },
         {
           slug: 'sendero-los-montes',
