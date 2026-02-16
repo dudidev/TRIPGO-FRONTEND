@@ -1,0 +1,31 @@
+.navPrincipal{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--padding-m);
+    background-color: var(--primary-color);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    position: relative;    /* NECESARIO */
+    z-index: 10;           /* Para que quede por encima */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5); /* Sombra ligera */
+
+    img{
+        width: 70px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    a{
+        color: var(--bg-color);
+        text-decoration: none;
+        font-size: 1.2rem;
+        font-weight: 600;
+        transition: color 0.3s ease;
+
+        &:hover,
+        &:focus{
+            color: var(--text-color);
+        }
+    }
+}

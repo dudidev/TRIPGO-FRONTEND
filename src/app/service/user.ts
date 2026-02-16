@@ -1,62 +1,55 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+export type Role = 'usuario' | 'empresa';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class User {
 
-  // ✅ ahora devuelve boolean para saber si registró o no
-  register(user: { name: string; email: string; password: string }): boolean {
-    let users = JSON.parse(localStorage.getItem('users') || '[]');
+  private baseUrl = 'http://localhost:4000/api/auth';
 
-    const name = (user.name || '').trim();
-    const email = (user.email || '').trim().toLowerCase();
-    const password = (user.password || '').trim();
+  constructor(private http: HttpClient) {}
 
-    // 1) No permitir vacíos
-    if (!name || !email || !password) return false;
-
-    // 2) Evitar email duplicado
-    const exists = users.some((u: any) =>
-      (u.email || '').trim().toLowerCase() === email
-    );
-    if (exists) return false;
-
-    users.push({ name, email, password });
-    localStorage.setItem('users', JSON.stringify(users));
-    return true;
+  register(data: {
+    nombre_usuario: string;
+    correo_usuario: string;
+    password_u: string;
+    rol?: Role;
+  }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/register`, data);
   }
 
-  login(email: string, password: string): boolean {
-    let users = JSON.parse(localStorage.getItem('users') || '[]');
-
-    const cleanEmail = (email || '').trim().toLowerCase();
-    const cleanPassword = (password || '').trim();
-
-    // ✅ Bloqueo total: no permite login vacío
-    if (!cleanEmail || !cleanPassword) return false;
-
-    const foundUser = users.find((u: any) =>
-      (u.email || '').trim().toLowerCase() === cleanEmail &&
-      (u.password || '').trim() === cleanPassword
-    );
-
-    if (foundUser) {
-      localStorage.setItem('currentUser', JSON.stringify(foundUser));
-      return true;
-    }
-    return false;
+  login(data: {
+    correo_usuario: string;
+    password_u: string;
+  }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/login`, data);
   }
 
-  logout(): void {
-    localStorage.removeItem('currentUser');
+  logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('currentUser');
+    return !!localStorage.getItem('token');
   }
 
-  getCurrentUser(): any {
-    return JSON.parse(localStorage.getItem('currentUser') || 'null');
+  getCurrentUser() {
+    return JSON.parse(localStorage.getItem('user') || 'null');
+  }
+
+   getRole(): Role | null {
+    const user = this.getCurrentUser();
+    return user?.rol ?? null;
+  }
+
+  isEmpresa(): boolean {
+    const user = this.getCurrentUser();
+    return user?.rol === 'empresa';
   }
 }
