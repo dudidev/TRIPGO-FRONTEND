@@ -1,54 +1,122 @@
 <app-nav></app-nav>
+@if (successMessage) {
+  <div class="toast toast-success" role="status" aria-live="polite">
+    {{ successMessage }}
+  </div>
+}
+
+
+@if (errorMessage) {
+  <div class="toast toast-error" role="alert" aria-live="assertive">
+    {{ errorMessage }}
+  </div>
+}
 
 
 <div class="ppal" role="main" aria-label="Registro">
 
- <section class="left">
-  <div class="left-content">
-    
-    <h1>Registro</h1>
 
-    <div class="logo-circle">
-      <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764678577/ChatGPT_Image_12_nov_2025_17_33_14_1_hj26hs.png" alt="Logo TripGO">
+  <section class="left">
+    <div class="left-content">
+      <h1>Registro</h1>
+
+
+      <div class="logo-circle">
+        <img
+          src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764678577/ChatGPT_Image_12_nov_2025_17_33_14_1_hj26hs.png"
+          alt="Logo TripGO"
+        >
+      </div>
     </div>
-
-  </div>
-</section>
-
-  
+  </section>
 
 
   <aside class="right">
     <div class="carta">
       <h2>Registro</h2>
 
-      <form (ngSubmit)="onSubmit()">
-        <div class="field">
-          <label for="first">Nombre</label>
-          <input id="first" [(ngModel)]="name" name="first" type="text" required>
-        </div>
+
+      <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)" novalidate>
+
 
         <div class="field">
-          <label for="email">Correo electronico</label>
-          <input id="email" [(ngModel)]="email" name="email" type="email" required>
+          <label for="name">Nombre</label>
+          <input
+            id="name"
+            [(ngModel)]="name"
+            name="name"
+            type="text"
+            required
+            minlength="2"
+            #nameCtrl="ngModel"
+          >
+
+
+          <small *ngIf="nameCtrl.invalid && (nameCtrl.touched || registerForm.submitted)">
+            El nombre es obligatorio (mínimo 2 caracteres).
+          </small>
         </div>
+
+
+        <div class="field">
+          <label for="email">Correo electrónico</label>
+          <input
+            id="email"
+            [(ngModel)]="email"
+            name="email"
+            type="email"
+            required
+            email
+            #emailCtrl="ngModel"
+          >
+
+
+          <small *ngIf="emailCtrl.invalid && (emailCtrl.touched || registerForm.submitted)">
+            Ingresa un correo válido.
+          </small>
+        </div>
+
 
         <div class="field">
           <label for="password">Contraseña</label>
-          <input id="password" [(ngModel)]="password" name="password" type="password" required>
+          <input
+            id="password"
+            [(ngModel)]="password"
+            name="password"
+            type="password"
+            required
+            minlength="8"
+            pattern="(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}"
+            #passwordCtrl="ngModel"
+          >
+
+
+          <small *ngIf="passwordCtrl.invalid && (passwordCtrl.touched || registerForm.submitted)">
+            Debe tener mínimo 8 caracteres e incluir letras y números.
+          </small>
         </div>
 
-        <button class="btn btn-primary" type="submit">Registrar</button>
+
+     
+
+
+        <button class="btn btn-primary" type="submit" [disabled]="registerForm.invalid">
+          Registrar
+        </button>
 
 
         <p class="account">
           Ya tienes una cuenta?
           <a routerLink="/login">Iniciar sesión</a>
         </p>
+
+
       </form>
     </div>
   </aside>
 </div>
-
-
 <app-footer></app-footer>
+<<<<<<< HEAD
+=======
+
+>>>>>>> Feature-karol
