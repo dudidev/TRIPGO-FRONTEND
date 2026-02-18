@@ -67,10 +67,8 @@ const LUGARES_DATA: Record<string, Record<string, LugaresData>> = {
     'valle-cocora': {
       titulo: 'Valle del Cocora',
       heroImgs: [
-        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770813173/copy_of_valle_de_cocora_1_prdcas_d48bce.jpg',
-        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770812553/Cocora_Valley_Magic_-_Stunning_Cocora_Valley_Photography_isxlbg.jpg',
-        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770812553/C%C3%B3cora_valley_i9ceo0.jpg',
-        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770646756/imagen6valle-cocora_r8sw92.jpg',
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729518/cocora_3_blygia.jpg',
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765685157/salento_1-portada_zkh8fr.jpg',
       ],
       items: [
         {
@@ -120,33 +118,10 @@ const LUGARES_DATA: Record<string, Record<string, LugaresData>> = {
 
         },
         {
-          slug: 'Bosque de Las Palmas',
-          titulo: 'Bosque de Las Palmas',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770818967/Imagen1senderismo_pyiubi.png'
-        },
-        {
-          slug: 'Circuito Valle de Cocora',
-          titulo: 'Circuito Valle de Cocora',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770819268/imagen2_senderismo_tvwcio.png'
-        },
-        {
-          slug: 'Cascada Santa Rita',
-          titulo: 'Cascada Santa Rita',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770819751/Imagen3_senderismo_cyldjb.png'
-
-        },
-        {
-          slug: 'Cocora - Quebrada Càrdenas - Rio Quindio',
-          titulo: 'Cocora - Quebrada Càrdenas Rio Quindio',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770820316/Imagen4_oc0lou.png'
-
-        },
-        {
-          slug: 'Valle del Cocora - Finca La Argentina',
-          titulo: 'Valle del Cocora - Finca La Argentina',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770820605/Imagen5_senderismo_secbaj.png'
-
-        },
+          slug: 'sendero-los-montes',
+          titulo: 'Sendero Los Montes',
+          img: 'https://via.placeholder.com/600x400?text=Sendero+Los+Montes'
+        }
       ]
     },
 
