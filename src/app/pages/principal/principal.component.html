@@ -46,6 +46,39 @@
       </button>
     </form>
   </div>
+  @if (showPanel) {
+  <div class="searchOverlay" (click)="closePanel()"></div>
+
+  <div class="searchPanel" (click)="$event.stopPropagation()">
+    <div class="searchPanel__head">
+      <strong>Resultados</strong>
+      <button type="button" (click)="closePanel()">✕</button>
+    </div>
+
+    @if (results.length === 0) {
+      <p class="searchEmpty">No se encontraron resultados.</p>
+    } @else {
+      <div class="searchList">
+        @for (r of results; track r.title) {
+          <button type="button" class="searchItem" (click)="goResult(r)">
+            <img *ngIf="r.img" [src]="r.img" alt="" />
+            <div class="searchItem__text">
+            <div class="searchItem__title">
+              {{ r.title }}
+              <span class="tag" [class.tagLugar]="r.kind==='lugar'" [class.tagCat]="r.kind==='categoria'">
+                {{ r.kind }}
+              </span>
+            </div>
+            <div class="searchItem__sub">{{ r.subtitle }}</div>
+</div>
+
+          </button>
+        }
+      </div>
+    }
+  </div>
+}
+
 
   <!-- cards horizontales -->
     <!-- cards horizontales -->

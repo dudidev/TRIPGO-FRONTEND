@@ -350,8 +350,90 @@
   .home__reco{ padding: 18px 6% 30px; }
   .home__allies{ padding: 10px 6% 34px; }
 }
+.searchOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.35);
+  z-index: 999;
+}
 
+.searchPanel {
+  position: fixed;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(720px, calc(100vw - 24px));
+  max-height: 70vh;
+  overflow: auto;
+  background: #fff;
+  border-radius: 18px;
+  z-index: 1000;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  padding: 12px;
+}
 
+.searchPanel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 6px 10px;
+  border-bottom: 1px solid rgba(0,0,0,.08);
+}
 
+.searchPanel__head button {
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+}
 
+.searchList {
+  display: grid;
+  gap: 10px;
+  padding: 10px 4px;
+}
 
+.searchItem {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  text-align: left;
+  border: 1px solid rgba(0,0,0,.08);
+  background: #fff;
+  border-radius: 14px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.searchItem img {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.searchItem__title {
+  font-weight: 700;
+}
+
+.searchItem__sub {
+  opacity: .7;
+  font-size: 13px;
+}
+
+.searchEmpty {
+  padding: 14px 6px;
+  opacity: .7;
+}
+.tag{
+  margin-left: 8px;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.12);
+  opacity: .8;
+}
+
+/*.tagLugar{ }
+.tagCat{ }
+*/

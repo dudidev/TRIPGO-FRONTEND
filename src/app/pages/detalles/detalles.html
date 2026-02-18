@@ -31,7 +31,7 @@
 
       <section>
         <h3>Descripción general</h3>
-        <p>{{ l.descripcion }}</p>
+        <p class="descripcion">{{ l.descripcion }}</p>
       </section>
 
       <section>
@@ -79,6 +79,20 @@
 
     <!-- DERECHA -->
     <div class="col-der">
+        <section class="box" *ngIf="l.datosGenerales?.length; else noDatos">
+        <h4>Información relevante</h4>
+        <ul>
+          <li *ngFor="let d of l.datosGenerales">{{ d }}</li>
+        </ul>
+      </section>
+
+      <ng-template #noDatos>
+        <section class="box">
+          <h4>Información relevante</h4>
+          <p>No hay información adicional por ahora.</p>
+        </section>
+      </ng-template>
+
 
       <section class="box" *ngIf="l.promociones; else noPromo">
         <h4>Algunas promociones</h4>
@@ -131,7 +145,7 @@
     <h2>No encontramos este lugar</h2>
     <p>Puede que el enlace esté mal o aún no exista información para este lugar.</p>
     <br>
-    <a routerLink="/" class="btn-itinerario">Volver al inicio</a>
+    <a routerLink='/home' class="btn-itinerario">Volver al inicio</a>
   </div>
 </ng-template>
 

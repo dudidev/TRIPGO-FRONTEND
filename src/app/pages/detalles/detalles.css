@@ -114,6 +114,9 @@ font-size: 2em;
   align-items: center;
   margin-bottom: 10px;
 }
+.descripcion {
+  white-space: pre-line;
+}
 
 /* Avatar circular */
 .avatar {

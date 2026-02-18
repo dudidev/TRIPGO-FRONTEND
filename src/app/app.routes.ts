@@ -9,6 +9,9 @@ import { Categorias } from './pages/categorias/categorias';
 import { LugaresComponent } from './pages/lugares/lugares';
 import { Detalles } from './pages/detalles/detalles';
 import { EditarCuentaComponent } from './pages/editar-cuenta/editar-cuenta';
+import { About } from './pages/about/about'; 
+
+
 
 // ✅ Tu empresa está en: src/app/pages/empresa/empresa.ts
 import { EmpresaComponent } from './pages/empresa/empresa';
