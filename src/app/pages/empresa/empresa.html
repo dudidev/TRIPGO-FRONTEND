@@ -1,0 +1,32 @@
+<!-- <app-nav></app-nav> -->
+ <app-header></app-header>
+
+<div class="empresa-page">
+
+  <div *ngIf="loading" class="card">
+    Cargando...
+  </div>
+
+  <div *ngIf="!loading && errorMessage" class="card">
+    <p class="empty">{{ errorMessage }}</p>
+  </div>
+
+  <div *ngIf="!loading && establecimiento" class="card">
+    <h2>Panel de Empresa</h2>
+    <p><b>Nombre:</b> {{ establecimiento.nombre_establecimiento }}</p>
+    <p><b>Ubicación:</b> {{ establecimiento.ubicacion }}</p>
+    <p><b>Descripción:</b> {{ establecimiento.descripcion }}</p>
+    <p><b>Dirección:</b> {{ establecimiento.direccion }}</p>
+    <p><b>Teléfono:</b> {{ establecimiento.telefono }}</p>
+    <p><b>Horario:</b> {{ establecimiento.horario_apertura }}</p>
+
+
+
+    
+
+    <button (click)="actualizar()">Guardar cambios</button>
+  </div>
+
+</div>
+
+<app-footer></app-footer>

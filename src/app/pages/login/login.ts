@@ -12,7 +12,6 @@ import { FormsModule, NgForm } from '@angular/forms';
   styleUrl: './login.css'
 })
 export class Login {
-
   email = '';
   password = '';
   errorMessage = '';
@@ -23,29 +22,37 @@ export class Login {
   showSuccess(message: string) {
     this.successMessage = message;
     this.errorMessage = '';
-
-    setTimeout(() => {
-      this.successMessage = '';
-    }, 3000);
+    setTimeout(() => (this.successMessage = ''), 3000);
   }
 
-  onSubmit(form: NgForm) {
-    this.errorMessage = '';
+ onSubmit(form: NgForm) {
 
-    if (form.invalid) {
-      this.errorMessage = 'Completa todos los campos.';
-      return;
-    }
+  if (form.invalid) {
+    this.errorMessage = 'Completa todos los campos.';
+    return;
+  }
 
-    const success = this.userService.login(this.email, this.password);
+  this.userService.login({
+    correo_usuario: this.email,
+    password_u: this.password
+  }).subscribe({
+    next: (res) => {
 
-    if (success) {
-      this.showSuccess('Inicio de sesión exitoso');
-      setTimeout(() => {
+      // 🔐 Guardar token
+      localStorage.setItem('token', res.token);
+      localStorage.setItem('user', JSON.stringify(res.user));
+
+      if (res.user.rol === 'empresa') {
+        this.router.navigate(['/empresa']);
+      } else {
         this.router.navigate(['/principal']);
-      }, 1500);
-    } else {
+      }
+
+    },
+    error: () => {
       this.errorMessage = 'Usuario o contraseña inválidos';
     }
-  }
+  });
+}
+
 }
