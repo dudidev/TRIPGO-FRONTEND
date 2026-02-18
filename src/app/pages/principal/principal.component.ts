@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 
 import { Nav } from '../../shared/nav/nav';
 import { Footer } from '../../shared/footer/footer';
+import { SearchService, SearchResult } from '../../service/search.service';
+
 // import { Api } from '../../api'; 
 
 @Component({
@@ -21,19 +23,41 @@ import { Footer } from '../../shared/footer/footer';
   styleUrls: ['./principal.component.css']
 })
 export class PrincipalComponent implements OnInit, OnDestroy {
+  query: string = ''; 
+  results: SearchResult[] = [];
+  showPanel = false;
 
-  constructor(
-    private router: Router,
-  ) {}
+constructor(private router: Router, private search: SearchService) {}
 
-  // ==========================
-  // BUSCADOR
-  // ==========================
-  query: string = '';
-
-  onSearch() {
-    console.log('Buscando:', this.query);
+onSearch() {
+  const q = this.query.trim();
+  if (!q) {
+    this.results = [];
+    this.showPanel = false;
+    return;
   }
+
+  this.results = this.search.search(q, 12);
+  this.showPanel = true;
+}
+
+goResult(r: SearchResult) {
+  this.showPanel = false;
+  this.query = '';
+
+  if (r.kind === 'lugar') {
+    this.router.navigate(['/detalles', r.route[1] ?? r.route]); // por si quedó mal armado
+    return;
+  }
+
+  // Para categorias o itinerarios, usa la ruta que viene
+  this.router.navigate(r.route);
+}
+
+
+closePanel() {
+  this.showPanel = false;
+}
 
   goToTown(slug: string) {
     this.router.navigate(['/categorias', slug]);
@@ -77,10 +101,8 @@ export class PrincipalComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.stopHeroSlider();
   }
-
-  // ==========================
   // HERO LOGIC
-  // ==========================
+
   private startHeroSlider() {
     this.stopHeroSlider();
     if (this.heroImages.length <= 1) return;

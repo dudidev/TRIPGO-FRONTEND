@@ -9,6 +9,9 @@ import { Categorias } from './pages/categorias/categorias';
 import { LugaresComponent } from './pages/lugares/lugares';
 import { Detalles } from './pages/detalles/detalles';
 import { EditarCuentaComponent } from './pages/editar-cuenta/editar-cuenta';
+import { About } from './pages/about/about'; 
+
+
 
 
 
@@ -21,7 +24,8 @@ export const routes: Routes = [
     {path: 'categorias/:slug', component: Categorias },
 { path: 'lugares/:townSlug/:categoryKey', component: LugaresComponent },
     {path: 'detalles/:slug', component: Detalles},
-    {path: 'editar-cuenta', component: EditarCuentaComponent}
+    {path: 'editar-cuenta', component: EditarCuentaComponent},
+    {path: 'about', component: About}
 ]
 
 @NgModule({
