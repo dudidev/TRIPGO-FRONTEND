@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export type Role = 'usuario' | 'empresa';
-
 
 @Injectable({
   providedIn: 'root'
 })
 export class User {
 
-  private baseUrl = 'http://localhost:4000/api/auth';
+  // Ahora toma la URL desde environment
+  private baseUrl = `${environment.apiBaseUrl}/auth`;
 
   constructor(private http: HttpClient) {}
 
@@ -27,7 +28,15 @@ export class User {
     correo_usuario: string;
     password_u: string;
   }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login`, data);
+    return this.http.post(`${this.baseUrl}/login`, data).pipe(
+      tap((response: any) => {
+        // Guardar token y usuario cuando haga login
+        if (response?.token) {
+          localStorage.setItem('token', response.token);
+          localStorage.setItem('user', JSON.stringify(response.user));
+        }
+      })
+    );
   }
 
   logout() {
@@ -43,7 +52,7 @@ export class User {
     return JSON.parse(localStorage.getItem('user') || 'null');
   }
 
-   getRole(): Role | null {
+  getRole(): Role | null {
     const user = this.getCurrentUser();
     return user?.rol ?? null;
   }

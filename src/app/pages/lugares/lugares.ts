@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { Nav } from '../../shared/nav/nav';
 import { Footer } from '../../shared/footer/footer';
+import { Api } from '../../api';
 
 type CardItem = {
   slug: string;
@@ -11,11 +12,10 @@ type CardItem = {
   img: string;
 };
 
-
 type LugaresData = {
-  titulo: string;      
+  titulo: string;
   heroImgs: string[];
-  items: CardItem[];
+  items: CardItem[]; // se mantiene por tu data estática, pero NO lo usamos para pintar
 };
 
 const LUGARES_DATA: Record<string, Record<string, LugaresData>> = {
@@ -199,54 +199,66 @@ const LUGARES_DATA: Record<string, Record<string, LugaresData>> = {
   styleUrl: './lugares.css'
 })
 export class LugaresComponent {
-
   query = '';
 
-  
-  
   townSlug = '';
   categoryKey = '';
 
- 
   titulo = '';
   heroImgs: string[] = [];
+
   items: CardItem[] = [];
   filtered: CardItem[] = [];
 
   heroIndex = 0;
   private timerId: any = null;
 
+  loading = false;
+  errorMsg = '';
+
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private api: Api
   ) {}
 
   ngOnInit(): void {
+    console.log('✅ LugaresComponent.ngOnInit ejecutado');
+
+    // 1) Suscribirse UNA sola vez al estado global (sin recargar)
+    this.api.establecimientos$.subscribe((data: any[]) => {
+      this.items = (data ?? []).map((e: any) => ({
+        slug: String(e.id_establecimiento ?? e.id ?? 'sin-id'),
+        titulo: e.nombre_establecimiento ?? e.nombre ?? e.direccion ?? 'Sin nombre',
+        img: e.imagen ?? 'https://via.placeholder.com/600x400?text=Establecimiento'
+      }));
+
+      this.filtered = this.applySearch(this.query);
+      this.loading = false;
+    });
+
+    // 2) Cambios por ruta: actualiza hero/titulo y recarga establecimientos
     this.route.paramMap.subscribe(params => {
-     
       this.townSlug = params.get('townSlug') || '';
       this.categoryKey = params.get('categoryKey') || '';
 
       const data = LUGARES_DATA[this.townSlug]?.[this.categoryKey];
 
-     
       if (!data) {
         this.titulo = 'No hay lugares para esta categoría aún';
         this.heroImgs = [];
-        this.items = [];
-        this.filtered = [];
         this.stopHero();
-        return;
+      } else {
+        this.titulo = data.titulo;
+        this.heroImgs = data.heroImgs;
+
+        this.heroIndex = 0;
+        this.startHero();
       }
 
-      this.titulo = data.titulo;
-      this.heroImgs = data.heroImgs;
-      this.items = data.items;
-      this.filtered = [...this.items];
-
-      // reinicia slider
-      this.heroIndex = 0;
-      this.startHero();
+      // 🔥 esto trae la data del backend y dispara el subject
+      this.loading = true;
+      this.api.loadEstablecimientos();
     });
   }
 
@@ -269,13 +281,16 @@ export class LugaresComponent {
   }
 
   onSearch() {
-    const q = this.query.trim().toLowerCase();
-    this.filtered = !q
+    this.filtered = this.applySearch(this.query);
+  }
+
+  private applySearch(query: string): CardItem[] {
+    const q = (query ?? '').trim().toLowerCase();
+    return !q
       ? [...this.items]
       : this.items.filter(x => x.titulo.toLowerCase().includes(q));
   }
 
-  // NAVEGACIÓN FUNCIONAL
   openItem(item: CardItem) {
     this.router.navigate(['/detalles', item.slug]);
   }
