@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
+import { environment } from '../environments/environment';
 
 export type ApiResponse<T> = {
   ok: boolean;
@@ -8,43 +9,40 @@ export type ApiResponse<T> = {
   error?: any;
 };
 
-export type Ubicacion = {
-  id_destinos?: number;
-  nombre_ciudad: string;
-  departamento?: string;
-  descripcion?: string;
-};
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class Api {
-  private baseUrl = 'http://localhost:3000/api';
+  private baseUrl = environment.apiBaseUrl;
+
+  private establecimientosSubject = new BehaviorSubject<any[]>([]);
+  establecimientos$ = this.establecimientosSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  getUbicaciones(): Observable<Ubicacion[]> {
-    return this.http
-      .get<ApiResponse<Ubicacion[]>>(`${this.baseUrl}/ubicaciones`)
-      .pipe(map(res => res.data ?? []));
+  // GET (para refrescar estado)
+  loadEstablecimientos(): void {
+    this.http
+      .get<ApiResponse<any[]>>(`${this.baseUrl}/establecimientos`)
+      .pipe(map(res => res.data ?? []))
+      .subscribe({
+        next: (data) => this.establecimientosSubject.next(data),
+        error: () => this.establecimientosSubject.next([]),
+      });
   }
 
-  // Si luego las necesitas en Categorias/Cabalgata:
-  getTipos(): Observable<any[]> {
-    return this.http.get<ApiResponse<any[]>>(`${this.baseUrl}/tipos`).pipe(
-      map(res => res.data ?? [])
+  // POST (crear)
+  crearEstablecimiento(body: { nombre: string; direccion: string }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/establecimientos`, body).pipe(
+      tap(() => {
+        // ✅ al crear, refrescamos la lista
+        this.loadEstablecimientos();
+      })
     );
   }
 
-  getServicios(): Observable<any[]> {
-    return this.http.get<ApiResponse<any[]>>(`${this.baseUrl}/servicios`).pipe(
-      map(res => res.data ?? [])
-    );
-  }
-
+  // (Opcional) método viejo si lo tienes en otros componentes
   getEstablecimientos(): Observable<any[]> {
-    return this.http.get<ApiResponse<any[]>>(`${this.baseUrl}/establecimientos`).pipe(
-      map(res => res.data ?? [])
-    );
+    return this.http
+      .get<ApiResponse<any[]>>(`${this.baseUrl}/establecimientos`)
+      .pipe(map(res => res.data ?? []));
   }
 }

@@ -3,8 +3,9 @@ import { EstablecimientoService } from '../../services/establecimiento.service';
 import { Nav } from '../../shared/nav/nav';
 import { Footer } from '../../shared/footer/footer';
 import { Header } from '../../shared/header/header';
-
 import { CommonModule } from '@angular/common';
+
+import { Api } from '../../api';
 
 @Component({
   selector: 'app-empresa',
@@ -20,7 +21,10 @@ export class EmpresaComponent implements OnInit {
   loading = false;
   errorMessage = '';
 
-  constructor(private establecimientoService: EstablecimientoService) {}
+  constructor(
+    private establecimientoService: EstablecimientoService,
+    private api: Api
+  ) {}
 
   ngOnInit(): void {
     this.obtenerMiEstablecimiento();
@@ -34,11 +38,13 @@ export class EmpresaComponent implements OnInit {
       next: (data) => {
         this.establecimiento = data;
         this.loading = false;
+
+        // ✅ refresca la lista global para que Lugares se actualice sin recargar
+        this.api.loadEstablecimientos();
       },
       error: (err) => {
         this.loading = false;
 
-        // ✅ si el backend responde: "No tienes establecimiento asociado"
         if (err?.status === 404) {
           this.establecimiento = null;
           this.errorMessage = err?.error?.message || 'No tienes establecimiento asociado';
@@ -57,6 +63,9 @@ export class EmpresaComponent implements OnInit {
     this.establecimientoService.updateMio(this.establecimiento).subscribe({
       next: () => {
         alert('Información actualizada correctamente');
+
+        // ✅ refresca la lista global para que Lugares se actualice sin recargar
+        this.api.loadEstablecimientos();
       },
       error: (err) => {
         console.error('Error updateMio:', err);
