@@ -2,37 +2,55 @@
 
 <section class="results">
 
-  <!-- HERO SLIDER (auto, sin botones) -->
+  <!-- ================= HERO ================= -->
   <header class="results__hero">
 
-  <!-- Carrusel (imágenes apiladas con fade) -->
-  <div class="results__heroCarousel">
-    <img
-      *ngFor="let img of heroImgs; let i = index"
-      class="results__heroImg"
-      [class.active]="i === heroIndex"
-      [src]="img"
-      alt="Hero Cabalgatas"
-    />
-  </div>
+    <!-- Carrusel -->
+    <div class="results__heroCarousel">
 
-  <!-- Overlay (texto encima) -->
-  <div class="results__heroOverlay">
-    <h1 class="results__title">{{ titulo | uppercase }}</h1>
-    <p class="results__subtitle">{{ townSlug | titlecase }} • Quindío</p>
+      <!-- Si hay imágenes -->
+      <ng-container *ngIf="heroImgs?.length; else heroFallback">
+        <img
+          *ngFor="let img of heroImgs; let i = index"
+          class="results__heroImg"
+          [class.active]="i === heroIndex"
+          [src]="img"
+          alt="Hero"
+        />
+      </ng-container>
 
-  </div>
+      <!-- Fallback si no hay imágenes -->
+      <ng-template #heroFallback>
+        <img
+          class="results__heroImg active"
+          [src]="'https://via.placeholder.com/1400x500?text=' + (titulo | uppercase)"
+          alt="Hero"
+        />
+      </ng-template>
 
-</header>
+    </div>
+
+    <!-- Overlay -->
+    <div class="results__heroOverlay">
+      <h1 class="results__title">
+        {{ titulo | uppercase }}
+      </h1>
+
+      <p class="results__subtitle">
+        {{ townSlug | titlecase }} • Quindío
+      </p>
+    </div>
+
+  </header>
 
 
-  <!-- CONTENIDO (izq + sidebar flotante) -->
+  <!-- ================= PANEL ================= -->
   <div class="results__panel">
 
-    <!-- IZQUIERDA -->
+    <!-- ================= MAIN ================= -->
     <main class="results__main">
 
-      <!-- Buscador (pill) -->
+      <!-- BUSCADOR -->
       <form class="results__search" (ngSubmit)="onSearch()">
         <div class="searchPill">
           <input
@@ -41,57 +59,79 @@
             [(ngModel)]="query"
             placeholder="Encuentra el mejor lugar"
             autocomplete="off"
+            [disabled]="loading"
           />
-          <button type="submit">Buscar</button>
+          <button type="submit" [disabled]="loading">
+            Buscar
+          </button>
         </div>
       </form>
 
-      <!-- GRID -->
-      <section class="cards">
+
+      <!-- ================= ESTADOS ================= -->
+
+      <!-- Loading -->
+      <div *ngIf="loading" class="results__state">
+        Cargando establecimientos...
+      </div>
+
+      <!-- Error o vacío -->
+      <div *ngIf="!loading && errorMsg" class="results__state">
+        {{ errorMsg }}
+      </div>
+
+
+      <!-- ================= GRID ================= -->
+      <section class="cards" *ngIf="!loading && !errorMsg">
+
         <button
           class="card"
           type="button"
           *ngFor="let item of filtered"
           (click)="openItem(item)"
         >
-          <img [src]="item.img" [alt]="item.titulo">
-          <div class="card__label">{{ item.titulo }}</div>
+          <img
+            [src]="item.img"
+            [alt]="item.titulo"
+          />
+          <div class="card__label">
+            {{ item.titulo }}
+          </div>
         </button>
-      </section>
 
-      <!-- Chips -->
-      <!-- <section class="chips">
-        <span class="chip chip--title">También hay cabalgatas en:</span>
-        <button class="chip" type="button">Filandia</button>
-        <button class="chip" type="button">Circasia</button>
-        <button class="chip" type="button">Montenegro</button>
-        <button class="chip" type="button">Quimbaya</button>
-        <button class="chip" type="button">Calarcá</button>
-      </section> -->
+      </section>
 
     </main>
 
-    <!-- DERECHA (FLOTANTE) -->
+
+    <!-- ================= SIDEBAR ================= -->
     <aside class="results__side">
+
       <div class="sideCard">
         <h3>Sugerencias itinerario</h3>
         <p class="sideSub">selecciona la opción que desees</p>
 
         <div class="itinerary">
-          <button class="itineraryItem" type="button">1. Cocora + caminata corta</button>
-          <button class="itineraryItem" type="button">2. Cabalgata 1h + fotos</button>
-          <button class="itineraryItem" type="button">3. Almuerzo típico</button>
-          <button class="itineraryItem" type="button">4. Calle Real + artesanías</button>
-          <button class="itineraryItem" type="button">5. Mirador + atardecer</button>
-          <button class="itineraryItem" type="button">6. Café de especialidad</button>
-          <button class="itineraryItem" type="button">7. Cabalgata 2h (montaña)</button>
-          <button class="itineraryItem" type="button">8. Noche tranquila + postre</button>
-          <button class="itineraryItem" type="button">9. Plan relax (mañana)</button>
+          <button class="itineraryItem" type="button">
+            1. Plan clásico
+          </button>
+          <button class="itineraryItem" type="button">
+            2. Plan aventura
+          </button>
+          <button class="itineraryItem" type="button">
+            3. Plan gastronómico
+          </button>
+          <button class="itineraryItem" type="button">
+            4. Plan romántico
+          </button>
         </div>
+
       </div>
+
     </aside>
 
   </div>
+
 </section>
 
 <app-footer></app-footer>

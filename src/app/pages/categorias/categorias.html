@@ -2,28 +2,26 @@
 
 <section class="categorias">
 
-  <!-- HERO / SLIDER (AUTO) -->
+  <!-- HERO / SLIDER -->
   <div class="hero">
-  <div class="hero__split">
+    <div class="hero__split">
 
-    <!-- IZQUIERDA -->
-    <div class="hero__half">
-      <div class="hero__stack">
-        <img class="hero__img" [class.active]="showA" [src]="leftA" alt="Slide izquierda A" />
-        <img class="hero__img" [class.active]="!showA" [src]="leftB" alt="Slide izquierda B" />
+      <div class="hero__half">
+        <div class="hero__stack">
+          <img class="hero__img" [class.active]="showA" [src]="leftA" />
+          <img class="hero__img" [class.active]="!showA" [src]="leftB" />
+        </div>
       </div>
-    </div>
 
-    <!-- DERECHA -->
-    <div class="hero__half">
-      <div class="hero__stack">
-        <img class="hero__img" [class.active]="showA" [src]="rightA" alt="Slide derecha A" />
-        <img class="hero__img" [class.active]="!showA" [src]="rightB" alt="Slide derecha B" />
+      <div class="hero__half">
+        <div class="hero__stack">
+          <img class="hero__img" [class.active]="showA" [src]="rightA" />
+          <img class="hero__img" [class.active]="!showA" [src]="rightB" />
+        </div>
       </div>
-    </div>
 
+    </div>
   </div>
-</div>
 
 
   <!-- PANEL -->
@@ -31,42 +29,60 @@
 
     <!-- IZQUIERDA -->
     <div class="panel__main">
+
       <h2 class="town-title">
-        {{ data?.nombre || (slug | titlecase) }} <span class="pin"></span>
+        {{ townSlug | titlecase }} <span class="pin"></span>
       </h2>
 
+      <!-- BUSCADOR -->
+      <div class="home__searchWrap">
+        <form class="home__search" (ngSubmit)="onSearch()">
+          <input
+            type="text"
+            name="q"
+            [(ngModel)]="query"
+            placeholder="¿Qué quieres hacer hoy?"
+            class="home__searchInput"
+          />
+          <button class="home__searchBtn" type="submit">
+            Buscar
+          </button>
+        </form>
+      </div>
 
-     <!-- BUSCADOR -->
-<div class="home__searchWrap">
-  <form class="home__search" (ngSubmit)="onSearch()">
-    <input
-      type="text"
-      name="q"
-      [(ngModel)]="query"
-      placeholder="¿Qué quieres hacer hoy?"
-      class="home__searchInput"
-    />
-    <button class="home__searchBtn" type="submit">Buscar</button>
-  </form>
-</div>
 
-
-
-      <!-- CATEGORÍAS -->
+      <!-- TIPOS -->
       <div class="cats-grid">
+
+        <!-- Loading -->
+        <div *ngIf="loadingTipos" style="padding: 10px 0;">
+          Cargando tipos...
+        </div>
+
+        <!-- Empty -->
+        <div *ngIf="!loadingTipos && tipos.length === 0">
+          No hay tipos registrados para este pueblo aún.
+        </div>
+
+        <!-- Cards -->
         <button
           class="cat-card"
           type="button"
-          *ngFor="let c of data?.categorias"
-          (click)="goCategory(c.key)"
+          *ngFor="let t of tipos"
+          (click)="goTipo(t.id_tipo)"
         >
-          <img [src]="c.img" [alt]="c.label" />
-          <span>{{ c.label }}</span>
+          <img
+            [src]="'https://via.placeholder.com/600x400?text=' + (t.nombre_tipo | titlecase)"
+          />
+          <span>{{ t.nombre_tipo }}</span>
         </button>
+
       </div>
+
     </div>
 
-    <!-- DERECHA (FLOTANTE) -->
+
+    <!-- DERECHA -->
     <aside class="panel__side">
       <div class="side-card">
         <h3>Sugerencias itinerario</h3>
@@ -79,10 +95,11 @@
             *ngFor="let it of data?.itinerarios; let i = index"
             (click)="goItinerary(i)"
           >
-            <img [src]="it.img" alt="" />
+            <img [src]="it.img" />
             <span>{{ i + 1 }}. {{ it.titulo }}</span>
           </button>
         </div>
+
       </div>
     </aside>
 

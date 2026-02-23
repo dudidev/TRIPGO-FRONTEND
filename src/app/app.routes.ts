@@ -27,15 +27,17 @@ export const routes: Routes = [
 
   { path: 'principal', component: PrincipalComponent },
 
-  { path: 'categorias/:slug', component: Categorias },
-  { path: 'lugares/:townSlug/:categoryKey', component: LugaresComponent },
+  // ✅ PUEBLO → TIPOS
+  { path: 'lugares/:townSlug', component: Categorias },
+
+  // ✅ TIPOS → ESTABLECIMIENTOS
+  { path: 'lugares/:townSlug/tipo/:idTipo', component: LugaresComponent },
+
   { path: 'detalles/:slug', component: Detalles },
 
   { path: 'editar-cuenta', component: EditarCuentaComponent },
 
-  // ✅ Ruta exclusiva empresa
   { path: 'empresa', component: EmpresaComponent, canActivate: [empresaGuard] },
 
-  // ✅ comodín (opcional)
   { path: '**', redirectTo: '' },
 ];
