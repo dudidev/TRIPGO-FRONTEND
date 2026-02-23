@@ -29,6 +29,6 @@ export class Home implements AfterViewInit {
       images[index].classList.remove("active");
       index = (index + 1) % images.length;
       images[index].classList.add("active");
-    }, 1000);
+    }, 4000);
   }
 }
