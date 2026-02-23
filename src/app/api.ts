@@ -64,4 +64,22 @@ loadEstablecimientosByTownAndTipoId(townSlug: string, idTipo: number): void {
       error: () => this.establecimientosSubject.next([]),
     });
 }
+// GET todos los tipos
+getTipos(): Observable<any[]> {
+  return this.http
+    .get<ApiResponse<any[]>>(`${this.baseUrl}/tipos`)
+    .pipe(map(res => res.data ?? []));
+}
+
+// ✅ helper: obtener nombre del tipo por id (sin endpoint nuevo)
+getTipoNombreById(idTipo: number): Observable<string> {
+  return this.getTipos().pipe(
+    map((tipos: any[]) => {
+      const found = (tipos ?? []).find(t => Number(t.id_tipo) === Number(idTipo));
+      return String(found?.nombre_tipo ?? 'Tipo');
+    })
+  );
+}
+
+
 }
