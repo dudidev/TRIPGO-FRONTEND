@@ -1,0 +1,34 @@
+.mapWrap {
+  width: 100%;
+  height: 320px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #e9ecef;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+  position: relative;
+  cursor: pointer   ;
+}
+
+.mapHost {
+  width: 100%;
+  height: 100%;
+}
+/* Quitar fondo blanco feo de leaflet */
+:host ::ng-deep .leaflet-container {
+  background: #e9ecef;
+}
+:host ::ng-deep .pinMarker .pin{
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: #e27921;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.25);
+  border: 2px solid white;
+}
+
+/* Responsive */
+@media (max-width: 560px) {
+  .mapWrap {
+    height: 240px;
+  }
+}

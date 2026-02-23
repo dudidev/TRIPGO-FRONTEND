@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Nav } from '../../shared/nav/nav';
 import { Footer } from '../../shared/footer/footer';
+import { MapaComponent } from '../../shared/mapa/mapa';
 
 type Opinion = {
   usuario: string;
@@ -22,6 +23,8 @@ type LugarDetalle = {
   datosGenerales?: string[];
 
   // opcionales para navegación / breadcrumb
+    lat: number;
+  lng: number;
   townSlug?: string;
   categoryKey?: string;
 };
@@ -59,6 +62,8 @@ const DETALLES_DATA: Record<string, LugarDetalle> = {
     ],
     townSlug: 'salento',
     categoryKey: 'cabalgatas',
+    lat: 4.636726020028663,
+    lng: -75.57155783394442,
   },
 
   // Ejemplo: agrega más slugs aquí
@@ -91,6 +96,8 @@ const DETALLES_DATA: Record<string, LugarDetalle> = {
     ],
     townSlug: 'salento',
     categoryKey: 'cabalgatas',
+    lat: 4.648624532903637,
+    lng: -75.48515657977302,
   },
   'alquiler-caballos-salento': {
     slug: 'alquiler-caballos-salento',
@@ -118,9 +125,11 @@ const DETALLES_DATA: Record<string, LugarDetalle> = {
           'Me encantó la experiencia, los paisajes son hermosos, pero podrían mejorar un poco la organización. En general, ¡muy recomendable!',
         rating: 4,
       },
-    ],
+    ], 
     townSlug: 'salento',
     categoryKey: 'cabalgatas',
+    lat:   4.654863733626751,
+    lng: -75.5757018934317,
   },
   'COCORATOURS1': {
     slug: 'COCORATOURS1',
@@ -162,21 +171,16 @@ const DETALLES_DATA: Record<string, LugarDetalle> = {
     ],
     townSlug: 'salento',
     categoryKey: 'valle-cocora',
+    lat:4.6389628880699325,
+    lng: -75.56772317805938,
   },
-
-
-
-
-
-
-
 
 };
 
 @Component({
   selector: 'app-detalles',
   standalone: true,
-  imports: [Nav, CommonModule, Footer, RouterModule],
+  imports: [Nav, CommonModule, Footer, RouterModule, MapaComponent],
   templateUrl: './detalles.html',
   styleUrl: './detalles.css',
 })
