@@ -12,25 +12,6 @@ type CardItem = {
   img: string;
 };
 
-type LugaresData = {
-  titulo: string;
-  heroImgs: string[];
-  items: CardItem[];
-};
-
-const LUGARES_DATA: Record<string, Record<string, LugaresData>> = {
-  // (tu data estática igual)
-  salento: {
-    cabalgatas: { titulo: 'Cabalgatas', heroImgs: [/* ... */], items: [] },
-    'valle-cocora': { titulo: 'Valle del Cocora', heroImgs: [/* ... */], items: [] },
-    senderismo: { titulo: 'Senderismo', heroImgs: [/* ... */], items: [] },
-    miradores: { titulo: 'Miradores', heroImgs: [/* ... */], items: [] },
-  },
-  filandia: {
-    miradores: { titulo: 'Miradores', heroImgs: [/* ... */], items: [] }
-  }
-};
-
 @Component({
   selector: 'app-lugares',
   standalone: true,
@@ -42,16 +23,14 @@ export class LugaresComponent {
   query = '';
 
   townSlug = '';
-  categoryKey = '';
+  idTipo = 0;
 
-  titulo = '';
-  heroImgs: string[] = [];
+  // ✅ ahora el “título” lo puedes setear desde el tipo seleccionado (si quieres)
+  titulo = 'Establecimientos';
+  heroImgs: string[] = []; // si no usas hero dinámico, lo puedes dejar vacío
 
   items: CardItem[] = [];
   filtered: CardItem[] = [];
-
-  heroIndex = 0;
-  private timerId: any = null;
 
   loading = false;
   errorMsg = '';
@@ -65,7 +44,7 @@ export class LugaresComponent {
   ngOnInit(): void {
     console.log('✅ LugaresComponent.ngOnInit ejecutado');
 
-    // 1) Suscribirse UNA sola vez al estado global
+    // 1) Suscripción al estado global
     this.api.establecimientos$.subscribe({
       next: (data: any[]) => {
         this.items = (data ?? []).map((e: any) => ({
@@ -86,51 +65,27 @@ export class LugaresComponent {
       }
     });
 
-    // 2) Cambios por ruta: actualiza hero/titulo y trae establecimientos filtrados
+    // 2) Leer parámetros: /lugares/:townSlug/tipo/:idTipo
     this.route.paramMap.subscribe(params => {
       this.townSlug = params.get('townSlug') || '';
-      this.categoryKey = params.get('categoryKey') || '';
+      this.idTipo = Number(params.get('idTipo') || 0);
 
-      const data = LUGARES_DATA[this.townSlug]?.[this.categoryKey];
-
-      if (!data) {
-        this.titulo = 'No hay lugares para esta categoría aún';
-        this.heroImgs = [];
-        this.stopHero();
-      } else {
-        this.titulo = data.titulo;
-        this.heroImgs = data.heroImgs;
-
-        this.heroIndex = 0;
-        this.startHero();
+      if (!this.townSlug || !this.idTipo) {
+        this.items = [];
+        this.filtered = [];
+        this.loading = false;
+        this.errorMsg = 'Ruta inválida: falta townSlug o idTipo';
+        return;
       }
 
-      // ✅ CAMBIO CLAVE: NO traer todo. Traer filtrado.
+      // ✅ Traer filtrado por ubicacion + tipo(id)
       this.loading = true;
       this.errorMsg = '';
       this.items = [];
       this.filtered = [];
 
-      this.api.loadEstablecimientosByTownAndCategory(this.townSlug, this.categoryKey);
+      this.api.loadEstablecimientosByTownAndTipoId(this.townSlug, this.idTipo);
     });
-  }
-
-  ngOnDestroy(): void {
-    this.stopHero();
-  }
-
-  private stopHero() {
-    if (this.timerId) clearInterval(this.timerId);
-    this.timerId = null;
-  }
-
-  startHero() {
-    this.stopHero();
-    if (!this.heroImgs.length) return;
-
-    this.timerId = setInterval(() => {
-      this.heroIndex = (this.heroIndex + 1) % this.heroImgs.length;
-    }, 3500);
   }
 
   onSearch() {

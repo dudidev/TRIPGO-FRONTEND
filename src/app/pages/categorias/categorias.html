@@ -52,18 +52,34 @@
 
 
 
-      <!-- CATEGORÍAS -->
-      <div class="cats-grid">
-        <button
-          class="cat-card"
-          type="button"
-          *ngFor="let c of data?.categorias"
-          (click)="goCategory(c.key)"
-        >
-          <img [src]="c.img" [alt]="c.label" />
-          <span>{{ c.label }}</span>
-        </button>
-      </div>
+     <!-- TIPOS (desde BD según ubicación) -->
+<div class="cats-grid">
+
+  <!-- loading -->
+  <div *ngIf="loadingTipos" style="padding: 8px 0;">
+    Cargando tipos...
+  </div>
+
+  <!-- empty -->
+  <div *ngIf="!loadingTipos && (!tipos || tipos.length === 0)" style="padding: 8px 0;">
+    No hay tipos registrados para este pueblo aún.
+  </div>
+
+  <!-- cards -->
+  <button
+    class="cat-card"
+    type="button"
+    *ngFor="let t of tipos"
+    (click)="goTipo(t.id_tipo)"
+  >
+    <!-- Como no tienes imagen por tipo en BD, dejamos un placeholder (o puedes poner un ícono) -->
+    <img
+      [src]="'https://via.placeholder.com/600x400?text=' + (t.nombre_tipo | titlecase)"
+      [alt]="t.nombre_tipo"
+    />
+    <span>{{ t.nombre_tipo }}</span>
+  </button>
+</div>
     </div>
 
     <!-- DERECHA (FLOTANTE) -->

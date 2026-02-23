@@ -46,15 +46,18 @@ export class Api {
       .pipe(map(res => res.data ?? []));
   }
 
-  // AGREGO ESTE METODO PARA FILTRAR POR PUEBLO Y CATEGORÍA, ASÍ NO HAGO TODO EN EL COMPONENTE
-  loadEstablecimientosByTownAndCategory(townSlug: string, categoryKey: string): void {
+  getTiposByTown(townSlug: string): Observable<any[]> {
   const town = encodeURIComponent(townSlug);
-  const category = encodeURIComponent(categoryKey);
+  return this.http
+    .get<ApiResponse<any[]>>(`${this.baseUrl}/tipos/por-ubicacion/${town}`)
+    .pipe(map(res => res.data ?? []));
+}
+
+loadEstablecimientosByTownAndTipoId(townSlug: string, idTipo: number): void {
+  const town = encodeURIComponent(townSlug);
 
   this.http
-    .get<ApiResponse<any[]>>(
-      `${this.baseUrl}/establecimientos/${town}/${category}`
-    )
+    .get<ApiResponse<any[]>>(`${this.baseUrl}/establecimientos/${town}/tipo/${idTipo}`)
     .pipe(map(res => res.data ?? []))
     .subscribe({
       next: (data) => this.establecimientosSubject.next(data),
