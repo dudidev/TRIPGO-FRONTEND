@@ -45,4 +45,20 @@ export class Api {
       .get<ApiResponse<any[]>>(`${this.baseUrl}/establecimientos`)
       .pipe(map(res => res.data ?? []));
   }
+
+  // AGREGO ESTE METODO PARA FILTRAR POR PUEBLO Y CATEGORÍA, ASÍ NO HAGO TODO EN EL COMPONENTE
+  loadEstablecimientosByTownAndCategory(townSlug: string, categoryKey: string): void {
+  const town = encodeURIComponent(townSlug);
+  const category = encodeURIComponent(categoryKey);
+
+  this.http
+    .get<ApiResponse<any[]>>(
+      `${this.baseUrl}/establecimientos/${town}/${category}`
+    )
+    .pipe(map(res => res.data ?? []))
+    .subscribe({
+      next: (data) => this.establecimientosSubject.next(data),
+      error: () => this.establecimientosSubject.next([]),
+    });
+}
 }
