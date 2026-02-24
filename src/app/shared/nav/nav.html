@@ -1,28 +1,38 @@
+<!-- BARRA SUPERIOR (VERDE) -->
 <div class="navPrincipal">
-    <div class="contLogo">
-        <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764678577/ChatGPT_Image_12_nov_2025_17_33_14_1_hj26hs.png" alt="">
-        <a routerlink="/principal">TRIPGO</a>
-    </div>
-    <div class="OpLaterales">
-        <a href="">Salir</a>
-        <a routerLink="/editar-cuenta">Perfil</a>
-    </div>
+  <div class="contLogo">
+    <img
+      src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764678577/ChatGPT_Image_12_nov_2025_17_33_14_1_hj26hs.png"
+      alt="TripGo"
+    />
 
+    <a [routerLink]="isLoggedIn ? '/principal' : '/'">TRIPGO</a>
+  </div>
+
+  <div class="OpLaterales">
+    @if (!isLoggedIn) {
+      <a routerLink="/login">Iniciar sesión</a>
+      <a routerLink="/register">Registrarse</a>
+    } @else {
+      <a routerLink="/editar-cuenta">Perfil</a>
+      <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
+    }
+  </div>
 </div>
 
+<!-- BARRA INFERIOR (NARANJA) -->
 <div class="nav-bar">
-    
-    @if(!isLoggedIn){
-        <a [routerLink]="isLoggedIn ? '/principal' : '/'">Home</a>
-        <a routerLink='/contact'>Contact</a>   
-        <a routerLink="/login">Iniciar Sesión</a>
-        <a routerLink="/register">Register</a>
-    }
-    @if(isLoggedIn){
-        <a routerLink="/principal">Lugares</a>
-        <a routerLink="#">Recomendaciones</a>
-        <a routerLink="/contact">Soporte</a>
-        <a routerLink="/about">Eventos</a>
-    }
+  @if (!isLoggedIn) {
+    <!-- Estos 2 son anclas SOLO para Home (si estás en otra página, no sirven) -->
+    <a href="/#Nosotros">¿Quienes somos?</a>
+    <a href="/#comoFunciona">Como funciona</a>
 
+    <a routerLink="/prices">Algunos planes</a>
+    <a routerLink="/contact">Contact</a>
+  } @else {
+    <a routerLink="/principal">Lugares</a>
+    <a routerLink="#">Recomendaciones</a>
+    <a routerLink="/contact">Soporte</a>
+    <a routerLink="/about">Eventos</a>
+  }
 </div>
