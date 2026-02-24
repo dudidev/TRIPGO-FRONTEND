@@ -37,12 +37,14 @@
       <section>
         <h3>Ubicación</h3>
         <div class="mapa">
-          <!-- Si luego quieres hacerlo dinámico, lo pasamos a l.mapaImg o l.ubicacion -->
-          <img
-            src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1765813714/Captura_de_pantalla_2025-11-18_091322_goc4qo.png"
-            alt="Mapa"
-          />
-        </div>
+        <app-mapa
+          [lat]="l.lat"
+          [lng]="l.lng"
+          [zoom]="15"
+          [label]="l.nombre"
+          [openOnClick]="true"
+        ></app-mapa>
+      </div>
       </section>
 
       <section>
