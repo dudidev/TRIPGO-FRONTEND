@@ -10,6 +10,7 @@ import { LugaresComponent } from './pages/lugares/lugares';
 import { Detalles } from './pages/detalles/detalles';
 import { EditarCuentaComponent } from './pages/editar-cuenta/editar-cuenta';
 import { About } from './pages/about/about'; 
+import { Prices } from './pages/prices/prices';
 
 
 
@@ -33,6 +34,7 @@ export const routes: Routes = [
 
   { path: 'editar-cuenta', component: EditarCuentaComponent },
 
+  { path: 'prices', component: Prices },
   // ✅ Ruta exclusiva empresa
   { path: 'empresa', component: EmpresaComponent, canActivate: [empresaGuard] },
 

@@ -1,0 +1,123 @@
+<app-nav></app-nav>
+
+<section class="pricing">
+
+  <!-- HERO -->
+  <header class="pricing__hero">
+    <div class="pricing__heroInner">
+      <p class="pill">Planes para emprendimientos</p>
+      <h1>Haz que más viajeros encuentren tu lugar</h1>
+      <p class="subtitle">
+        Publica tu negocio en TripGo y recibe contactos reales por WhatsApp. Sin complicaciones.
+      </p>
+
+      <!-- Toggle -->
+      <div class="billingToggle" role="group" aria-label="Tipo de cobro">
+        <button
+          type="button"
+          class="toggleBtn"
+          [class.active]="billing === 'monthly'"
+          (click)="billing='monthly'"
+        >
+          Mensual
+        </button>
+
+        <button
+          type="button"
+          class="toggleBtn"
+          [class.active]="billing === 'yearly'"
+          (click)="billing='yearly'"
+        >
+          Anual <span class="save">-20%</span>
+        </button>
+      </div>
+
+      <div class="heroCtas">
+        <button class="btnPrimary" type="button" (click)="contact()">
+          Hablar con TripGo
+        </button>
+      </div>
+
+      <div class="trustRow">
+        <span> ● Sin tarjetas</span>
+        <span> ● Cancelas cuando quieras</span>
+        <span> ● Soporte humano</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- PLANES -->
+  <main class="pricing__body" id="planes">
+
+    <section class="plansGrid">
+      <article
+        class="planCard"
+        *ngFor="let p of plans"
+        [class.highlight]="p.highlighted"
+      >
+        <div class="planTop">
+          <div class="planNameRow">
+            <h3>{{ p.name }}</h3>
+            <span class="badge" *ngIf="p.badge">{{ p.badge }}</span>
+          </div>
+
+          <p class="planDesc">{{ p.description }}</p>
+
+          <div class="price">
+            <span class="currency">$</span>
+            <span class="amount">{{ getPrice(p) }}</span>
+            <span class="per">{{ billing === 'monthly' ? 'mes' : 'año' }}</span>
+          </div>
+
+          <p class="smallNote" *ngIf="billing==='yearly'">
+            Facturado anual (equivale a <strong>${{ getPrice(p) }}</strong> al mes)
+          </p>
+
+          <button class="btnPlan" type="button" (click)="contact(p.name)">
+            {{ p.cta }}
+          </button>
+        </div>
+
+        <ul class="features">
+          <li *ngFor="let f of p.features">
+            <span class="check">✓</span>
+            <span>{{ f }}</span>
+          </li>
+        </ul>
+      </article>
+    </section>
+
+    <!-- BLOQUE EXTRA -->
+    <section class="enterprise">
+      <div class="enterprise__text">
+        <h2>¿Tienes varios lugares o eres una agencia?</h2>
+        <p>
+          Podemos armar un plan a medida: múltiples sedes, categorías destacadas, campañas y soporte dedicado.
+        </p>
+      </div>
+      <a class="btnSecondary" href="/contact">Pedir plan a medida</a>
+    </section>
+
+    <!-- FAQ mini -->
+    <section class="faq">
+      <h2>Preguntas rápidas</h2>
+      <div class="faqGrid">
+        <div class="faqItem">
+          <h4>¿Qué necesito para publicar?</h4>
+          <p>Nombre, fotos, descripción y ubicación. Te ayudamos a dejarlo bonito.</p>
+        </div>
+        <div class="faqItem">
+          <h4>¿Puedo cancelar?</h4>
+          <p>Sí. Puedes pausar o cancelar cuando quieras.</p>
+        </div>
+        <div class="faqItem">
+          <h4>¿Cómo llegan los clientes?</h4>
+          <p>Te contactan directo por WhatsApp y ven tu ficha en búsquedas del destino.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</section>
+
+<app-footer></app-footer>

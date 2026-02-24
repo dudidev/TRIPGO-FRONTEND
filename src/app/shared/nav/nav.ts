@@ -9,7 +9,7 @@ import { User } from '../../service/user';
   styleUrl: './nav.css'
 })
 export class Nav {
-  constructor(private userService: User, private router: Router) { }
+  constructor(private userService: User, private router: Router) {}
 
   get isLoggedIn(): boolean {
     return this.userService.isLoggedIn();

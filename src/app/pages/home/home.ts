@@ -1,10 +1,11 @@
 import { Component, signal, AfterViewInit } from '@angular/core';
 import { Footer } from '../../shared/footer/footer';
 import { RouterLink } from '@angular/router';
+import { Nav } from '../../shared/nav/nav';
 
 @Component({
   selector: 'app-home',
-  imports: [Footer, RouterLink],
+  imports: [Footer, RouterLink, Nav],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
