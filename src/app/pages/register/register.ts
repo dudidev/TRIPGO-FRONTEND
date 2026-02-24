@@ -6,7 +6,6 @@ import { User, Role } from '../../service/user';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-
 @Component({
   selector: 'app-register',
   imports: [Nav, Footer, FormsModule, RouterLink, CommonModule],
@@ -18,14 +17,27 @@ export class Register {
   name = '';
   email = '';
   password = '';
+  confirmPassword = ''; // ✅ nuevo campo
 
   errorMessage = '';
   successMessage = '';
+
+  // ✅ UX: ojito
+  showPassword = false;
+  showConfirmPassword = false;
 
   emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
   constructor(private userService: User, private router: Router) {}
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPassword() {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
 
   showSuccess(message: string) {
     this.successMessage = message;
@@ -66,18 +78,23 @@ export class Register {
       return;
     }
 
-   const payload: {
-  nombre_usuario: string;
-  correo_usuario: string;
-  password_u: string;
-  rol: Role;
-} = {
-  nombre_usuario: this.name.trim(),
-  correo_usuario: this.email.trim().toLowerCase(),
-  password_u: this.password.trim(),
-  rol: 'usuario'
-};
+    // ✅ 4) Confirmar contraseña
+    if (this.password.trim() !== this.confirmPassword.trim()) {
+      this.showError('Las contraseñas no coinciden.');
+      return;
+    }
 
+    const payload: {
+      nombre_usuario: string;
+      correo_usuario: string;
+      password_u: string;
+      rol: Role;
+    } = {
+      nombre_usuario: this.name.trim(),
+      correo_usuario: this.email.trim().toLowerCase(),
+      password_u: this.password.trim(),
+      rol: 'usuario'
+    };
 
     this.userService.register(payload).subscribe({
       next: () => {

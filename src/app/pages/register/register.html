@@ -1,10 +1,10 @@
 <app-nav></app-nav>
+
 @if (successMessage) {
   <div class="toast toast-success" role="status" aria-live="polite">
     {{ successMessage }}
   </div>
 }
-
 
 @if (errorMessage) {
   <div class="toast toast-error" role="alert" aria-live="assertive">
@@ -12,14 +12,11 @@
   </div>
 }
 
-
 <div class="ppal" role="main" aria-label="Registro">
-
 
   <section class="left">
     <div class="left-content">
       <h1>Registro</h1>
-
 
       <div class="logo-circle">
         <img
@@ -30,14 +27,11 @@
     </div>
   </section>
 
-
   <aside class="right">
     <div class="carta">
       <h2>Registro</h2>
 
-
       <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)" novalidate>
-
 
         <div class="field">
           <label for="name">Nombre</label>
@@ -51,12 +45,10 @@
             #nameCtrl="ngModel"
           >
 
-
           <small *ngIf="nameCtrl.invalid && (nameCtrl.touched || registerForm.submitted)">
             El nombre es obligatorio (mínimo 2 caracteres).
           </small>
         </div>
-
 
         <div class="field">
           <label for="email">Correo electrónico</label>
@@ -70,49 +62,99 @@
             #emailCtrl="ngModel"
           >
 
-
           <small *ngIf="emailCtrl.invalid && (emailCtrl.touched || registerForm.submitted)">
             Ingresa un correo válido.
           </small>
         </div>
 
-
-        <div class="field">
+        <!-- ✅ Password con ojito -->
+        <div class="field password-field">
           <label for="password">Contraseña</label>
-          <input
-            id="password"
-            [(ngModel)]="password"
-            name="password"
-            type="password"
-            required
-            minlength="8"
-            pattern="(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}"
-            #passwordCtrl="ngModel"
-          >
 
+          <div class="password-wrap">
+            <input
+              id="password"
+              [(ngModel)]="password"
+              name="password"
+              [type]="showPassword ? 'text' : 'password'"
+              required
+              minlength="8"
+              pattern="(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}"
+              #passwordCtrl="ngModel"
+              autocomplete="new-password"
+            >
+
+            <button
+              type="button"
+              class="toggle-pass"
+              (click)="togglePassword()"
+              [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            >
+              {{ showPassword ? '🙈' : '👁️' }}
+            </button>
+          </div>
 
           <small *ngIf="passwordCtrl.invalid && (passwordCtrl.touched || registerForm.submitted)">
             Debe tener mínimo 8 caracteres e incluir letras y números.
           </small>
         </div>
 
+        <!-- ✅ Confirmar contraseña con ojito -->
+        <div class="field password-field">
+          <label for="confirmPassword">Confirmar contraseña</label>
 
-     
+          <div class="password-wrap">
+            <input
+              id="confirmPassword"
+              [(ngModel)]="confirmPassword"
+              name="confirmPassword"
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              required
+              minlength="8"
+              autocomplete="new-password"
+              #confirmPasswordCtrl="ngModel"
+            >
 
+            <button
+              type="button"
+              class="toggle-pass"
+              (click)="toggleConfirmPassword()"
+              [attr.aria-label]="showConfirmPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            >
+              {{ showConfirmPassword ? '🙈' : '👁️' }}
+            </button>
+          </div>
+
+          <small *ngIf="confirmPasswordCtrl.invalid && (confirmPasswordCtrl.touched || registerForm.submitted)">
+            Confirma tu contraseña.
+          </small>
+
+          <!-- ✅ Mensaje específico cuando no coinciden (solo cuando ambos tienen algo) -->
+          <small
+            class="mismatch"
+            *ngIf="
+              (passwordCtrl.touched || confirmPasswordCtrl.touched || registerForm.submitted) &&
+              password &&
+              confirmPassword &&
+              password !== confirmPassword
+            "
+          >
+            Las contraseñas no coinciden.
+          </small>
+        </div>
 
         <button class="btn btn-primary" type="submit" [disabled]="registerForm.invalid">
           Registrar
         </button>
-
 
         <p class="account">
           Ya tienes una cuenta?
           <a routerLink="/login">Iniciar sesión</a>
         </p>
 
-
       </form>
     </div>
   </aside>
 </div>
+
 <app-footer></app-footer>
