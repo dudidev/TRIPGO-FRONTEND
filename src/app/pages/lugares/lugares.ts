@@ -1,194 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { Nav } from '../../shared/nav/nav';
 import { Footer } from '../../shared/footer/footer';
 import { Api } from '../../api';
+import { Subject, takeUntil } from 'rxjs';
 
 type CardItem = {
   slug: string;
   titulo: string;
   img: string;
-};
-
-type LugaresData = {
-  titulo: string;
-  heroImgs: string[];
-  items: CardItem[]; // se mantiene por tu data estática, pero NO lo usamos para pintar
-};
-
-const LUGARES_DATA: Record<string, Record<string, LugaresData>> = {
-  salento: {
-    cabalgatas: {
-      titulo: 'Cabalgatas',
-      heroImgs: [
-        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765731482/cabalgata_portada_-_cabal_sd9xro.jpg',
-        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765731467/cabalgata_portada_2-_cabal_vkqbmf.jpg',
-        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765731481/cabalgata_portada_-_5_xfwmcd.jpg',
-        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765732072/cabalgata_portada_-_3_sysznh.jpg',
-        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765731463/cabalgata_-_portada_4_dma1bo.jpg',
-      ],
-      items: [
-        {
-          slug: 'cabalgatas-san-pablo',
-          titulo: 'Cabalgatas San Pablo',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733179/san_pablo_-_cabalgata_rio_igrhyg.jpg'
-        },
-        {
-          slug: 'caminos-y-trochas',
-          titulo: 'Cabalgatas Caminos Y Trochas',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733201/portada_-_categoria_5_t7pmpz.jpg'
-        },
-        {
-          slug: 'alquiler-caballos-salento',
-          titulo: 'Alquiler De Caballos Salento',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733119/alquiler_de_caballos_jxigjm.jpg'
-        },
-        {
-          slug: 'parque-el-secreto',
-          titulo: 'Parque El Secreto',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733591/parque_el_secreto_2_dxc2be.jpg'
-        },
-        {
-          slug: 'equitour',
-          titulo: 'Operadora Turistica Equitou',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733157/operadora_-_equiotur_iruxok.jpg'
-        },
-        {
-          slug: 'amigos-caballistas',
-          titulo: 'Amigos Caballiztas De Salento',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733124/amigos_caballiztas_wmm1yd.jpg'
-        }
-      ]
-    },
-
-   
-    'valle-cocora': {
-      titulo: 'Valle del Cocora',
-      heroImgs: [
-        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770813173/copy_of_valle_de_cocora_1_prdcas_d48bce.jpg',
-        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770812553/Cocora_Valley_Magic_-_Stunning_Cocora_Valley_Photography_isxlbg.jpg',
-        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770812553/C%C3%B3cora_valley_i9ceo0.jpg',
-        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770646756/imagen6valle-cocora_r8sw92.jpg',
-      ],
-      items: [
-        {
-          slug: 'COCORATOURS1',
-          titulo: 'CocoraTours - Excursión grupal valle del cocora',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770644290/Imagen2valle-cocora_w9b3ja.png'
-        }, 
-        {
-          slug: 'COCORATOURS2',
-          titulo: 'CocoraTours - Plan con hospedaje palmas Carbonera',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770644278/img1valle-cocora_azfhwk.png'
-        },
-        {
-          slug: 'COCORA XTREME',
-          titulo: 'Cocora Xtreme',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770644280/Imagen4valle-cocora_q54j6k.png'
-        },
-        {
-          slug: 'Bosques De Cocora Donde Juanb',
-          titulo: 'Bosques De Cocora Donde Juanb',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770644269/Imagen3valle-cocora_w0ggkc.png'
-        },
-        {
-          slug: 'Tour valle del cocora',
-          titulo:'Tour valle del cocora y sus alrededores',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770810931/Imagen7-valle-cocora_jaaz7z.png'
-
-        },
-        {
-          slug: 'Cabañas Valle del Cocora La Truchera',
-          titulo:'Cabañas Valle del Cocora La Truchera',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770646756/imagen6valle-cocora_r8sw92.jpg'
-
-        },
-      ]
-    },
-
-    "senderismo": {
-      titulo: 'Senderismo',
-      heroImgs: [
-        'https://via.placeholder.com/900x500?text=Senderismo+1',],
-      items: [
-      {
-          slug: 'Acaime',
-          titulo:'Acaime (La Casa del Colibrí)',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770645717/Converging_aeomy1.jpg'
-
-        },
-        {
-          slug: 'Bosque de Las Palmas',
-          titulo: 'Bosque de Las Palmas',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770818967/Imagen1senderismo_pyiubi.png'
-        },
-        {
-          slug: 'Circuito Valle de Cocora',
-          titulo: 'Circuito Valle de Cocora',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770819268/imagen2_senderismo_tvwcio.png'
-        },
-        {
-          slug: 'Cascada Santa Rita',
-          titulo: 'Cascada Santa Rita',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770819751/Imagen3_senderismo_cyldjb.png'
-
-        },
-        {
-          slug: 'Cocora - Quebrada Càrdenas - Rio Quindio',
-          titulo: 'Cocora - Quebrada Càrdenas Rio Quindio',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770820316/Imagen4_oc0lou.png'
-
-        },
-        {
-          slug: 'Valle del Cocora - Finca La Argentina',
-          titulo: 'Valle del Cocora - Finca La Argentina',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770820605/Imagen5_senderismo_secbaj.png'
-
-        },
-      ]
-    },
-
-    "miradores": {
-      titulo: 'Miradores',
-      heroImgs: [
-        'https://via.placeholder.com/900x500?text=Miradores+1',],
-      items: [
-        {
-          slug: 'mirador-colina-iluminada',
-          titulo: 'Mirador Colina Iluminada',
-          img: 'https://via.placeholder.com/600x400?text=Mirador+Colina+Iluminada'
-        },
-        {
-          slug: 'mirador-colina-iluminada',
-          titulo: 'Mirador Colina Iluminada',
-          img: 'https://via.placeholder.com/600x400?text=Mirador+Colina+Iluminada'
-        },
-        {
-          slug: 'mirador-colina-iluminada',
-          titulo: 'Mirador Colina Iluminada',
-          img: 'https://via.placeholder.com/600x400?text=Mirador+Colina+Iluminada'
-        }
-      ]
-  },
-},
-  filandia: {
-    miradores: {
-      titulo: 'Miradores',
-      heroImgs: [
-        'https://via.placeholder.com/900x500?text=FILANDIA+MIRADORES+1',
-        'https://via.placeholder.com/900x500?text=FILANDIA+MIRADORES+2',
-      ],
-      items: [
-        {
-          slug: 'mirador-encanto',
-          titulo: 'Mirador Encanto',
-          img: 'https://via.placeholder.com/600x400?text=Mirador+Encanto'
-        }
-      ]
-    }
-  }
 };
 
 @Component({
@@ -198,23 +20,27 @@ const LUGARES_DATA: Record<string, Record<string, LugaresData>> = {
   templateUrl: './lugares.html',
   styleUrl: './lugares.css'
 })
-export class LugaresComponent {
+export class LugaresComponent implements OnDestroy {
   query = '';
 
   townSlug = '';
-  categoryKey = '';
+  idTipo = 0;
 
-  titulo = '';
+  // ✅ título dinámico
+  titulo = 'Establecimientos';
+
+  // ✅ HERO
   heroImgs: string[] = [];
+  heroIndex = 0;
+  private heroTimerId: any = null;
 
   items: CardItem[] = [];
   filtered: CardItem[] = [];
 
-  heroIndex = 0;
-  private timerId: any = null;
-
   loading = false;
   errorMsg = '';
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
@@ -225,61 +51,132 @@ export class LugaresComponent {
   ngOnInit(): void {
     console.log('✅ LugaresComponent.ngOnInit ejecutado');
 
-    // 1) Suscribirse UNA sola vez al estado global (sin recargar)
-    this.api.establecimientos$.subscribe((data: any[]) => {
-      this.items = (data ?? []).map((e: any) => ({
-        slug: String(e.id_establecimiento ?? e.id ?? 'sin-id'),
-        titulo: e.nombre_establecimiento ?? e.nombre ?? e.direccion ?? 'Sin nombre',
-        img: e.imagen ?? 'https://via.placeholder.com/600x400?text=Establecimiento'
-      }));
+    // 1) Estado global de establecimientos
+    this.api.establecimientos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data: any[]) => {
+          this.items = (data ?? []).map((e: any) => ({
+            slug: String(e.id_establecimiento ?? e.id ?? 'sin-id'),
+            titulo: e.nombre_establecimiento ?? e.nombre ?? e.direccion ?? 'Sin nombre',
+            img: e.imagen ?? 'https://via.placeholder.com/600x400?text=Establecimiento'
+          }));
 
-      this.filtered = this.applySearch(this.query);
-      this.loading = false;
-    });
+          this.filtered = this.applySearch(this.query);
+          this.loading = false;
 
-    // 2) Cambios por ruta: actualiza hero/titulo y recarga establecimientos
-    this.route.paramMap.subscribe(params => {
-      this.townSlug = params.get('townSlug') || '';
-      this.categoryKey = params.get('categoryKey') || '';
+          if (!this.items.length) {
+            this.errorMsg = 'No hay establecimientos registrados para este tipo en este pueblo.';
+          } else {
+            this.errorMsg = '';
+          }
+        },
+        error: () => {
+          this.items = [];
+          this.filtered = [];
+          this.loading = false;
+          this.errorMsg = 'Error cargando establecimientos';
+        }
+      });
 
-      const data = LUGARES_DATA[this.townSlug]?.[this.categoryKey];
+    // 2) Leer parámetros: /lugares/:townSlug/tipo/:idTipo
+    this.route.paramMap
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(params => {
+        this.townSlug = params.get('townSlug') || '';
+        this.idTipo = Number(params.get('idTipo') || 0);
 
-      if (!data) {
-        this.titulo = 'No hay lugares para esta categoría aún';
-        this.heroImgs = [];
-        this.stopHero();
-      } else {
-        this.titulo = data.titulo;
-        this.heroImgs = data.heroImgs;
+        if (!this.townSlug || !this.idTipo) {
+          this.items = [];
+          this.filtered = [];
+          this.loading = false;
+          this.errorMsg = 'Ruta inválida: falta townSlug o idTipo';
+          return;
+        }
 
-        this.heroIndex = 0;
-        this.startHero();
-      }
+        // ✅ Reset UI
+        this.loading = true;
+        this.errorMsg = '';
+        this.items = [];
+        this.filtered = [];
+        this.query = '';
 
-      // 🔥 esto trae la data del backend y dispara el subject
-      this.loading = true;
-      this.api.loadEstablecimientos();
-    });
+        // ✅ título: traer nombre del tipo
+        this.titulo = `Establecimientos en ${this.townSlug}`;
+        this.api.getTipoNombreById(this.idTipo)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: (nombre) => {
+              this.titulo = `${nombre} en ${this.townSlug}`;
+              // opcional: puedes armar hero dinámico por tipo
+              this.setHeroByTipoNombre(nombre);
+            },
+            error: () => {
+              this.titulo = `Establecimientos en ${this.townSlug}`;
+              this.setHeroFallback();
+            }
+          });
+
+        // ✅ Cargar establecimientos filtrados
+        this.api.loadEstablecimientosByTownAndTipoId(this.townSlug, this.idTipo);
+      });
   }
 
   ngOnDestroy(): void {
     this.stopHero();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  private stopHero() {
-    if (this.timerId) clearInterval(this.timerId);
-    this.timerId = null;
+  // =========================
+  // HERO helpers
+  // =========================
+  private setHeroFallback() {
+    this.heroImgs = [];
+    this.heroIndex = 0;
+    this.stopHero();
   }
 
-  startHero() {
+  private setHeroByTipoNombre(nombre: string) {
+    // ✅ Sin quemar datos de BD: solo estética
+    const n = (nombre || '').toLowerCase();
+
+    if (n.includes('cabalg')) {
+      this.heroImgs = [
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765731482/cabalgata_portada_-_cabal_sd9xro.jpg',
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765731467/cabalgata_portada_2-_cabal_vkqbmf.jpg'
+      ];
+    } else if (n.includes('mirador')) {
+      this.heroImgs = [
+        'https://via.placeholder.com/1400x500?text=Miradores+1',
+        'https://via.placeholder.com/1400x500?text=Miradores+2'
+      ];
+    } else {
+      // default
+      this.heroImgs = [];
+    }
+
+    this.heroIndex = 0;
+    this.startHero();
+  }
+
+  private startHero() {
     this.stopHero();
     if (!this.heroImgs.length) return;
 
-    this.timerId = setInterval(() => {
+    this.heroTimerId = setInterval(() => {
       this.heroIndex = (this.heroIndex + 1) % this.heroImgs.length;
     }, 3500);
   }
 
+  private stopHero() {
+    if (this.heroTimerId) clearInterval(this.heroTimerId);
+    this.heroTimerId = null;
+  }
+
+  // =========================
+  // Search + navigation
+  // =========================
   onSearch() {
     this.filtered = this.applySearch(this.query);
   }

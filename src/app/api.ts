@@ -39,10 +39,49 @@ export class Api {
     );
   }
 
-  // (Opcional) método viejo si lo tienes en otros componentes
-  getEstablecimientos(): Observable<any[]> {
-    return this.http
-      .get<ApiResponse<any[]>>(`${this.baseUrl}/establecimientos`)
-      .pipe(map(res => res.data ?? []));
-  }
+  // GET todos los establecimientos (sin estado)
+getEstablecimientos(): Observable<any[]> {
+  return this.http
+    .get<ApiResponse<any[]>>(`${this.baseUrl}/establecimientos`)
+    .pipe(map(res => res.data ?? []));
+}
+
+// GET tipos por pueblo (OJO: este endpoint debes crearlo en backend)
+getTiposByTown(townSlug: string): Observable<any[]> {
+  const town = encodeURIComponent(townSlug);
+  return this.http
+    .get<ApiResponse<any[]>>(`${this.baseUrl}/tipos/por-ubicacion/${town}`)
+    .pipe(map(res => res.data ?? []));
+}
+
+// GET establecimientos por pueblo y tipo
+loadEstablecimientosByTownAndTipoId(townSlug: string, idTipo: number): void {
+  const town = encodeURIComponent(townSlug);
+
+  this.http
+    .get<ApiResponse<any[]>>(`${this.baseUrl}/establecimientos/${town}/tipo/${idTipo}`)
+    .pipe(map(res => res.data ?? []))
+    .subscribe({
+      next: (data) => this.establecimientosSubject.next(data),
+      error: () => this.establecimientosSubject.next([]),
+    });
+}
+// GET todos los tipos
+getTipos(): Observable<any[]> {
+  return this.http
+    .get<ApiResponse<any[]>>(`${this.baseUrl}/tipos`)
+    .pipe(map(res => res.data ?? []));
+}
+
+// ✅ helper: obtener nombre del tipo por id (sin endpoint nuevo)
+getTipoNombreById(idTipo: number): Observable<string> {
+  return this.getTipos().pipe(
+    map((tipos: any[]) => {
+      const found = (tipos ?? []).find(t => Number(t.id_tipo) === Number(idTipo));
+      return String(found?.nombre_tipo ?? 'Tipo');
+    })
+  );
+}
+
+
 }

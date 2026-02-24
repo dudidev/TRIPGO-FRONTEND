@@ -1,0 +1,335 @@
+:root{
+  --primary: #0E6973;
+  --secondary: #E27921;
+  --bg: #F8F9FA;
+  --text: #2B2D42;
+
+  --cardShadow: 0 12px 28px rgba(0,0,0,.16);
+  --softShadow: 0 8px 18px rgba(0,0,0,.12);
+  --radius: 18px;
+}
+
+.pricing{
+  background: var(--bg);
+  color: var(--text);
+  min-height: calc(100vh - 120px);
+}
+
+/* HERO */
+.pricing__hero{
+  background:
+    radial-gradient(900px 300px at 20% 10%, rgba(226,121,33,.20), transparent 60%),
+    radial-gradient(700px 240px at 80% 20%, rgba(14,105,115,.22), transparent 60%),
+    linear-gradient(180deg, #0E6973 0%, #f3fbfb 100%);
+  border-bottom: 1px solid rgba(0,0,0,.06);
+}
+
+.pricing__heroInner{
+  width: min(980px, 92%);
+  margin: 0 auto;
+  padding: 54px 0 34px;
+  text-align: center;
+}
+
+.pill{
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(14,105,115,.12);
+  color: var(--primary);
+  font-weight: 900;
+  margin-bottom: 14px;
+}
+
+.pricing__heroInner h1{
+  font-size: clamp(28px, 3.8vw, 44px);
+  line-height: 1.1;
+  margin: 0 0 10px;
+  font-weight: 900;
+}
+
+.subtitle{
+  max-width: 720px;
+  margin: 0 auto 18px;
+  font-size: 15px;
+  opacity: .9;
+}
+
+/* Toggle */
+.billingToggle{
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  background: #fff;
+  padding: 8px;
+  border-radius: 999px;
+  box-shadow: var(--softShadow);
+  border: 1px solid rgba(0,0,0,.06);
+  margin: 10px 0 18px;
+}
+
+.toggleBtn{
+  border: none;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 900;
+  background: transparent;
+  color: var(--text);
+  transition: transform .12s ease, background .12s ease;
+}
+
+.toggleBtn:hover{ transform: translateY(-1px); }
+
+.toggleBtn.active{
+  background: var(--primary);
+  color: #000000;
+}
+
+.save{
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(226,121,33,.18);
+  color: var(--secondary);
+  font-weight: 900;
+  font-size: 12px;
+}
+
+/* CTAs */
+.heroCtas{
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 6px 0 14px;
+  flex-wrap: wrap;
+}
+
+.btnPrimary, .btnSecondary, .btnPlan{
+  border: none;
+  cursor: pointer;
+  font-weight: 900;
+  border-radius: 999px;
+  padding: 12px 18px;
+  box-shadow: var(--softShadow);
+}
+
+.btnPrimary{
+  background: var(--secondary);
+  color: #fff;
+}
+
+.btnSecondary{
+  background: var(--primary);
+  color: #fff;
+}
+
+.btnGhost{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 12px 18px;
+  font-weight: 900;
+  color: var(--primary);
+  background: rgba(14,105,115,.10);
+  text-decoration: none;
+}
+
+.trustRow{
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-weight: 800;
+  opacity: .9;
+  font-size: 12px;
+}
+
+/* BODY */
+.pricing__body{
+  width: min(1100px, 92%);
+  margin: 0 auto;
+  padding: 26px 0 54px;
+}
+
+.plansGrid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.planCard{
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--cardShadow);
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,.06);
+  display: flex;
+  flex-direction: column;
+  border-radius: 10%;
+}
+
+.planCard.highlight{
+  border: 2px solid rgba(226,121,33,.65);
+  transform: translateY(-4px);
+}
+
+.planTop{
+  padding: 18px 16px 14px;
+}
+
+.planNameRow{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.planNameRow h3{
+  margin: 0;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.badge{
+  background: rgba(226,121,33,.18);
+  color: var(--secondary);
+  font-weight: 900;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+.planDesc{
+  margin: 10px 0 12px;
+  font-size: 13px;
+  opacity: .9;
+  min-height: 38px;
+}
+
+.price{
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.currency{ font-weight: 900; color: var(--text); opacity: .75; }
+.amount{ font-size: 40px; font-weight: 900; letter-spacing: -1px; }
+.per{ font-weight: 900; opacity: .75; }
+
+.smallNote{
+  font-size: 12px;
+  opacity: .85;
+  margin: 0 0 12px;
+}
+
+.btnPlan{
+  width: 100%;
+  background: var(--primary);
+  color: #fff;
+}
+
+.planCard.highlight .btnPlan{
+  background: var(--secondary);
+}
+
+.features{
+  list-style: none;
+  margin: 0;
+  padding: 14px 16px 18px;
+  border-top: 1px solid rgba(0,0,0,.06);
+  display: grid;
+  gap: 10px;
+}
+
+.features li{
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 10px;
+  align-items: start;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.check{
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  display: inline-grid;
+  place-items: center;
+  background: rgba(14,105,115,.14);
+  color: var(--primary);
+  font-weight: 900;
+}
+
+/* ENTERPRISE */
+.enterprise{
+  margin-top: 18px;
+  background: linear-gradient( rgba(14,105,115,10), rgba(226,121,33,10));
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 10px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: var(--softShadow);
+}
+
+.enterprise__text h2{
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 900;
+}
+.enterprise__text p{
+  margin: 0;
+  opacity: .9;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* FAQ */
+.faq{
+  margin-top: 26px;
+}
+.faq h2{
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 900;
+}
+.faqGrid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.faqItem{
+  background: #fff;
+  border-radius: 10px;
+  padding: 14px 14px 16px;
+  box-shadow: var(--softShadow);
+  border: 1px solid rgba(0,0,0,.06);
+}
+.faqItem h4{
+  margin: 0 0 6px;
+  font-weight: 900;
+}
+.faqItem p{
+  margin: 0;
+  font-size: 13px;
+  opacity: .9;
+  font-weight: 700;
+}
+
+/* RESPONSIVE */
+@media (max-width: 980px){
+  .plansGrid{ grid-template-columns: 1fr; }
+  .faqGrid{ grid-template-columns: 1fr; }
+  .enterprise{ flex-direction: column; align-items: stretch; }
+  .planCard.highlight{ transform: none; }
+}

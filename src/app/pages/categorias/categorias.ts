@@ -6,6 +6,12 @@ import { Nav } from '../../shared/nav/nav';
 import { Footer } from '../../shared/footer/footer';
 import { SearchService, SearchResult } from '../../service/search.service';
 import { CATEGORIAS_DATA, CategoriaData } from '../../data/categorias.data';
+import { Api } from '../../api';
+
+type TipoItem = {
+  id_tipo: number;
+  nombre_tipo: string;
+};
 
 @Component({
   selector: 'app-categorias',
@@ -15,11 +21,19 @@ import { CATEGORIAS_DATA, CategoriaData } from '../../data/categorias.data';
   styleUrls: ['./categorias.css']
 })
 export class Categorias implements OnInit, OnDestroy {
-  slug = '';
+  //  ahora el slug viene como townSlug
+  townSlug = '';
+
   query = '';
   results: SearchResult[] = [];
   showPanel = false;
+
+  //  seguimos usando data estática SOLO para slider/itinerarios del pueblo
   data?: CategoriaData;
+
+  //  tipos dinámicos del backend
+  tipos: TipoItem[] = [];
+  loadingTipos = false;
 
   private timerId: any = null;
   private slideIndex = 0;
@@ -33,14 +47,17 @@ export class Categorias implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private search: SearchService
+    private search: SearchService,
+    private api: Api
   ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      this.slug = params.get('slug') || '';
-      this.data = CATEGORIAS_DATA[this.slug] ?? {
-        nombre: this.slug || 'Destino',
+      this.townSlug = params.get('townSlug') || '';
+
+      //  data estática (solo estética: slider/itinerarios)
+      this.data = CATEGORIAS_DATA[this.townSlug] ?? {
+        nombre: this.townSlug || 'Destino',
         sliderImgs: [],
         categorias: [],
         itinerarios: []
@@ -48,11 +65,37 @@ export class Categorias implements OnInit, OnDestroy {
 
       this.ensureFallbacks();
       this.startAutoSlider();
+
+      //  cargar tipos reales del backend (lo importante)
+      this.cargarTipos();
     });
   }
 
   ngOnDestroy(): void {
     this.stopAutoSlider();
+  }
+
+  private cargarTipos() {
+    if (!this.townSlug) {
+      this.tipos = [];
+      return;
+    }
+
+    this.loadingTipos = true;
+    this.api.getTiposByTown(this.townSlug).subscribe({
+      next: (data: any[]) => {
+        // backend devuelve: [{ id_tipo, nombre_tipo }]
+        this.tipos = (data ?? []).map(x => ({
+          id_tipo: Number(x.id_tipo),
+          nombre_tipo: String(x.nombre_tipo ?? '')
+        }));
+        this.loadingTipos = false;
+      },
+      error: () => {
+        this.tipos = [];
+        this.loadingTipos = false;
+      }
+    });
   }
 
   private ensureFallbacks() {
@@ -106,20 +149,21 @@ export class Categorias implements OnInit, OnDestroy {
   }
 
   onSearch() {
-  const q = this.query.trim();
-  if (!q) {
-    this.results = [];
-    this.showPanel = false;
-    return;
+    const q = this.query.trim();
+    if (!q) {
+      this.results = [];
+      this.showPanel = false;
+      return;
+    }
+
+    // ✅ busca dentro del pueblo actual
+    this.results = this.search.search(q, 12, { townSlug: this.townSlug });
+    this.showPanel = true;
   }
 
-  // ✅ SOLO busca dentro del pueblo actual (slug)
-  this.results = this.search.search(q, 12, { townSlug: this.slug });
-  this.showPanel = true;
-  }
   goResult(r: SearchResult) {
-  this.showPanel = false;
-  this.query = '';
+    this.showPanel = false;
+    this.query = '';
 
     if (r.kind === 'lugar') {
       this.router.navigate(['/detalles', r.route[1] ?? r.route]);
@@ -133,13 +177,14 @@ export class Categorias implements OnInit, OnDestroy {
     this.showPanel = false;
   }
 
-
-  goCategory(catKey: string) {
-    this.router.navigate(['/lugares', this.slug, catKey]);
+  
+  // ✅ ahora: entrar a un TIPO real por id
+  goTipo(idTipo: number) {
+    this.router.navigate(['/lugares', this.townSlug, 'tipo', idTipo]);
   }
 
   goItinerary(index: number) {
     const it = this.data?.itinerarios?.[index];
-    console.log('Click itinerario:', index + 1, it?.titulo, 'en', this.slug);
+    console.log('Click itinerario:', index + 1, it?.titulo, 'en', this.townSlug);
   }
 }

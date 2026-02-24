@@ -225,3 +225,11 @@ font-size: 2em;
     position: static;
   }
 }
+.mapa{
+  margin-top: 10px;
+}
+
+/* si quieres que el mapa se vea como tarjeta */
+.mapa app-mapa{
+  display: block;
+}

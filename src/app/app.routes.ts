@@ -10,6 +10,7 @@ import { LugaresComponent } from './pages/lugares/lugares';
 import { Detalles } from './pages/detalles/detalles';
 import { EditarCuentaComponent } from './pages/editar-cuenta/editar-cuenta';
 import { About } from './pages/about/about'; 
+import { Prices } from './pages/prices/prices';
 
 
 
@@ -27,15 +28,17 @@ export const routes: Routes = [
 
   { path: 'principal', component: PrincipalComponent },
 
-  { path: 'categorias/:slug', component: Categorias },
-  { path: 'lugares/:townSlug/:categoryKey', component: LugaresComponent },
+  // ✅ PUEBLO → TIPOS
+  { path: 'lugares/:townSlug', component: Categorias },
+
+  // ✅ TIPOS → ESTABLECIMIENTOS
+  { path: 'lugares/:townSlug/tipo/:idTipo', component: LugaresComponent },
+
   { path: 'detalles/:slug', component: Detalles },
 
   { path: 'editar-cuenta', component: EditarCuentaComponent },
 
-  // ✅ Ruta exclusiva empresa
   { path: 'empresa', component: EmpresaComponent, canActivate: [empresaGuard] },
 
-  // ✅ comodín (opcional)
   { path: '**', redirectTo: '' },
 ];
