@@ -26,10 +26,13 @@ export class LugaresComponent implements OnDestroy {
   townSlug = '';
   idTipo = 0;
 
-  tipoNombre = ''; // ✅ para pintar título real
-
+  // ✅ título dinámico
   titulo = 'Establecimientos';
+
+  // ✅ HERO
   heroImgs: string[] = [];
+  heroIndex = 0;
+  private heroTimerId: any = null;
 
   items: CardItem[] = [];
   filtered: CardItem[] = [];
@@ -48,7 +51,7 @@ export class LugaresComponent implements OnDestroy {
   ngOnInit(): void {
     console.log('✅ LugaresComponent.ngOnInit ejecutado');
 
-    // 1) Suscripción al estado global (evita duplicados con takeUntil)
+    // 1) Estado global de establecimientos
     this.api.establecimientos$
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -91,39 +94,89 @@ export class LugaresComponent implements OnDestroy {
           return;
         }
 
-        // ✅ setear título (tipo + pueblo)
-        this.tipoNombre = '';
-        this.titulo = `Establecimientos en ${this.townSlug}`;
-
-        // Traer el nombre del tipo desde /tipos (para mostrarlo bonito)
-        this.api.getTipoNombreById(this.idTipo)
-          .pipe(takeUntil(this.destroy$))
-          .subscribe({
-            next: (nombre) => {
-              this.tipoNombre = nombre;
-              this.titulo = `${nombre} en ${this.townSlug}`;
-            },
-            error: () => {
-              // si falla, al menos dejamos un título genérico
-              this.tipoNombre = '';
-            }
-          });
-
-        // ✅ Traer filtrado por ubicacion + tipo(id)
+        // ✅ Reset UI
         this.loading = true;
         this.errorMsg = '';
         this.items = [];
         this.filtered = [];
+        this.query = '';
 
+        // ✅ título: traer nombre del tipo
+        this.titulo = `Establecimientos en ${this.townSlug}`;
+        this.api.getTipoNombreById(this.idTipo)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: (nombre) => {
+              this.titulo = `${nombre} en ${this.townSlug}`;
+              // opcional: puedes armar hero dinámico por tipo
+              this.setHeroByTipoNombre(nombre);
+            },
+            error: () => {
+              this.titulo = `Establecimientos en ${this.townSlug}`;
+              this.setHeroFallback();
+            }
+          });
+
+        // ✅ Cargar establecimientos filtrados
         this.api.loadEstablecimientosByTownAndTipoId(this.townSlug, this.idTipo);
       });
   }
 
   ngOnDestroy(): void {
+    this.stopHero();
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  // =========================
+  // HERO helpers
+  // =========================
+  private setHeroFallback() {
+    this.heroImgs = [];
+    this.heroIndex = 0;
+    this.stopHero();
+  }
+
+  private setHeroByTipoNombre(nombre: string) {
+    // ✅ Sin quemar datos de BD: solo estética
+    const n = (nombre || '').toLowerCase();
+
+    if (n.includes('cabalg')) {
+      this.heroImgs = [
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765731482/cabalgata_portada_-_cabal_sd9xro.jpg',
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765731467/cabalgata_portada_2-_cabal_vkqbmf.jpg'
+      ];
+    } else if (n.includes('mirador')) {
+      this.heroImgs = [
+        'https://via.placeholder.com/1400x500?text=Miradores+1',
+        'https://via.placeholder.com/1400x500?text=Miradores+2'
+      ];
+    } else {
+      // default
+      this.heroImgs = [];
+    }
+
+    this.heroIndex = 0;
+    this.startHero();
+  }
+
+  private startHero() {
+    this.stopHero();
+    if (!this.heroImgs.length) return;
+
+    this.heroTimerId = setInterval(() => {
+      this.heroIndex = (this.heroIndex + 1) % this.heroImgs.length;
+    }, 3500);
+  }
+
+  private stopHero() {
+    if (this.heroTimerId) clearInterval(this.heroTimerId);
+    this.heroTimerId = null;
+  }
+
+  // =========================
+  // Search + navigation
+  // =========================
   onSearch() {
     this.filtered = this.applySearch(this.query);
   }

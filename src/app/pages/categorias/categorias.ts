@@ -21,17 +21,17 @@ type TipoItem = {
   styleUrls: ['./categorias.css']
 })
 export class Categorias implements OnInit, OnDestroy {
-  // ✅ ahora el slug viene como townSlug
+  //  ahora el slug viene como townSlug
   townSlug = '';
 
   query = '';
   results: SearchResult[] = [];
   showPanel = false;
 
-  // ✅ seguimos usando data estática SOLO para slider/itinerarios del pueblo
+  //  seguimos usando data estática SOLO para slider/itinerarios del pueblo
   data?: CategoriaData;
 
-  // ✅ tipos dinámicos del backend
+  //  tipos dinámicos del backend
   tipos: TipoItem[] = [];
   loadingTipos = false;
 
@@ -55,7 +55,7 @@ export class Categorias implements OnInit, OnDestroy {
     this.route.paramMap.subscribe(params => {
       this.townSlug = params.get('townSlug') || '';
 
-      // ✅ data estática (solo estética: slider/itinerarios)
+      //  data estática (solo estética: slider/itinerarios)
       this.data = CATEGORIAS_DATA[this.townSlug] ?? {
         nombre: this.townSlug || 'Destino',
         sliderImgs: [],
@@ -66,7 +66,7 @@ export class Categorias implements OnInit, OnDestroy {
       this.ensureFallbacks();
       this.startAutoSlider();
 
-      // ✅ cargar tipos reales del backend (lo importante)
+      //  cargar tipos reales del backend (lo importante)
       this.cargarTipos();
     });
   }
@@ -177,7 +177,7 @@ export class Categorias implements OnInit, OnDestroy {
     this.showPanel = false;
   }
 
-  // ✅ antes era goCategory(catKey)
+  
   // ✅ ahora: entrar a un TIPO real por id
   goTipo(idTipo: number) {
     this.router.navigate(['/lugares', this.townSlug, 'tipo', idTipo]);

@@ -60,7 +60,7 @@ closePanel() {
 }
 
   goToTown(slug: string) {
-    this.router.navigate(['/categorias', slug]);
+    this.router.navigate(['/lugares', slug]);
   }
 
   // ==========================
