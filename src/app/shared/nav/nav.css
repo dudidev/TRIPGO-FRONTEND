@@ -87,3 +87,135 @@
     transform: scale(0.95);
     transition: transform 0.1s ease;
 }
+.btnBurger{
+  display: none; /* por ahora lo dejamos oculto, en el paso 2 lo mostramos en móvil */
+  border: none;
+  background: transparent;
+  color: var(--bg-color);
+  font-size: 28px;
+  cursor: pointer;
+  padding: 6px 10px;
+}
+
+.mobileMenuBackdrop{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 999;
+}
+
+.mobileMenu{
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: min(82vw, 320px);
+  background: #fff;
+  z-index: 1000;
+  padding: 16px;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mobileMenu a{
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 800;
+  padding: 10px 12px;
+  border-radius: 10px;
+}
+
+.mobileMenu a:hover{
+  background: rgba(14,105,115,0.10);
+}
+/* ====== HAMBURGER BUTTON ====== */
+.hamburgerBtn{
+  display: none; /* desktop no */
+  border: none;
+  background: transparent;
+  color: var(--bg-color);
+  font-size: 28px;
+  font-weight: 900;
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+
+/* ====== OVERLAY + SIDE MENU ====== */
+.menuOverlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 999;
+}
+
+.sideMenu{
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(320px, 85vw);
+  height: 100vh;
+  background: #ffffff;
+  z-index: 1000;
+  box-shadow: -12px 0 24px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+}
+
+.sideMenu__top{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 2px solid rgba(0,0,0,0.08);
+}
+
+.sideMenu__title{
+  font-weight: 900;
+  color: var(--primary-color);
+  font-size: 16px;
+}
+
+.sideMenu__close{
+  border: none;
+  background: rgba(0,0,0,0.06);
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 8px 10px;
+  font-size: 16px;
+}
+
+/* links */
+.sideMenu__links{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 12px;
+}
+
+.sideMenu__links a{
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 800;
+  padding: 12px 12px;
+  border-radius: 10px;
+  background: rgba(14,105,115,0.08);
+}
+
+/* hover suave (no agresivo) */
+.sideMenu__links a:hover{
+  background: rgba(14,105,115,0.14);
+}
+
+/* ====== MOBILE RULES (aquí evitamos el doble menú) ====== */
+@media (max-width: 768px){
+  .hamburgerBtn{ display: inline-flex; }
+
+  /* escondemos tu nav-bar naranja y opLaterales en móvil */
+  .nav-bar{ display: none; }
+  .OpLaterales{ display: none; }
+}
+/* ====== MOBILE ====== */
