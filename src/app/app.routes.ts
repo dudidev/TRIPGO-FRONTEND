@@ -34,9 +34,10 @@ export const routes: Routes = [
 
   { path: 'editar-cuenta', component: EditarCuentaComponent },
 
-  { path: 'prices', component: Prices },
   // ✅ Ruta exclusiva empresa
   { path: 'empresa', component: EmpresaComponent, canActivate: [empresaGuard] },
+  {path: 'about', component: About},
+  {path: 'prices', component: Prices},
 
   // ✅ comodín (opcional)
   { path: '**', redirectTo: '' },
