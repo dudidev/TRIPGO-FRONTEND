@@ -1,6 +1,12 @@
 <app-nav></app-nav>
 
-<div class="detalle-container" *ngIf="lugar as l; else notFound">
+<!-- LOADING -->
+<div class="detalle-container" *ngIf="loading">
+  <h2>Cargando...</h2>
+  <p>Estamos trayendo la información del lugar.</p>
+</div>
+
+<div class="detalle-container" *ngIf="!loading && lugar as l; else notFound">
 
   <h1>{{ l.nombre }}</h1>
   <p class="direccion">📍 {{ l.direccion }}</p>
@@ -36,15 +42,21 @@
 
       <section>
         <h3>Ubicación</h3>
-        <div class="mapa">
-        <app-mapa
-          [lat]="l.lat"
-          [lng]="l.lng"
-          [zoom]="15"
-          [label]="l.nombre"
-          [openOnClick]="true"
-        ></app-mapa>
-      </div>
+
+        <!-- ✅ Solo mostramos el mapa si hay lat/lng -->
+        <div class="mapa" *ngIf="l.lat != null && l.lng != null; else noUbicacion">
+          <app-mapa
+            [lat]="l.lat"
+            [lng]="l.lng"
+            [zoom]="15"
+            [label]="l.nombre"
+            [openOnClick]="true"
+          ></app-mapa>
+        </div>
+
+        <ng-template #noUbicacion>
+          <p>Ubicación no disponible por ahora.</p>
+        </ng-template>
       </section>
 
       <section>
@@ -81,7 +93,7 @@
 
     <!-- DERECHA -->
     <div class="col-der">
-        <section class="box" *ngIf="l.datosGenerales?.length; else noDatos">
+      <section class="box" *ngIf="l.datosGenerales?.length; else noDatos">
         <h4>Información relevante</h4>
         <ul>
           <li *ngFor="let d of l.datosGenerales">{{ d }}</li>
@@ -94,7 +106,6 @@
           <p>No hay información adicional por ahora.</p>
         </section>
       </ng-template>
-
 
       <section class="box" *ngIf="l.promociones; else noPromo">
         <h4>Algunas promociones</h4>
@@ -126,17 +137,6 @@
         Agregar a itinerario
       </button>
 
-      <!-- Extra opcional: volver a la lista (si guardas townSlug/categoryKey en el detalle) -->
-      <!--
-      <a
-        *ngIf="l.townSlug && l.categoryKey"
-        [routerLink]="['/lugares', l.townSlug, l.categoryKey]"
-        class="btn-volver"
-      >
-        ← Volver a la categoría
-      </a>
-      -->
-
     </div>
 
   </div>
@@ -145,7 +145,13 @@
 <ng-template #notFound>
   <div class="detalle-container">
     <h2>No encontramos este lugar</h2>
-    <p>Puede que el enlace esté mal o aún no exista información para este lugar.</p>
+
+    <!-- ✅ Si viene un mensaje de error, lo mostramos -->
+    <p *ngIf="errorMsg; else defaultNotFound">{{ errorMsg }}</p>
+    <ng-template #defaultNotFound>
+      <p>Puede que el enlace esté mal o aún no exista información para este lugar.</p>
+    </ng-template>
+
     <br>
     <a routerLink='/home' class="btn-itinerario">Volver al inicio</a>
   </div>
