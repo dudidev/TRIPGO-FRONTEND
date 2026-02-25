@@ -7,6 +7,7 @@ import { Footer } from '../../shared/footer/footer';
 import { SearchService, SearchResult } from '../../service/search.service';
 import { CATEGORIAS_DATA, CategoriaData } from '../../data/categorias.data';
 import { Api } from '../../api';
+import { portadaTipo } from '../../shared/tipos-portada';
 
 type TipoItem = {
   id_tipo: number;
@@ -21,6 +22,9 @@ type TipoItem = {
   styleUrls: ['./categorias.css']
 })
 export class Categorias implements OnInit, OnDestroy {
+
+
+  portadaTipo = portadaTipo;
   //  ahora el slug viene como townSlug
   townSlug = '';
 

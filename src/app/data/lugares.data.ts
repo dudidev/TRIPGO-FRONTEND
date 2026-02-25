@@ -23,9 +23,9 @@ export const LUGARES_DATA: Record<string, Record<string, LugaresData>> = {
       ],
       items: [
         {
-          slug: 'cabalgatas-san-pablo',
-          titulo: 'Cabalgatas San Pablo',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733179/san_pablo_-_cabalgata_rio_igrhyg.jpg'
+          slug: '5',
+          titulo: 'Hotel Camino Real Salento',
+          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729515/calle_real_-_categoria_hudaar.jpg'
         },
         {
           slug: 'caminos-y-trochas',
@@ -51,7 +51,8 @@ export const LUGARES_DATA: Record<string, Record<string, LugaresData>> = {
           slug: 'amigos-caballistas',
           titulo: 'Amigos Caballiztas De Salento',
           img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733124/amigos_caballiztas_wmm1yd.jpg'
-        }
+        },
+        
       ]
     },
 
@@ -64,60 +65,91 @@ export const LUGARES_DATA: Record<string, Record<string, LugaresData>> = {
       ],
       items: [
         {
-          slug: 'COCORATOURS1',
+          slug: '6',
           titulo: 'CocoraTours - Excursión grupal valle del cocora',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770644290/Imagen2valle-cocora_w9b3ja.png'
-        }, 
-        {
-          slug: 'COCORATOURS2',
-          titulo: 'CocoraTours - Plan con hospedaje palmas Carbonera',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770644278/img1valle-cocora_azfhwk.png'
-        },
-        {
-          slug: 'COCORA XTREME',
-          titulo: 'Cocora Xtreme',
           img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770644280/Imagen4valle-cocora_q54j6k.png'
+        }, 
+
+        
+        {
+          slug: '4',
+          titulo: 'Tour Valle del Cocora',
+          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770644290/Imagen2valle-cocora_w9b3ja.png'
         },
         {
-          slug: 'Bosques De Cocora Donde Juanb',
-          titulo: 'Bosques De Cocora Donde Juanb',
+          slug: '11',
+          titulo: 'Tour Valle del Cocora y sus alrededores',
+          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765732072/cabalgata_portada_-_3_sysznh.jpg'
+        },
+        {
+          slug: '7',
+          titulo: 'CocoraTours - Plan Hospedaje Santuario de Palmas',
           img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770644269/Imagen3valle-cocora_w0ggkc.png'
-        }
+        },
+        {
+          slug: '5',
+          titulo: 'Hotel Camino Real Salento',
+          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729515/calle_real_-_categoria_hudaar.jpg'
+        },
+        
       ]
     },
 
-    "senderismo": {
-      titulo: 'Senderismo',
+    "hotel": {
+      titulo: 'Hoteles',
       heroImgs: [
-        'https://via.placeholder.com/900x500?text=Senderismo+1',],
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1771997447/hotel_calle_real_bcugsw.jpg',
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1771997562/hotel_calle_real_2_fjwhdl.jpg'
+      ],
       items: [
         {
-          slug: 'sendero-los-pinos',
-          titulo: 'Sendero Los Pinos',
-          img: 'https://via.placeholder.com/600x400?text=Sendero+Los+Pinos'
+          slug: '5',
+          titulo: 'Hotel Camino Real Salento',
+          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729515/calle_real_-_categoria_hudaar.jpg'
         },
-        {
-          slug: 'sendero-los-montes',
-          titulo: 'Sendero Los Montes',
-          img: 'https://via.placeholder.com/600x400?text=Sendero+Los+Montes'
-        }
+        
       ]
     },
 
-    "miradores": {
+    "mirador": {
       titulo: 'Miradores',
       heroImgs: [
-        'https://via.placeholder.com/900x500?text=Miradores+1',],
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770812553/Cocora_Valley_Magic_-_Stunning_Cocora_Valley_Photography_isxlbg.jpg',
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770812553/C%C3%B3cora_valley_i9ceo0.jpg'],
       items: [
         {
-          slug: 'mirador-colina-iluminada',
-          titulo: 'Mirador Colina Iluminada',
-          img: 'https://via.placeholder.com/600x400?text=Mirador+Colina+Iluminada'
+          slug: '12',
+          titulo: 'Mirador Alto de la Cruz',
+          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1771997990/mirador_alto_de_la_cruz_vl62jj.jpg'
+        },
+        {
+          slug: '13',
+          titulo: 'Mirador Las Manos de Dios',
+          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765723552/cocora_bcq0nv.jpg'
         },
         {
           slug: 'mirador-colina-iluminada',
           titulo: 'Mirador Colina Iluminada',
           img: 'https://via.placeholder.com/600x400?text=Mirador+Colina+Iluminada'
+        }
+      ]
+  },
+
+   "senderismo": {
+      titulo: 'Senderismo',
+      heroImgs: [
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770818967/Imagen1senderismo_pyiubi.png',
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770819751/Imagen3_senderismo_cyldjb.png'],
+      items: [
+        {
+          slug: '10',
+          titulo: 'Senderismo Valle del Cocora - Acaime',
+          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770819751/Imagen3_senderismo_cyldjb.png'
+        },
+        {
+          slug: '13',
+          titulo: 'Mirador Las Manos de Dios',
+          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765723552/cocora_bcq0nv.jpg'
         },
         {
           slug: 'mirador-colina-iluminada',
@@ -143,4 +175,8 @@ export const LUGARES_DATA: Record<string, Record<string, LugaresData>> = {
       ]
     }
   }
+
+
+
+
 };

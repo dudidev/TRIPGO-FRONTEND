@@ -52,10 +52,11 @@ export const CATEGORIAS_DATA: Record<string, CategoriaData> = {
   filandia: {
     nombre: 'Filandia',
     sliderImgs: [
-      'https://via.placeholder.com/900x500?text=FILANDIA+1',
-      'https://via.placeholder.com/900x500?text=FILANDIA+2',
-      'https://via.placeholder.com/900x500?text=FILANDIA+3',
-      'https://via.placeholder.com/900x500?text=FILANDIA+4'
+      'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722321/filandia_portada_-_carrucel_yvkncf.jpg',
+      'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765685143/filandia_1-portada_tu13tg.jpg',
+      'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765685143/gastronomia_3-_portada_pdxw7k.jpg',
+      'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765685143/gastronomia_2-portada_e7tr5m.jpg',
+      'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729528/portada_-_categoria_3_sl5x04.jpg'
     ],
     categorias: [
       { key: 'miradores', label: 'Miradores', img: 'https://via.placeholder.com/600x400?text=MIRADORES' },
@@ -68,10 +69,10 @@ export const CATEGORIAS_DATA: Record<string, CategoriaData> = {
 
     ],
     itinerarios: [
-      { titulo: 'Ruta cultural', img: 'https://via.placeholder.com/80?text=1' },
-      { titulo: 'Mirador + fotografía', img: 'https://via.placeholder.com/80?text=2' },
-      { titulo: 'Plan cafetero', img: 'https://via.placeholder.com/80?text=3' },
-      { titulo: 'Plan relax: cafés y fotos', img: 'https://via.placeholder.com/80?text=4' },
+      { titulo: 'Ruta cultural', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729551/senderismo_-_categorias_sqngzv.jpg' },
+      { titulo: 'Mirador + fotografía', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729523/mirador_-_categoria_omagyv.jpg' },
+      { titulo: 'Plan cafetero', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729552/tour_cafe_-_categoria_be5nev.jpg' },
+      { titulo: 'Plan relax: cafés y fotos', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729512/cafes_-_categorias_f9s1db.jpg' },
 
     ]
   }

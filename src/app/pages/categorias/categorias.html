@@ -66,16 +66,23 @@
 
         <!-- Cards -->
         <button
-          class="cat-card"
-          type="button"
-          *ngFor="let t of tipos"
-          (click)="goTipo(t.id_tipo)"
-        >
-          <img
-            [src]="'https://via.placeholder.com/600x400?text=' + (t.nombre_tipo | titlecase)"
-          />
-          <span>{{ t.nombre_tipo }}</span>
-        </button>
+  class="cat-card"
+  type="button"
+  *ngFor="let t of tipos"
+  (click)="goTipo(t.id_tipo)"
+>
+  <img
+    class="cat-card__img"
+    [src]="portadaTipo(t.id_tipo)"
+    [alt]="t.nombre_tipo"
+  />
+
+  <div class="cat-card__overlay">
+    <span class="cat-card__title">
+      {{ t.nombre_tipo | titlecase }}
+    </span>
+  </div>
+</button>
 
       </div>
 
