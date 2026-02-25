@@ -1,11 +1,6 @@
-<!-- BARRA SUPERIOR (VERDE) -->
 <div class="navPrincipal">
   <div class="contLogo">
-    <img
-      src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764678577/ChatGPT_Image_12_nov_2025_17_33_14_1_hj26hs.png"
-      alt="TripGo"
-    />
-
+    <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764678577/ChatGPT_Image_12_nov_2025_17_33_14_1_hj26hs.png" alt="TripGo" />
     <a [routerLink]="isLoggedIn ? '/principal' : '/'">TRIPGO</a>
   </div>
 
@@ -18,15 +13,18 @@
       <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
     }
   </div>
+
+  <!-- ✅ NUEVO: botón hamburguesa (solo se verá en móvil con CSS) -->
+  <button class="hamburgerBtn" type="button" (click)="toggleMenu()" aria-label="Abrir menú">
+    ☰
+  </button>
 </div>
 
-<!-- BARRA INFERIOR (NARANJA) -->
+<!-- ✅ Tu nav-bar normal se queda igual (desktop) -->
 <div class="nav-bar">
   @if (!isLoggedIn) {
-    <!-- Estos 2 son anclas SOLO para Home (si estás en otra página, no sirven) -->
     <a href="/#Nosotros">¿Quienes somos?</a>
     <a href="/#comoFunciona">Como funciona</a>
-
     <a routerLink="/prices">Algunos planes</a>
     <a routerLink="/contact">Contact</a>
   } @else {
@@ -36,3 +34,33 @@
     <a routerLink="/about">Eventos</a>
   }
 </div>
+
+<!-- ✅ NUEVO: overlay + panel lateral -->
+@if (menuOpen) {
+  <div class="menuOverlay" (click)="closeMenu()"></div>
+
+  <aside class="sideMenu" (click)="$event.stopPropagation()">
+    <div class="sideMenu__top">
+      <span class="sideMenu__title">Menú</span>
+      <button class="sideMenu__close" type="button" (click)="closeMenu()">✕</button>
+    </div>
+
+    <nav class="sideMenu__links">
+      @if (!isLoggedIn) {
+        <a href="/#Nosotros" (click)="closeMenu()">¿Quienes somos?</a>
+        <a href="/#comoFunciona" (click)="closeMenu()">Como funciona</a>
+        <a routerLink="/prices" (click)="closeMenu()">Algunos planes</a>
+        <a routerLink="/contact" (click)="closeMenu()">Contact</a>
+        <a routerLink="/login" (click)="closeMenu()">Iniciar sesión</a>
+        <a routerLink="/register" (click)="closeMenu()">Registrarse</a>
+      } @else {
+        <a routerLink="/principal" (click)="closeMenu()">Lugares</a>
+        <a routerLink="#" (click)="closeMenu()">Recomendaciones</a>
+        <a routerLink="/contact" (click)="closeMenu()">Soporte</a>
+        <a routerLink="/about" (click)="closeMenu()">Eventos</a>
+        <a routerLink="/editar-cuenta" (click)="closeMenu()">Perfil</a>
+        <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
+      }
+    </nav>
+  </aside>
+}

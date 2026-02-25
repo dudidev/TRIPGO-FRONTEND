@@ -9,14 +9,33 @@ import { User } from '../../service/user';
   styleUrl: './nav.css'
 })
 export class Nav {
-  constructor(private userService: User, private router: Router) {}
+  menuOpen = false;
+
+  constructor(private userService: User, private router: Router) { }
 
   get isLoggedIn(): boolean {
     return this.userService.isLoggedIn();
   }
 
+  toggleMenu() {
+  this.menuOpen = !this.menuOpen;
+
+  if (this.menuOpen) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = 'auto';
+  }
+  }
+
+  closeMenu() {
+    this.menuOpen = false;
+    document.body.style.overflow = 'auto';
+  }
+
+
   logout(): void {
     this.userService.logout();
+    this.closeMenu();
     this.router.navigate(['/login']);
   }
 }
