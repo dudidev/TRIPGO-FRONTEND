@@ -26,10 +26,10 @@
     <a href="/#Nosotros">¿Quienes somos?</a>
     <a href="/#comoFunciona">Como funciona</a>
     <a routerLink="/prices">Algunos planes</a>
-    <a routerLink="/contact">Contact</a>
+    <a routerLink="/contact">Contacto</a>
   } @else {
     <a routerLink="/principal">Lugares</a>
-    <a routerLink="#">Recomendaciones</a>
+    <a routerLink="/principal">Recomendaciones</a>
     <a routerLink="/contact">Soporte</a>
     <a routerLink="/about">Eventos</a>
   }
@@ -47,15 +47,16 @@
 
     <nav class="sideMenu__links">
       @if (!isLoggedIn) {
+        <a routerLink="/login" (click)="closeMenu()">Iniciar sesión</a>
+        <a routerLink="/register" (click)="closeMenu()">Registrarse</a>
         <a href="/#Nosotros" (click)="closeMenu()">¿Quienes somos?</a>
         <a href="/#comoFunciona" (click)="closeMenu()">Como funciona</a>
         <a routerLink="/prices" (click)="closeMenu()">Algunos planes</a>
-        <a routerLink="/contact" (click)="closeMenu()">Contact</a>
-        <a routerLink="/login" (click)="closeMenu()">Iniciar sesión</a>
-        <a routerLink="/register" (click)="closeMenu()">Registrarse</a>
+        <a routerLink="/contact" (click)="closeMenu()">Contacto</a>
+        
       } @else {
         <a routerLink="/principal" (click)="closeMenu()">Lugares</a>
-        <a routerLink="#" (click)="closeMenu()">Recomendaciones</a>
+        <a routerLink="/principal" (click)="closeMenu()">Recomendaciones</a>
         <a routerLink="/contact" (click)="closeMenu()">Soporte</a>
         <a routerLink="/about" (click)="closeMenu()">Eventos</a>
         <a routerLink="/editar-cuenta" (click)="closeMenu()">Perfil</a>
