@@ -4,39 +4,51 @@
     <a [routerLink]="isLoggedIn ? '/principal' : '/'">TRIPGO</a>
   </div>
 
-  <div class="OpLaterales">
-    @if (!isLoggedIn) {
-      <a routerLink="/login">Iniciar sesión</a>
-      <a routerLink="/register">Registrarse</a>
-    } @else {
-      <a routerLink="/editar-cuenta">Perfil</a>
+  <!-- ✅ Si estoy en /empresa: SOLO Salir -->
+  @if (isEmpresaPage) {
+    <div class="OpLaterales">
       <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
-    }
-  </div>
-
-  <!-- ✅ NUEVO: botón hamburguesa (solo se verá en móvil con CSS) -->
-  <button class="hamburgerBtn" type="button" (click)="toggleMenu()" aria-label="Abrir menú">
-    ☰
-  </button>
-</div>
-
-<!-- ✅ Tu nav-bar normal se queda igual (desktop) -->
-<div class="nav-bar">
-  @if (!isLoggedIn) {
-    <a href="/#Nosotros">¿Quienes somos?</a>
-    <a href="/#comoFunciona">Como funciona</a>
-    <a routerLink="/prices">Algunos planes</a>
-    <a routerLink="/contact">Contacto</a>
+    </div>
   } @else {
-    <a routerLink="/principal">Lugares</a>
-    <a routerLink="/principal">Recomendaciones</a>
-    <a routerLink="/contact">Soporte</a>
-    <a routerLink="/about">Eventos</a>
+    <!-- ✅ Tu OpLaterales normal -->
+    <div class="OpLaterales">
+      @if (!isLoggedIn) {
+        <a routerLink="/login">Iniciar sesión</a>
+        <a routerLink="/register">Registrarse</a>
+      } @else {
+        <a routerLink="/editar-cuenta">Perfil</a>
+        <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
+      }
+    </div>
+  }
+
+  <!-- ✅ Hamburguesa: la ocultamos en /empresa (para que no salga el menú) -->
+  @if (!isEmpresaPage) {
+    <button class="hamburgerBtn" type="button" (click)="toggleMenu()" aria-label="Abrir menú">
+      ☰
+    </button>
   }
 </div>
 
-<!-- ✅ NUEVO: overlay + panel lateral -->
-@if (menuOpen) {
+<!-- ✅ nav-bar normal: oculto en /empresa -->
+@if (!isEmpresaPage) {
+  <div class="nav-bar">
+    @if (!isLoggedIn) {
+      <a href="/#Nosotros">¿Quienes somos?</a>
+      <a href="/#comoFunciona">Como funciona</a>
+      <a routerLink="/prices">Algunos planes</a>
+      <a routerLink="/contact">Contacto</a>
+    } @else {
+      <a routerLink="/principal">Lugares</a>
+      <a routerLink="/principal">Recomendaciones</a>
+      <a routerLink="/contact">Soporte</a>
+      <a routerLink="/about">Eventos</a>
+    }
+  </div>
+}
+
+<!-- ✅ overlay + sideMenu: ocultos en /empresa también -->
+@if (!isEmpresaPage && menuOpen) {
   <div class="menuOverlay" (click)="closeMenu()"></div>
 
   <aside class="sideMenu" (click)="$event.stopPropagation()">
@@ -53,7 +65,6 @@
         <a href="/#comoFunciona" (click)="closeMenu()">Como funciona</a>
         <a routerLink="/prices" (click)="closeMenu()">Algunos planes</a>
         <a routerLink="/contact" (click)="closeMenu()">Contacto</a>
-        
       } @else {
         <a routerLink="/principal" (click)="closeMenu()">Lugares</a>
         <a routerLink="/principal" (click)="closeMenu()">Recomendaciones</a>

@@ -16,6 +16,9 @@ export class Nav {
   get isLoggedIn(): boolean {
     return this.userService.isLoggedIn();
   }
+  get isEmpresaPage(): boolean {
+    return this.router.url.includes('/empresa');
+  }
 
   toggleMenu() {
   this.menuOpen = !this.menuOpen;

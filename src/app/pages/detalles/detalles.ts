@@ -4,6 +4,8 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Nav } from '../../shared/nav/nav';
 import { Footer } from '../../shared/footer/footer';
 import { MapaComponent } from '../../shared/mapa/mapa';
+import { Api } from '../../api';
+import { take } from 'rxjs';
 
 type Opinion = {
   usuario: string;
@@ -12,7 +14,9 @@ type Opinion = {
 };
 
 type LugarDetalle = {
+  // OJO: en tu app hoy este "slug" realmente es el ID que viene por la ruta /detalles/:slug
   slug: string;
+
   nombre: string;
   direccion: string;
   descripcion: string;
@@ -22,159 +26,13 @@ type LugarDetalle = {
   opiniones: Opinion[];
   datosGenerales?: string[];
 
+  // ✅ ahora opcionales (porque desde BD puede que no vengan aún)
+  lat?: number;
+  lng?: number;
+
   // opcionales para navegación / breadcrumb
-  lat: number;
-  lng: number;
   townSlug?: string;
   categoryKey?: string;
-};
-
-const DETALLES_DATA: Record<string, LugarDetalle> = {
-  'cabalgatas-san-pablo': {
-    slug: 'cabalgatas-san-pablo',
-    nombre: 'Cabalgatas San Pablo',
-    direccion: 'Salento, Quindío',
-    descripcion:
-      'Sumérgete en la magia del Paisaje Cultural Cafetero (PCC) de Colombia, declarado Patrimonio de la Humanidad, a lomos de nobles caballos. En Cabalgatas San Pablo, te ofrecemos más que un simple paseo: una experiencia de conexión total con la naturaleza, la cultura local y la tradición ecuestre.',
-    promociones: '2x1 en cabalgatas los viernes',
-    horarios: [
-      'Lunes: Cerrado',
-      'Martes a Viernes: 9:00 AM - 5:00 PM',
-      'Sábado y Domingo: 8:00 AM - 6:00 PM',
-    ],
-    imagenes: [
-      'https://res.cloudinary.com/dtyvd3fim/image/upload/v1765810725/cabalgata1.1_c0xvp8.jpg',
-      'https://res.cloudinary.com/dtyvd3fim/image/upload/v1765811666/Cabalgata1.3_bdeacc.jpg',
-      'https://res.cloudinary.com/dtyvd3fim/image/upload/v1765811666/Cabalgata1.2_ymzaji.jpg',
-    ],
-    opiniones: [
-      {
-        usuario: 'Pepito Perez',
-        comentario: 'Excelente lugar, muy buena atención.',
-        rating: 5,
-      },
-      {
-        usuario: 'Maria Gomez',
-        comentario:
-          'Me encantó la experiencia, los paisajes son hermosos, pero podrían mejorar un poco la organización. En general, ¡muy recomendable!',
-        rating: 4,
-      },
-    ],
-    townSlug: 'salento',
-    categoryKey: 'cabalgatas',
-    lat: 4.636726020028663,
-    lng: -75.57155783394442,
-  },
-
-  // Ejemplo: agrega más slugs aquí
-  'caminos-y-trochas': {
-    slug: 'caminos-y-trochas',
-    nombre: 'Cabalgatas Caminos y Trochas',
-    direccion: 'Salento, Quindío',
-    descripcion:
-      'Recorridos por caminos rurales y senderos con paradas para fotos. Ideal para una salida tranquila en naturaleza.',
-    promociones: '10% off entre semana',
-    horarios: [
-      'Lunes a Viernes: 9:00 AM - 5:00 PM',
-      'Sábado y Domingo: 8:00 AM - 6:00 PM',
-    ],
-    imagenes: [
-      'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733201/portada_-_categoria_5_t7pmpz.jpg',
-    ],
-    opiniones: [
-      {
-        usuario: 'Pedro Fernandez',
-        comentario: 'Excelente lugar, muy buena atención.',
-        rating: 5,
-      },
-      {
-        usuario: 'Michel Rodriguez',
-        comentario:
-          'Me encantó la experiencia, los paisajes son hermosos, pero podrían mejorar un poco la organización. En general, ¡muy recomendable!',
-        rating: 4,
-      },
-    ],
-    townSlug: 'salento',
-    categoryKey: 'cabalgatas',
-    lat: 4.648624532903637,
-    lng: -75.48515657977302,
-  },
-  'alquiler-caballos-salento': {
-    slug: 'alquiler-caballos-salento',
-    nombre: 'Alquiler de Caballos Salento',
-    direccion: 'Salento, Quindío',
-    descripcion:
-      'Alquiler de caballos para disfrutar de la naturaleza y el paisaje del Valle del cocora.',
-    promociones: '10% off entre semana',
-    horarios: [
-      'Lunes a Viernes: 9:00 AM - 5:00 PM',
-      'Sábado y Domingo: 8:00 AM - 6:00 PM',
-    ],
-    imagenes: [
-      'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733201/portada_-_categoria_5_t7pmpz.jpg',
-    ],
-    opiniones: [
-      {
-        usuario: 'Pedro Fernandez',
-        comentario: 'Excelente lugar, muy buena atención.',
-        rating: 5,
-      },
-      {
-        usuario: 'Michel Rodriguez',
-        comentario:
-          'Me encantó la experiencia, los paisajes son hermosos, pero podrían mejorar un poco la organización. En general, ¡muy recomendable!',
-        rating: 4,
-      },
-    ],
-    townSlug: 'salento',
-    categoryKey: 'cabalgatas',
-    lat: 4.654863733626751,
-    lng: -75.5757018934317,
-  },
-  'COCORATOURS1': {
-    slug: 'COCORATOURS1',
-    nombre: 'CocoraTours - Excursión grupal valle del cocora',
-    direccion: 'Direccion: barrio las Colinas, calle 2 # 6-09, Salento Quindio. ',
-    descripcion: 'Este tour económico incluye un recorrido en jeep tradicional hasta el Valle de Cocora, donde iniciaremos una caminata por diversas atracciones artificiales perfectas para tomarte fotos memorables. Entre ellas encontrarás el famoso jeep con la bandera y costales de café, el letrero Cocora, las mallas, la casa tradicional y esculturas de fauna local como el puma, el oso, el venado y el emblemático nido del cóndor.' + '\n' + '\n' +
-      'También podrás conocer la famosa mano azul con fondo de palmas de cera. Si prefieres un recorrido más natural y menos fotográfico, puedes omitir estas paradas y adaptar la experiencia a tu gusto.El recorrido continúa con un tour caminando de aproximadamente 2 a 3 horas por los hermosos valles de palmas, pasando por miradores naturales que ofrecen vistas panorámicas de 360 grados sobre todo el Valle de Cocora.' + '\n' + '\n' + 'Durante la caminata,' +
-      'disfrutarás de paisajes únicos, cuencas de ríos y las majestuosas palmas de cera, el árbol nacional más alto de Colombia. Este tour económico es perfecto para quienes desean explorar la naturaleza, capturar momentos increíbles y vivir una experiencia auténtica sin afectar demasiado su presupuesto.',
-    datosGenerales: [
-      'Duración: 4-5 horas. ',
-      'Dificultad: Media. ',
-      'Transporte ida y regreso en Jeep Willys. ',
-      'Entrada al bosque de palmas( Mano, mallas, nido, miradores).',
-      'Guia turistico local. '
-    ],
-
-    promociones: '',
-    horarios: [
-      'Lunes a Viernes: 9:00 AM - 5:00 PM',
-      'Sábado y Domingo: 8:00 AM - 6:00 PM',
-    ],
-    imagenes: [
-      'https://res.cloudinary.com/dtyvd3fim/image/upload/v1770910663/01-01LUGAR_uvwc5d.png',
-      'https://res.cloudinary.com/dtyvd3fim/image/upload/v1770910663/01-02LUGAR_gbdupb.png',
-      'https://res.cloudinary.com/dtyvd3fim/image/upload/v1770910663/01-03LUGAR_hzgc9d.png',
-    ],
-    opiniones: [
-      {
-        usuario: 'Pedro Fernandez',
-        comentario: 'Excelente lugar, muy buena atención.',
-        rating: 5,
-      },
-      {
-        usuario: 'Michel Rodriguez',
-        comentario:
-          'Me encantó la experiencia, los paisajes son hermosos, pero podrían mejorar un poco la organización. En general, ¡muy recomendable!',
-        rating: 4,
-      },
-    ],
-    townSlug: 'salento',
-    categoryKey: 'valle-cocora',
-    lat: 4.6389628880699325,
-    lng: -75.56772317805938,
-  },
-
 };
 
 @Component({
@@ -190,23 +48,144 @@ export class Detalles {
   // lugar actual (o null si no existe)
   lugar: LugarDetalle | null = null;
 
-  constructor(private route: ActivatedRoute) { }
+  // estados UI
+  loading = false;
+  errorMsg = '';
+
+  constructor(private route: ActivatedRoute, private api: Api) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
+      // En tu app, este "slug" es realmente el ID que navegas desde la lista
       this.slug = params.get('slug') || '';
-
-      // Busca el lugar por slug
-      const data = DETALLES_DATA[this.slug] ?? null;
-
-      // si no existe
-      if (!data) {
+      if (!this.slug) {
         this.lugar = null;
+        this.errorMsg = 'No llegó un identificador válido.';
         return;
       }
 
-      this.lugar = data;
+      this.cargarDetalle(this.slug);
     });
+  }
+
+  private cargarDetalle(idParam: string): void {
+    this.loading = true;
+    this.errorMsg = '';
+    this.lugar = null;
+
+    // ✅ Opción A:
+    // 1) Primero intenta en el estado global (si vienes desde la lista ya está cargado)
+    this.api.establecimientos$.pipe(take(1)).subscribe({
+      next: (listaEstado) => {
+        const foundEnEstado = this.findById(listaEstado, idParam);
+
+        if (foundEnEstado) {
+          this.lugar = this.mapToLugarDetalle(foundEnEstado, idParam);
+          this.loading = false;
+          return;
+        }
+
+        // 2) Si no está (refresh o link directo), hace fallback: pedir todos
+        this.api.getEstablecimientos().pipe(take(1)).subscribe({
+          next: (listaBackend) => {
+            const foundEnBackend = this.findById(listaBackend, idParam);
+
+            if (!foundEnBackend) {
+              this.lugar = null;
+              this.errorMsg =
+                'No encontramos este lugar. Puede que el enlace esté mal o aún no exista información.';
+              this.loading = false;
+              return;
+            }
+
+            this.lugar = this.mapToLugarDetalle(foundEnBackend, idParam);
+            this.loading = false;
+          },
+          error: () => {
+            this.lugar = null;
+            this.errorMsg =
+              'Ocurrió un error cargando el detalle desde el servidor. Intenta nuevamente.';
+            this.loading = false;
+          },
+        });
+      },
+      error: () => {
+        this.lugar = null;
+        this.errorMsg =
+          'No se pudo acceder al estado de establecimientos. Intenta nuevamente.';
+        this.loading = false;
+      },
+    });
+  }
+
+  // Busca por id_establecimiento o id (porque en tu lista ya contemplas ambos)
+  private findById(lista: any[], idParam: string): any | null {
+    const id = String(idParam);
+
+    const found =
+      (lista ?? []).find((e) => String(e?.id_establecimiento ?? e?.id ?? '') === id) ??
+      null;
+
+    return found;
+  }
+
+  // Adaptador: convierte el objeto del backend a lo que tu UI espera
+  private mapToLugarDetalle(raw: any, idParam: string): LugarDetalle {
+    const nombre = String(raw?.nombre_establecimiento ?? raw?.nombre ?? 'Sin nombre');
+    const direccion = String(raw?.direccion ?? 'Dirección no disponible');
+    const descripcion = String(raw?.descripcion ?? 'Sin descripción por ahora.');
+
+    // Imágenes: tu modelo de backend no trae imágenes, pero dejamos listo por si luego agregas
+    const imagenRaw =
+      raw?.imagen ??
+      raw?.imagen_url ??
+      raw?.foto ??
+      raw?.foto_url ??
+      raw?.portada ??
+      null;
+
+    const imagenes = imagenRaw ? [String(imagenRaw)] : [];
+
+    // Horarios: construimos algo útil si hay apertura/cierre
+    const apertura = raw?.horario_apertura ? String(raw.horario_apertura) : '';
+    const cierre = raw?.horario_cierre ? String(raw.horario_cierre) : '';
+    const horarios =
+      apertura || cierre
+        ? [`Horario: ${apertura || '—'} - ${cierre || '—'}`]
+        : [];
+
+    // Datos generales: armamos una lista con lo que sí venga
+    const datosGenerales: string[] = [];
+    if (raw?.telefono) datosGenerales.push(`Teléfono: ${raw.telefono}`);
+    if (raw?.correo) datosGenerales.push(`Correo: ${raw.correo}`);
+    if (raw?.estado) datosGenerales.push(`Estado: ${raw.estado}`);
+
+    // Coordenadas: por ahora opcionales (si no vienen, el HTML no mostrará el mapa)
+    const lat =
+      raw?.lat != null ? Number(raw.lat) : raw?.latitude != null ? Number(raw.latitude) : undefined;
+    const lng =
+      raw?.lng != null ? Number(raw.lng) : raw?.longitude != null ? Number(raw.longitude) : undefined;
+
+    // Opiniones: por ahora vacío (luego conectamos comentarios si aplica)
+    const opiniones: Opinion[] = [];
+
+    return {
+      slug: String(idParam), // aquí guardamos el ID (tu ruta usa ID)
+      nombre,
+      direccion,
+      descripcion,
+      promociones: raw?.promociones ? String(raw.promociones) : undefined,
+      horarios,
+      imagenes,
+      opiniones,
+      datosGenerales: datosGenerales.length ? datosGenerales : undefined,
+      lat,
+      lng,
+
+      // Si en el futuro el backend manda estos, quedará listo:
+      townSlug: raw?.townSlug ? String(raw.townSlug) : undefined,
+      categoryKey: raw?.categoryKey ? String(raw.categoryKey) : undefined,
+    };
   }
 
   agregarItinerario() {
