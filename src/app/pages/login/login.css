@@ -251,3 +251,90 @@
   from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
   to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
+/* ===== EXTRA RESPONSIVE (solo agrega, no rompe tu diseño) ===== */
+
+/* Evita overflow horizontal en móviles */
+.ppal,
+.left,
+.right,
+.carta,
+form {
+  max-width: 100%;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ✅ Tablets & Mobile (<= 900px): como tu layout es GRID, aquí cambiamos a 1 columna */
+@media (max-width: 900px) {
+  .ppal {
+    grid-template-columns: 1fr;
+  }
+
+  .left {
+    min-height: 45vh;
+    padding: 60px 30px;
+  }
+
+  .right {
+    min-height: 55vh;
+    padding: 40px 20px;
+  }
+
+  .left-content {
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+  }
+
+  .left-content h1 {
+    font-size: clamp(34px, 7vw, 46px);
+    margin-bottom: 1.8rem;
+  }
+
+  .carta {
+    max-width: 430px;
+    padding: 2.2rem 1.8rem;
+  }
+}
+
+/* ✅ Small phones (<= 480px) */
+@media (max-width: 480px) {
+  .left {
+    padding: 44px 16px;
+  }
+
+  .right {
+    padding: 26px 14px 40px;
+  }
+
+  .logo-circle {
+    width: 120px;
+    height: 120px;
+  }
+
+  .carta h2 {
+    font-size: 1.4rem;
+  }
+
+  .field input {
+    padding: 0.8rem;
+  }
+}
+
+
+@media (max-height: 700px) and (max-width: 900px) {
+  .left {
+    min-height: auto;
+    padding: 40px 20px;
+  }
+}
+
+@media (max-width: 520px) {
+  .toast {
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+    min-width: unset;
+  }
+}
