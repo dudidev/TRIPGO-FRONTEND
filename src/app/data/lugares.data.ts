@@ -147,9 +147,9 @@ export const LUGARES_DATA: Record<string, Record<string, LugaresData>> = {
           img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770819751/Imagen3_senderismo_cyldjb.png'
         },
         {
-          slug: '13',
-          titulo: 'Mirador Las Manos de Dios',
-          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765723552/cocora_bcq0nv.jpg'
+          slug: '20',
+          titulo: 'Cascada Santa Rita',
+          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770644278/img1valle-cocora_azfhwk.png'
         },
         {
           slug: 'mirador-colina-iluminada',
