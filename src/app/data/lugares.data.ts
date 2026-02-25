@@ -152,9 +152,9 @@ export const LUGARES_DATA: Record<string, Record<string, LugaresData>> = {
           img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770644278/img1valle-cocora_azfhwk.png'
         },
         {
-          slug: 'mirador-colina-iluminada',
-          titulo: 'Mirador Colina Iluminada',
-          img: 'https://via.placeholder.com/600x400?text=Mirador+Colina+Iluminada'
+          slug: '21',
+          titulo: 'Sendero Cafe Tour',
+          img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770820605/Imagen5_senderismo_secbaj.png'
         }
       ]
   },
