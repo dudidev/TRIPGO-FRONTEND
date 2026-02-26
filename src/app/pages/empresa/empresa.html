@@ -1,231 +1,121 @@
 <app-nav></app-nav>
 
-<div class="detalle-container">
+<div class="empresa-page">
 
-  <!-- Header + acciones -->
-  <div class="empresa-top">
-    <div class="empresa-title">
-      <!-- Vista -->
-      <h1 *ngIf="!editMode">{{ establecimiento.nombre_establecimiento }}</h1>
+  <div *ngIf="loading" class="card">Cargando...</div>
 
-      <!-- Edición -->
-      <div *ngIf="editMode" class="field">
-        <label>Nombre</label>
-        <input class="input" [(ngModel)]="establecimientoEdit.nombre_establecimiento" />
-      </div>
-
-      <p class="direccion" *ngIf="!editMode">📍 {{ establecimiento.ubicacion }}</p>
-
-      <div *ngIf="editMode" class="field">
-        <label>Ubicación</label>
-        <input class="input" [(ngModel)]="establecimientoEdit.ubicacion" />
-      </div>
-    </div>
-
-    <div class="empresa-actions">
-      <button class="btn-itinerario" *ngIf="!editMode" (click)="editar()">Editar</button>
-      <ng-container *ngIf="editMode">
-        <button class="btn-itinerario" (click)="guardar()">Guardar</button>
-        <button class="btn-secundario" (click)="cancelar()">Cancelar</button>
-      </ng-container>
-    </div>
+  <div *ngIf="!loading && errorMessage" class="card">
+    <p class="empty">{{ errorMessage }}</p>
   </div>
 
-  <!-- IMÁGENES -->
-  <div class="imagenes" *ngIf="!editMode && establecimiento.imagenes?.length; else imagesEdit">
-    <img class="principal" [src]="establecimiento.imagenes[0]" [alt]="establecimiento.nombre_establecimiento" />
+  <div *ngIf="!loading && establecimientoOriginal" class="card">
 
-    <div class="secundarias" *ngIf="establecimiento.imagenes.length > 1">
-      <img *ngFor="let img of establecimiento.imagenes.slice(1)" [src]="img" [alt]="establecimiento.nombre_establecimiento" />
-    </div>
-  </div>
-
-  <ng-template #imagesEdit>
-    <div class="box" *ngIf="editMode; else noImages">
-      <h4>Imágenes</h4>
-
-      <div class="list">
-        <div class="list-item" *ngFor="let img of establecimientoEdit.imagenes; let i = index">
-          <span class="truncate">{{ img }}</span>
-          <button class="btn-mini" (click)="removeImagen(i)">Eliminar</button>
-        </div>
+    <div class="panel-header">
+      <div>
+        <h2>{{ establecimientoOriginal.nombre_establecimiento }}</h2>
+        <p class="muted">📍 {{ establecimientoOriginal.ubicacion }}</p>
       </div>
 
-      <div class="add-row">
-        <input class="input" [(ngModel)]="nuevaImagen" placeholder="URL de imagen..." />
-        <button class="btn-mini" (click)="addImagen()">Agregar</button>
+      <div class="actions">
+        <button *ngIf="!editMode" (click)="editar()">Editar</button>
+
+        <ng-container *ngIf="editMode">
+          <button (click)="guardarCambios()" [disabled]="saving">
+            {{ saving ? 'Guardando...' : 'Guardar' }}
+          </button>
+          <button class="btn-secundario" (click)="cancelar()" [disabled]="saving">
+            Cancelar
+          </button>
+        </ng-container>
       </div>
     </div>
 
-    <ng-template #noImages>
-      <div class="imagenes imagenes--empty">
-        <p>No hay imágenes disponibles todavía.</p>
-      </div>
-    </ng-template>
-  </ng-template>
+    <div class="contenido">
 
-  <div class="contenido">
+      <!-- IZQUIERDA -->
+      <div class="col-izq">
 
-    <!-- IZQUIERDA -->
-    <div class="col-izq">
+        <section>
+          <h3>Descripción general</h3>
 
-      <section>
-        <h3>Descripción general</h3>
+          <p *ngIf="!editMode">{{ establecimientoOriginal.descripcion || '—' }}</p>
 
-        <p class="descripcion" *ngIf="!editMode">{{ establecimiento.descripcion }}</p>
-
-        <div *ngIf="editMode" class="field">
-          <label>Descripción</label>
-          <textarea class="textarea" rows="7" [(ngModel)]="establecimientoEdit.descripcion"></textarea>
-        </div>
-      </section>
-
-      <section>
-        <h3>Ubicación</h3>
-
-        <div class="mapa" *ngIf="!editMode">
-          <ng-container *ngIf="establecimiento.lat != null && establecimiento.lng != null; else noUbicacion">
-            <app-mapa
-              [lat]="establecimiento.lat"
-              [lng]="establecimiento.lng"
-              [zoom]="15"
-              [label]="establecimiento.nombre_establecimiento"
-              [openOnClick]="true"
-            ></app-mapa>
-          </ng-container>
-
-          <ng-template #noUbicacion>
-            <p>Ubicación no disponible por ahora.</p>
-          </ng-template>
-        </div>
-
-        <div *ngIf="editMode" class="grid-2">
-          <div class="field">
-            <label>Lat</label>
-            <input class="input" type="number" [(ngModel)]="establecimientoEdit.lat" />
-          </div>
-          <div class="field">
-            <label>Lng</label>
-            <input class="input" type="number" [(ngModel)]="establecimientoEdit.lng" />
-          </div>
-        </div>
-      </section>
-
-    </div>
-
-    <!-- DERECHA -->
-    <div class="col-der">
-
-      <!-- Información relevante -->
-      <section class="box" *ngIf="!editMode; else editDatos">
-        <h4>Información relevante</h4>
-        <ul>
-          <li *ngFor="let d of establecimiento.datosGenerales">{{ d }}</li>
-        </ul>
-      </section>
-
-      <ng-template #editDatos>
-        <section class="box">
-          <h4>Información relevante</h4>
-
-          <div class="list">
-            <div class="list-item" *ngFor="let d of establecimientoEdit.datosGenerales; let i = index">
-              <span class="truncate">{{ d }}</span>
-              <button class="btn-mini" (click)="removeDato(i)">Eliminar</button>
-            </div>
-          </div>
-
-          <div class="add-row">
-            <input class="input" [(ngModel)]="nuevoDato" placeholder="Ej: Teléfono: +57..." />
-            <button class="btn-mini" (click)="addDato()">Agregar</button>
-          </div>
+          <textarea *ngIf="editMode"
+            rows="6"
+            [(ngModel)]="establecimientoEdit.descripcion"
+          ></textarea>
         </section>
-      </ng-template>
 
-      <!-- Promociones -->
-      <section class="box" *ngIf="!editMode; else editPromo">
-        <h4>Algunas promociones</h4>
-        <p>{{ establecimiento.promociones || 'No hay promociones disponibles por ahora.' }}</p>
-      </section>
+        <section>
+          <h3>Datos de contacto</h3>
 
-      <ng-template #editPromo>
-        <section class="box">
-          <h4>Algunas promociones</h4>
-          <textarea class="textarea" rows="3" [(ngModel)]="establecimientoEdit.promociones"></textarea>
+          <p><b>Teléfono:</b>
+            <span *ngIf="!editMode">{{ establecimientoOriginal.telefono || '—' }}</span>
+            <input *ngIf="editMode" [(ngModel)]="establecimientoEdit.telefono" />
+          </p>
+
+          <p><b>Correo:</b>
+            <span *ngIf="!editMode">{{ establecimientoOriginal.correo || '—' }}</span>
+            <input *ngIf="editMode" [(ngModel)]="establecimientoEdit.correo" />
+          </p>
+
+          <p><b>Estado:</b>
+            <span *ngIf="!editMode">{{ establecimientoOriginal.estado || 'activo' }}</span>
+
+            <select *ngIf="editMode" [(ngModel)]="establecimientoEdit.estado">
+              <option value="activo">activo</option>
+              <option value="inactivo">inactivo</option>
+            </select>
+          </p>
         </section>
-      </ng-template>
 
-      <!-- Horarios -->
-      <section class="box" *ngIf="!editMode; else editHours">
-        <h4>Horarios</h4>
-        <ul>
-          <li *ngFor="let h of establecimiento.horarios">{{ h }}</li>
-        </ul>
-      </section>
+      </div>
 
-      <ng-template #editHours>
+      <!-- DERECHA -->
+      <div class="col-der">
+
+        <section class="box">
+          <h4>Información bloqueada</h4>
+
+          <p><b>Nombre:</b> {{ establecimientoOriginal.nombre_establecimiento }}</p>
+          <p><b>Ubicación:</b> {{ establecimientoOriginal.ubicacion }}</p>
+          <p><b>Dirección:</b> {{ establecimientoOriginal.direccion || '—' }}</p>
+          <p><b>Tipo:</b> {{ establecimientoOriginal.tipo || '—' }}</p>
+        </section>
+
         <section class="box">
           <h4>Horarios</h4>
 
-          <div class="list">
-            <div class="list-item" *ngFor="let h of establecimientoEdit.horarios; let i = index">
-              <span class="truncate">{{ h }}</span>
-              <button class="btn-mini" (click)="removeHorario(i)">Eliminar</button>
-            </div>
-          </div>
+          <!-- Vista -->
+          <ng-container *ngIf="!editMode">
+            <ul>
+              <li *ngFor="let d of diasSemana">
+                {{ d }}: {{ establecimientoOriginal.horario_apertura || '—' }} - {{ establecimientoOriginal.horario_cierre || '—' }}
+              </li>
+            </ul>
+          </ng-container>
 
-          <div class="add-row">
-            <input class="input" [(ngModel)]="nuevoHorario" placeholder="Ej: Lunes: 9AM - 6PM" />
-            <button class="btn-mini" (click)="addHorario()">Agregar</button>
-          </div>
-        </section>
-      </ng-template>
-
-      <!-- Datos básicos (como en tu panel actual) -->
-      <section class="box" *ngIf="!editMode; else editBasicos">
-        <h4>Datos de contacto</h4>
-        <p><b>Dirección:</b> {{ establecimiento.direccion }}</p>
-        <p><b>Teléfono:</b> {{ establecimiento.telefono }}</p>
-        <p><b>Correo:</b> {{ establecimiento.correo || '—' }}</p>
-        <p><b>Apertura:</b> {{ establecimiento.horario_apertura || '—' }}</p>
-        <p><b>Cierre:</b> {{ establecimiento.horario_cierre || '—' }}</p>
-      </section>
-
-      <ng-template #editBasicos>
-        <section class="box">
-          <h4>Datos de contacto</h4>
-
-          <div class="field">
-            <label>Dirección</label>
-            <input class="input" [(ngModel)]="establecimientoEdit.direccion" />
-          </div>
-
-          <div class="field">
-            <label>Teléfono</label>
-            <input class="input" [(ngModel)]="establecimientoEdit.telefono" />
-          </div>
-
-          <div class="field">
-            <label>Correo</label>
-            <input class="input" [(ngModel)]="establecimientoEdit.correo" />
-          </div>
-
-          <div class="grid-2">
+          <!-- Edición (solo horas, días fijos) -->
+          <ng-container *ngIf="editMode">
             <div class="field">
-              <label>Horario apertura</label>
-              <input class="input" [(ngModel)]="establecimientoEdit.horario_apertura" />
+              <label>Hora apertura</label>
+              <input [(ngModel)]="establecimientoEdit.horario_apertura" />
             </div>
+
             <div class="field">
-              <label>Horario cierre</label>
-              <input class="input" [(ngModel)]="establecimientoEdit.horario_cierre" />
+              <label>Hora cierre</label>
+              <input [(ngModel)]="establecimientoEdit.horario_cierre" />
             </div>
-          </div>
+
+            <p class="hint">Los días se muestran fijos por ahora; solo editas las horas.</p>
+          </ng-container>
         </section>
-      </ng-template>
+
+      </div>
 
     </div>
-
   </div>
+
 </div>
 
 <app-footer></app-footer>

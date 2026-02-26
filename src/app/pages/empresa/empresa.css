@@ -1,103 +1,60 @@
-/* ===== Contenedor tipo Detalles ===== */
-.detalle-container {
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.empresa-page{
   max-width: 1100px;
   margin: 40px auto;
   padding: 20px;
 }
 
-.direccion {
-  margin-top: 6px;
-  color: #666;
+/* ===== CARD (contenedor base) ===== */
+.card{
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
 }
 
-/* ===== Top header ===== */
-.empresa-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+/* Estados vacíos */
+.empty{
+  padding: 14px;
+  border-radius: 12px;
+  background: #f5f5f5;
+  color: #777;
+  text-align: center;
+  font-style: italic;
+}
+
+/* ===== HEADER DEL PANEL ===== */
+.panel-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
   gap: 16px;
 }
 
-.empresa-actions {
-  display: flex;
+.panel-header h2{
+  margin: 0;
+  font-size: 22px;
+  font-weight: 900;
+  color: #0F3B3E;
+}
+
+.muted{
+  margin-top: 6px;
+  color: #666;
+  font-weight: 600;
+}
+
+/* acciones (botones derecha) */
+.actions{
+  display:flex;
   gap: 10px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
-/* ===== Imágenes (igual que Detalles) ===== */
-.imagenes {
-  margin-top: 16px;
-}
-
-.principal {
-  width: 100%;
-  height: 320px;
-  object-fit: cover;
-  border-radius: 14px;
-}
-
-.secundarias {
-  margin-top: 10px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 10px;
-}
-
-.secundarias img {
-  width: 100%;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-.imagenes--empty {
-  padding: 18px;
-  border-radius: 14px;
-  background: #f5f5f5;
-  color: #777;
-}
-
-/* ===== Layout dos columnas ===== */
-.contenido {
-  margin-top: 22px;
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 22px;
-}
-
-.col-izq section {
-  margin-bottom: 18px;
-}
-
-.descripcion {
-  line-height: 1.6;
-  color: #333;
-}
-
-.mapa {
-  margin-top: 10px;
-  border-radius: 14px;
-  overflow: hidden;
-}
-
-/* ===== Boxes derecha ===== */
-.box {
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 16px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-  margin-bottom: 14px;
-}
-
-.box h4 {
-  margin: 0 0 10px 0;
-  font-size: 16px;
-}
-
-/* ===== Botones ===== */
-.btn-itinerario {
-  width: 100%;
-  margin-top: 10px;
+/* ===== BOTONES ===== */
+/* Botón principal: aplica a Editar y Guardar (no tienen clase) */
+.actions button{
   padding: 10px 14px;
   border-radius: 12px;
   border: none;
@@ -105,101 +62,148 @@
   background: #2c5364;
   color: white;
   font-size: 14px;
+  font-weight: 700;
+  transition: background .15s ease, transform .12s ease;
 }
 
-.btn-itinerario:hover {
+.actions button:hover{
   background: #1e3c47;
+  transform: translateY(-1px);
 }
 
-.btn-secundario {
-  width: 100%;
-  margin-top: 10px;
-  padding: 10px 14px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  background: #e9e9e9;
-  color: #222;
-  font-size: 14px;
+/* Botón secundario: Cancelar */
+.btn-secundario{
+  background: #e9e9e9 !important;
+  color: #222 !important;
 }
 
-.btn-secundario:hover {
-  background: #dcdcdc;
+.btn-secundario:hover{
+  background: #dcdcdc !important;
 }
 
-/* ===== Form ===== */
-.field {
+/* botón deshabilitado */
+.actions button[disabled]{
+  opacity: .65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ===== LAYOUT 2 COLUMNAS ===== */
+.contenido{
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 22px;
+}
+
+.col-izq section{
+  margin-bottom: 18px;
+}
+
+.col-izq h3{
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 900;
+  color: #0E6973;
+}
+
+.col-der{
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== BOXES DERECHA ===== */
+.box{
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  margin-bottom: 14px;
+}
+
+.box h4{
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 900;
+  color: #0F3B3E;
+}
+
+/* ===== FORM (inputs reales del HTML) ===== */
+.field{
   display: flex;
   flex-direction: column;
   gap: 6px;
   margin-top: 10px;
 }
 
-label {
+label{
   font-size: 13px;
   color: #444;
-  font-weight: 600;
+  font-weight: 700;
 }
 
-.input, .textarea {
+/* Como tu HTML usa <input> <textarea> <select> sin clase,
+   los estilamos dentro de empresa-page para no afectar toda la app */
+.empresa-page input,
+.empresa-page textarea,
+.empresa-page select{
   width: 100%;
   padding: 10px 12px;
   border-radius: 12px;
   border: 1px solid #ddd;
   font-size: 14px;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+  background: #fff;
 }
 
-.grid-2 {
-  margin-top: 10px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+.empresa-page textarea{
+  resize: vertical;
+  min-height: 120px;
 }
 
-/* ===== Listas editables ===== */
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.empresa-page input:focus,
+.empresa-page textarea:focus,
+.empresa-page select:focus{
+  border-color: #0f6b73;
+  box-shadow: 0 0 0 3px rgba(15,107,115,0.14);
 }
 
-.list-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
+/* ===== LISTAS / TEXTOS ===== */
+.empresa-page p{
+  color: #333;
+  line-height: 1.55;
 }
 
-.truncate {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.empresa-page ul{
+  padding-left: 18px;
+  margin: 8px 0 0;
 }
 
-.add-row {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
+.empresa-page li{
+  margin: 6px 0;
+  color: #333;
 }
 
-.btn-mini {
-  padding: 8px 10px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  background: #f2f2f2;
+/* hint */
+.hint{
+  color: #777;
+  font-size: 12px;
+  margin-top: 8px;
 }
 
-.btn-mini:hover {
-  background: #e6e6e6;
-}
-
-/* ===== Responsive ===== */
-@media (max-width: 900px) {
-  .contenido {
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px){
+  .contenido{
     grid-template-columns: 1fr;
   }
-  .empresa-actions button {
-    width: auto;
+
+  .panel-header{
+    flex-direction: column;
+  }
+
+  .actions{
+    width: 100%;
+    justify-content: flex-start;
   }
 }

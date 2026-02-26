@@ -2,138 +2,124 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { Footer } from '../../shared/footer/footer';
-import { Header } from '../../shared/header/header';
+import { EstablecimientoService } from '../../services/establecimiento.service';
 import { Nav } from '../../shared/nav/nav';
-import { MapaComponent } from '../../shared/mapa/mapa';
-
-type EmpresaDetalle = {
-  nombre_establecimiento: string;
-  ubicacion: string;
-  descripcion: string;
-  direccion: string;
-  telefono: string;
-  correo?: string;
-  horario_apertura?: string;
-  horario_cierre?: string;
-
-  promociones?: string;
-
-  imagenes: string[];
-  datosGenerales: string[];
-  horarios: string[];
-
-  lat?: number;
-  lng?: number;
-};
-
-const EMPRESA_DEMO: EmpresaDetalle = {
-  nombre_establecimiento: 'Café Montaña',
-  ubicacion: 'Salento, Quindío',
-  descripcion:
-    'Un espacio acogedor con café de origen, postres artesanales y una vista espectacular al valle. Ideal para descansar, trabajar o compartir en familia.',
-  direccion: 'Calle 5 # 3-21, Salento',
-  telefono: '3001234567',
-  correo: 'cafemontana@demo.com',
-  horario_apertura: '8:00 AM',
-  horario_cierre: '6:00 PM',
-  promociones: '10% de descuento en bebidas calientes de lunes a miércoles.',
-  imagenes: [
-    'https://images.unsplash.com/photo-1442512595331-e89e73853f31',
-    'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb',
-    'https://images.unsplash.com/photo-1521017432531-fbd92d768814',
-  ],
-  datosGenerales: [
-    'NIT: 900.000.000-1',
-    'Métodos de pago: Efectivo / Tarjeta',
-    'Ambiente: Familiar',
-    'Pet friendly: Sí',
-  ],
-  horarios: [
-    'Lunes a Viernes: 8:00 AM - 6:00 PM',
-    'Sábados y Domingos: 8:00 AM - 7:00 PM',
-  ],
-  lat: 4.6367,
-  lng: -75.5715,
-};
+import { Footer } from '../../shared/footer/footer';
+import { Api } from '../../api';
 
 @Component({
   selector: 'app-empresa',
   standalone: true,
-  imports: [CommonModule, FormsModule, Header, Footer, MapaComponent,Nav],
+  imports: [Nav, Footer, CommonModule, FormsModule],
   templateUrl: './empresa.html',
-  styleUrls: ['./empresa.css'],
+  styleUrl:'./empresa.css'
 })
 export class EmpresaComponent implements OnInit {
-  // 🔥 Solo visual (no backend)
+
   loading = false;
+  saving = false;
   errorMessage = '';
 
-  establecimiento: EmpresaDetalle = structuredClone(EMPRESA_DEMO);
-  establecimientoEdit: EmpresaDetalle = structuredClone(EMPRESA_DEMO);
+  // Llegada del back
+  establecimientoOriginal: any = null;
+
+  // Copia editable
+  establecimientoEdit: any = null;
 
   editMode = false;
 
-  // inputs auxiliares para agregar items a listas
-  nuevaImagen = '';
-  nuevoDato = '';
-  nuevoHorario = '';
+  // días fijos (solo UI)
+  readonly diasSemana = [
+    'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
+  ];
+
+  constructor(
+    private establecimientoService: EstablecimientoService,
+    private api: Api
+  ) {}
 
   ngOnInit(): void {
-    // ✅ No llamamos backend porque por ahora solo quieres ver lo visual
-    this.loading = false;
+    this.obtenerMiEstablecimiento();
+  }
+
+  obtenerMiEstablecimiento() {
+    this.loading = true;
     this.errorMessage = '';
+    this.editMode = false;
+
+    this.establecimientoService.getMio().subscribe({
+      next: (data) => {
+        // si tu back devuelve {ok,data} cambia esto a data.data
+        const est = data?.data ?? data;
+
+        this.establecimientoOriginal = est;
+        this.establecimientoEdit = structuredClone(est);
+        this.loading = false;
+
+        this.api.loadEstablecimientos();
+      },
+      error: (err) => {
+        this.loading = false;
+
+        if (err?.status === 404) {
+          this.establecimientoOriginal = null;
+          this.establecimientoEdit = null;
+          this.errorMessage = 'No tienes establecimiento asignado. Contacta soporte.';
+          return;
+        }
+
+        this.errorMessage = 'Error al obtener el establecimiento. Revisa consola.';
+        console.error('getMio error:', err);
+      }
+    });
   }
 
   editar() {
-    this.establecimientoEdit = structuredClone(this.establecimiento);
+    if (!this.establecimientoOriginal) return;
+    this.establecimientoEdit = structuredClone(this.establecimientoOriginal);
     this.editMode = true;
-    this.nuevaImagen = '';
-    this.nuevoDato = '';
-    this.nuevoHorario = '';
   }
 
   cancelar() {
-    this.establecimientoEdit = structuredClone(this.establecimiento);
+    if (!this.establecimientoOriginal) return;
+    this.establecimientoEdit = structuredClone(this.establecimientoOriginal);
     this.editMode = false;
   }
 
-  guardar() {
-    this.establecimiento = structuredClone(this.establecimientoEdit);
-    this.editMode = false;
-    alert('Guardado solo visual (sin backend).');
-  }
+  guardarCambios() {
+    if (!this.establecimientoOriginal || !this.establecimientoEdit) return;
 
-  addImagen() {
-    const v = this.nuevaImagen.trim();
-    if (!v) return;
-    this.establecimientoEdit.imagenes = [...this.establecimientoEdit.imagenes, v];
-    this.nuevaImagen = '';
-  }
+    // payload seguro: bloqueados desde original, editables desde edit
+    const payload = {
+      // BLOQUEADOS
+      nombre_establecimiento: this.establecimientoOriginal.nombre_establecimiento,
+      ubicacion: this.establecimientoOriginal.ubicacion,
+      direccion: this.establecimientoOriginal.direccion,
+      tipo: this.establecimientoOriginal.tipo,
 
-  removeImagen(i: number) {
-    this.establecimientoEdit.imagenes = this.establecimientoEdit.imagenes.filter((_, idx) => idx !== i);
-  }
+      // EDITABLES
+      descripcion: this.establecimientoEdit.descripcion,
+      telefono: this.establecimientoEdit.telefono,
+      correo: this.establecimientoEdit.correo,
+      horario_apertura: this.establecimientoEdit.horario_apertura,
+      horario_cierre: this.establecimientoEdit.horario_cierre,
+      estado: this.establecimientoEdit.estado ?? 'activo'
+    };
 
-  addDato() {
-    const v = this.nuevoDato.trim();
-    if (!v) return;
-    this.establecimientoEdit.datosGenerales = [...this.establecimientoEdit.datosGenerales, v];
-    this.nuevoDato = '';
-  }
+    this.saving = true;
 
-  removeDato(i: number) {
-    this.establecimientoEdit.datosGenerales = this.establecimientoEdit.datosGenerales.filter((_, idx) => idx !== i);
-  }
-
-  addHorario() {
-    const v = this.nuevoHorario.trim();
-    if (!v) return;
-    this.establecimientoEdit.horarios = [...this.establecimientoEdit.horarios, v];
-    this.nuevoHorario = '';
-  }
-
-  removeHorario(i: number) {
-    this.establecimientoEdit.horarios = this.establecimientoEdit.horarios.filter((_, idx) => idx !== i);
+    this.establecimientoService.updateMio(payload).subscribe({
+      next: () => {
+        this.saving = false;
+        alert('Actualizado correctamente');
+        this.api.loadEstablecimientos();
+        this.obtenerMiEstablecimiento();
+      },
+      error: (err) => {
+        this.saving = false;
+        console.error('updateMio error:', err);
+        alert('No se pudo actualizar. Revisa consola.');
+      }
+    });
   }
 }
