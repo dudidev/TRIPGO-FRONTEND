@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { User } from '../../service/user';
+import { LanguageService } from '../../service/language.service';
 
 @Component({
   selector: 'app-nav',
@@ -11,7 +12,11 @@ import { User } from '../../service/user';
 export class Nav {
   menuOpen = false;
 
-  constructor(private userService: User, private router: Router) { }
+  constructor(
+    private userService: User,
+    private router: Router,
+    public lang: LanguageService
+  ) { }
 
   get isLoggedIn(): boolean {
     return this.userService.isLoggedIn();
@@ -21,20 +26,19 @@ export class Nav {
   }
 
   toggleMenu() {
-  this.menuOpen = !this.menuOpen;
+    this.menuOpen = !this.menuOpen;
 
-  if (this.menuOpen) {
-    document.body.style.overflow = 'hidden';
-  } else {
-    document.body.style.overflow = 'auto';
-  }
+    if (this.menuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
   }
 
   closeMenu() {
     this.menuOpen = false;
     document.body.style.overflow = 'auto';
   }
-
 
   logout(): void {
     this.userService.logout();

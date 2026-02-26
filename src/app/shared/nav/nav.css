@@ -219,3 +219,40 @@
   .OpLaterales{ display: none; }
 }
 /* ====== MOBILE ====== */
+
+/* Button styles for language toggle */
+
+.langBtn{
+  border: 2px solid var(--bg-color);
+  background: transparent;
+  color: var(--bg-color);
+  font-weight: 900;
+  font-size: 0.95em;
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  line-height: 1;
+  transition: 0.2s ease;
+}
+
+.langBtn:hover{
+  background: var(--bg-color);
+  color: var(--primary-color);
+}
+
+.langBtnMobile{
+  margin-top: 8px;
+  border: none;
+  background: var(--primary-color);
+  color: white;
+  font-weight: 900;
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  width: 100%;
+  transition: 0.2s ease;
+}
+
+.langBtnMobile:hover{
+  filter: brightness(1.1);
+}

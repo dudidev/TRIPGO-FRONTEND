@@ -15,9 +15,15 @@
       @if (!isLoggedIn) {
         <a routerLink="/login">Iniciar sesión</a>
         <a routerLink="/register">Registrarse</a>
+        <button type="button" class="langBtn" (click)="lang.toggle()">
+  {{ lang.current === 'es' ? 'EN' : 'ES' }}
+</button>
       } @else {
         <a routerLink="/editar-cuenta">Perfil</a>
         <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
+        <button type="button" class="langBtn" (click)="lang.toggle()">
+        {{ lang.current === 'es' ? 'EN' : 'ES' }}
+        </button>
       }
     </div>
   }
@@ -73,6 +79,15 @@
         <a routerLink="/editar-cuenta" (click)="closeMenu()">Perfil</a>
         <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
       }
+
+      <!-- ✅ BOTÓN IDIOMA EN MÓVIL -->
+       <button
+           type="button"
+             class="langBtnMobile"
+              (click)="lang.toggle(); closeMenu()"
+          >
+          Cambiar a {{ lang.current === 'es' ? 'English' : 'Español' }}
+        </button>
     </nav>
   </aside>
 }
