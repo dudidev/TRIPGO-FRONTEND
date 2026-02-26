@@ -75,5 +75,32 @@ export const CATEGORIAS_DATA: Record<string, CategoriaData> = {
       { titulo: 'Plan relax: cafés y fotos', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729512/cafes_-_categorias_f9s1db.jpg' },
 
     ]
+  },
+  circasia: {
+    nombre: 'Circasia',
+    sliderImgs: [
+      'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722223/circasia_portada_-_carrucel_ouyjxj.jpg',
+      'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765685143/circasia_1-portada_ryk00f.jpg',
+      'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765685143/gastronomia_3-_portada_pdxw7k.jpg',
+      'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765685143/gastronomia_2-portada_e7tr5m.jpg',
+      'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729528/portada_-_categoria_3_sl5x04.jpg'
+    ],
+    categorias: [
+      { key: 'miradores', label: 'Miradores', img: 'https://via.placeholder.com/600x400?text=MIRADORES' },
+      { key: 'cafes', label: 'Cafés', img: 'https://via.placeholder.com/600x400?text=CAFES' },
+      { key: 'artesanias', label: 'Artesanías', img: 'https://via.placeholder.com/600x400?text=ARTESANIAS' },
+      { key: 'cultura', label: 'Cultura', img: 'https://via.placeholder.com/600x400?text=CULTURA' },
+      { key: 'cultura', label: 'Cultura', img: 'https://via.placeholder.com/600x400?text=CULTURA' },
+      { key: 'paseo', label: 'Paseo', img: 'https://via.placeholder.com/600x400?text=PASEO' },
+
+
+    ],
+    itinerarios: [
+      { titulo: 'Ruta cultural', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729551/senderismo_-_categorias_sqngzv.jpg' },
+      { titulo: 'Mirador + fotografía', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729523/mirador_-_categoria_omagyv.jpg' },
+      { titulo: 'Plan cafetero', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729552/tour_cafe_-_categoria_be5nev.jpg' },
+      { titulo: 'Plan relax: cafés y fotos', img: 'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729512/cafes_-_categorias_f9s1db.jpg' },
+
+    ]
   }
 };

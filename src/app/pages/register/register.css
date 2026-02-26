@@ -100,10 +100,10 @@
 }
 
 .carta h2 {
-  margin: 8px 0 22px;
-  font-size: 22px;
-  color: #0b0b0b;
+  font-size: 24px;
   font-weight: 800;
+  color: #0b0b0b;
+  margin-bottom: 22px;
 }
 
 form .field {
@@ -115,17 +115,18 @@ label {
   display: block;
   font-size: 12px;
   margin-bottom: 6px;
-  color: #555;
+  color: #444;
   font-weight: 700;
 }
 
 input {
   width: 100%;
-  height: 42px;
-  padding: 0 14px;
-  border-radius: 999px;      /* pill */
-  border: 1.5px solid #999;  /* más marcado */
-  font-size: 14px;
+  height: 48px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1.5px solid #999;
+  font-size: 15px;
+  font-family: 'Poppins', sans-serif;
   outline: none;
   transition: 0.2s ease;
 }
@@ -172,17 +173,17 @@ small{
 }
 
 .btn {
-  margin-top: 10px;
-  width: 75%;
+  margin-top: 14px;
+  width: 100%;
   height: 48px;
   border-radius: 999px;
   border: none;
   cursor: pointer;
   font-weight: 700;
   font-size: 15px;
-  transition: transform .12s ease, filter .12s ease;
+  font-family: 'Poppins', sans-serif;
+  transition: 0.15s ease;
 }
-
 .btn-primary {
   background: #e57a1f; /* naranja mockup */
   color: white;
