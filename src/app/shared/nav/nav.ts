@@ -3,6 +3,7 @@ import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { User } from '../../service/user';
 import { LanguageService } from '../../service/language.service';
+import { ItinerarioService } from '../../service/itinerario.service';
 
 @Component({
   selector: 'app-nav',
@@ -18,7 +19,9 @@ export class Nav implements AfterViewInit {
   constructor(
     private userService: User,
     private router: Router,
-    public lang: LanguageService
+    public lang: LanguageService,
+    private itinerario: ItinerarioService
+    
   ) {
     // Recalcular cuando cambias de ruta (por si aparece/desaparece nav-bar en /empresa)
     this.router.events
@@ -51,6 +54,32 @@ export class Nav implements AfterViewInit {
     return this.router.url.includes('/empresa');
   }
 
+  itinerarioOpen = false;
+
+   toggleItinerario() {
+    this.itinerarioOpen = !this.itinerarioOpen;
+  }
+
+  closeItinerario() {
+    this.itinerarioOpen = false;
+  }
+
+  removeItItem(id: string) {
+    this.itinerario.remove(id);
+  }
+
+  clearItinerario() {
+    this.itinerario.clear();
+  }
+
+  //  Cierra con ESC
+  @HostListener('document:keydown.escape')
+  onEsc() {
+    this.closeItinerario();
+  }
+
+
+
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
 
@@ -73,6 +102,7 @@ export class Nav implements AfterViewInit {
   logout(): void {
     this.userService.logout();
     this.closeMenu();
+    this.closeItinerario();
     this.router.navigate(['/login']);
   }
 }

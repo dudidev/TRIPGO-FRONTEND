@@ -264,3 +264,129 @@
 .langBtnMobile:hover{
   filter: brightness(1.1);
 }
+
+
+/* ====== Itinerario (carrito) en nav ====== */
+.itNavBtn{
+  position: relative;
+  margin-left: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 0;
+  cursor: pointer;
+  font-weight: 600;
+  background: rgba(255,255,255,0.2);
+  color: white;
+}
+
+.itBadge{
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #ff3b30;
+  color: white;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.itBackdrop{
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  z-index: 999;
+}
+
+.itPopover{
+  position: fixed;
+  right: 24px;
+  top: 120px; /* ajusta si quieres que quede pegado a la barra */
+  width: 360px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 35px rgba(0,0,0,.25);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.itHeader{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.itClose{
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.itBody{
+  padding: 10px 14px;
+}
+
+.itEmpty{
+  padding: 14px 0;
+  color: #666;
+}
+
+/* ✅ scroll cuando hay muchos */
+.itList{
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.itItem{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.itThumb{
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.itInfo{ flex: 1; }
+.itName{ font-weight: 700; color: #111; }
+.itSub{ font-size: 12px; color: #666; }
+
+.itRemove{
+  border: 0;
+  cursor: pointer;
+  background: #f4f4f4;
+  padding: 6px 10px;
+  border-radius: 10px;
+}
+
+.itFooter{
+  display: flex;
+  gap: 10px;
+  padding: 12px 14px;
+  border-top: 1px solid #eee;
+}
+
+.itClear, .itGo{
+  flex: 1;
+  border: 0;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.itClear{ background: #f4f4f4; }
+.itGo{ background: #0f7a7a; color: white; }
+.itGo:disabled, .itClear:disabled { opacity: .6; cursor: not-allowed; }
