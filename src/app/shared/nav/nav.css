@@ -1,3 +1,11 @@
+.headerFixed{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2000; /* más que overlays si quieres */
+}
+
 .navPrincipal{
     display: flex;
     justify-content: space-between;

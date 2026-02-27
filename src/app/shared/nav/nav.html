@@ -1,93 +1,97 @@
-<div class="navPrincipal">
-  <div class="contLogo">
-    <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764678577/ChatGPT_Image_12_nov_2025_17_33_14_1_hj26hs.png" alt="TripGo" />
-    <a [routerLink]="isLoggedIn ? '/principal' : '/'">TRIPGO</a>
-  </div>
+<header #headerRef class="headerFixed">
 
-  <!-- ✅ Si estoy en /empresa: SOLO Salir -->
-  @if (isEmpresaPage) {
-    <div class="OpLaterales">
-      <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
+
+  <div class="navPrincipal">
+    <div class="contLogo">
+      <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764678577/ChatGPT_Image_12_nov_2025_17_33_14_1_hj26hs.png" alt="TripGo" />
+      <a [routerLink]="isLoggedIn ? '/principal' : '/'">TRIPGO</a>
     </div>
-  } @else {
-    <!-- ✅ Tu OpLaterales normal -->
-    <div class="OpLaterales">
-      @if (!isLoggedIn) {
-        <a routerLink="/login">Iniciar sesión</a>
-        <a routerLink="/register">Registrarse</a>
-        <button type="button" class="langBtn" (click)="lang.toggle()">
-  {{ lang.current === 'es' ? 'EN' : 'ES' }}
-</button>
-      } @else {
-        <a routerLink="/editar-cuenta">Perfil</a>
+
+    <!-- ✅ Si estoy en /empresa: SOLO Salir -->
+    @if (isEmpresaPage) {
+      <div class="OpLaterales">
         <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
-        <button type="button" class="langBtn" (click)="lang.toggle()">
-        {{ lang.current === 'es' ? 'EN' : 'ES' }}
-        </button>
-      }
-    </div>
-  }
-
-  <!-- ✅ Hamburguesa: la ocultamos en /empresa (para que no salga el menú) -->
-  @if (!isEmpresaPage) {
-    <button class="hamburgerBtn" type="button" (click)="toggleMenu()" aria-label="Abrir menú">
-      ☰
-    </button>
-  }
-</div>
-
-<!-- ✅ nav-bar normal: oculto en /empresa -->
-@if (!isEmpresaPage) {
-  <div class="nav-bar">
-    @if (!isLoggedIn) {
-      <a href="/#Nosotros">¿Quienes somos?</a>
-      <a href="/#comoFunciona">Como funciona</a>
-      <a routerLink="/prices">Algunos planes</a>
-      <a routerLink="/contact">Contacto</a>
+      </div>
     } @else {
-      <a routerLink="/principal">Lugares</a>
-      <a routerLink="/principal">Recomendaciones</a>
-      <a routerLink="/contact">Soporte</a>
-      <a routerLink="/about">Eventos</a>
+      <!-- ✅ Tu OpLaterales normal -->
+      <div class="OpLaterales">
+        @if (!isLoggedIn) {
+          <a routerLink="/login">Iniciar sesión</a>
+          <a routerLink="/register">Registrarse</a>
+          <button type="button" class="langBtn" (click)="lang.toggle()">
+    {{ lang.current === 'es' ? 'EN' : 'ES' }}
+  </button>
+        } @else {
+          <a routerLink="/editar-cuenta">Perfil</a>
+          <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
+          <button type="button" class="langBtn" (click)="lang.toggle()">
+          {{ lang.current === 'es' ? 'EN' : 'ES' }}
+          </button>
+        }
+      </div>
+    }
+
+    <!-- ✅ Hamburguesa: la ocultamos en /empresa (para que no salga el menú) -->
+    @if (!isEmpresaPage) {
+      <button class="hamburgerBtn" type="button" (click)="toggleMenu()" aria-label="Abrir menú">
+        ☰
+      </button>
     }
   </div>
-}
 
-<!-- ✅ overlay + sideMenu: ocultos en /empresa también -->
-@if (!isEmpresaPage && menuOpen) {
-  <div class="menuOverlay" (click)="closeMenu()"></div>
-
-  <aside class="sideMenu" (click)="$event.stopPropagation()">
-    <div class="sideMenu__top">
-      <span class="sideMenu__title">Menú</span>
-      <button class="sideMenu__close" type="button" (click)="closeMenu()">✕</button>
-    </div>
-
-    <nav class="sideMenu__links">
+  <!-- ✅ nav-bar normal: oculto en /empresa -->
+  @if (!isEmpresaPage) {
+    <div class="nav-bar">
       @if (!isLoggedIn) {
-        <a routerLink="/login" (click)="closeMenu()">Iniciar sesión</a>
-        <a routerLink="/register" (click)="closeMenu()">Registrarse</a>
-        <a href="/#Nosotros" (click)="closeMenu()">¿Quienes somos?</a>
-        <a href="/#comoFunciona" (click)="closeMenu()">Como funciona</a>
-        <a routerLink="/prices" (click)="closeMenu()">Algunos planes</a>
-        <a routerLink="/contact" (click)="closeMenu()">Contacto</a>
+        <a href="/#Nosotros">¿Quienes somos?</a>
+        <a href="/#comoFunciona">Como funciona</a>
+        <a routerLink="/prices">Algunos planes</a>
+        <a routerLink="/contact">Contacto</a>
       } @else {
-        <a routerLink="/principal" (click)="closeMenu()">Lugares</a>
-        <a routerLink="/principal" (click)="closeMenu()">Recomendaciones</a>
-        <a routerLink="/contact" (click)="closeMenu()">Soporte</a>
-        <a routerLink="/about" (click)="closeMenu()">Eventos</a>
-        <a routerLink="/editar-cuenta" (click)="closeMenu()">Perfil</a>
-        <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
+        <a routerLink="/principal">Lugares</a>
+        <a routerLink="/principal">Recomendaciones</a>
+        <a routerLink="/contact">Soporte</a>
+        <a routerLink="/about">Eventos</a>
       }
+    </div>
+  }
 
-      <!-- ✅ BOTÓN IDIOMA EN MÓVIL -->
-       <button
-           type="button"
-             class="langBtnMobile"
-              (click)="lang.toggle(); closeMenu()"
-          >
-          Cambiar a {{ lang.current === 'es' ? 'English' : 'Español' }}
-        </button>
-    </nav>
-  </aside>
-}
+  <!-- ✅ overlay + sideMenu: ocultos en /empresa también -->
+  @if (!isEmpresaPage && menuOpen) {
+    <div class="menuOverlay" (click)="closeMenu()"></div>
+
+    <aside class="sideMenu" (click)="$event.stopPropagation()">
+      <div class="sideMenu__top">
+        <span class="sideMenu__title">Menú</span>
+        <button class="sideMenu__close" type="button" (click)="closeMenu()">✕</button>
+      </div>
+
+      <nav class="sideMenu__links">
+        @if (!isLoggedIn) {
+          <a routerLink="/login" (click)="closeMenu()">Iniciar sesión</a>
+          <a routerLink="/register" (click)="closeMenu()">Registrarse</a>
+          <a href="/#Nosotros" (click)="closeMenu()">¿Quienes somos?</a>
+          <a href="/#comoFunciona" (click)="closeMenu()">Como funciona</a>
+          <a routerLink="/prices" (click)="closeMenu()">Algunos planes</a>
+          <a routerLink="/contact" (click)="closeMenu()">Contacto</a>
+        } @else {
+          <a routerLink="/principal" (click)="closeMenu()">Lugares</a>
+          <a routerLink="/principal" (click)="closeMenu()">Recomendaciones</a>
+          <a routerLink="/contact" (click)="closeMenu()">Soporte</a>
+          <a routerLink="/about" (click)="closeMenu()">Eventos</a>
+          <a routerLink="/editar-cuenta" (click)="closeMenu()">Perfil</a>
+          <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
+        }
+
+        <!-- ✅ BOTÓN IDIOMA EN MÓVIL -->
+        <button
+            type="button"
+              class="langBtnMobile"
+                (click)="lang.toggle(); closeMenu()"
+            >
+            Cambiar a {{ lang.current === 'es' ? 'English' : 'Español' }}
+          </button>
+      </nav>
+    </aside>
+  }
+</header>
