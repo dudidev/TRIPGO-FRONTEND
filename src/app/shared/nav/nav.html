@@ -1,9 +1,11 @@
 <header #headerRef class="headerFixed">
 
-
   <div class="navPrincipal">
     <div class="contLogo">
-      <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764678577/ChatGPT_Image_12_nov_2025_17_33_14_1_hj26hs.png" alt="TripGo" />
+      <img
+        src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764678577/ChatGPT_Image_12_nov_2025_17_33_14_1_hj26hs.png"
+        alt="TripGo"
+      />
       <a [routerLink]="isLoggedIn ? '/principal' : '/'">TRIPGO</a>
     </div>
 
@@ -11,53 +13,33 @@
     @if (isEmpresaPage) {
       <div class="OpLaterales">
         <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
-        <button type="button" class="langBtn" (click)="lang.toggle()">
-        {{ lang.current === 'es' ? 'EN' : 'ES' }}
-        </button>
-      
-      }
-    </div>
-  }
-
-  <!--  Hamburguesa: la ocultamos en /empresa (para que no salga el menú) -->
-  @if (!isEmpresaPage) {
-    <button class="hamburgerBtn" type="button" (click)="toggleMenu()" aria-label="Abrir menú">
-      ☰
-    </button>
-  }
-</div>
-
-<!--  nav-bar normal: oculto en /empresa -->
-@if (!isEmpresaPage) {
-  <div class="nav-bar">
-    @if (!isLoggedIn) {
-      <a href="/#Nosotros">¿Quienes somos?</a>
-      <a href="/#comoFunciona">Como funciona</a>
-      <a routerLink="/prices">Algunos planes</a>
-      <a routerLink="/contact">Contacto</a>
+      </div>
     } @else {
-      <!-- ✅ Tu OpLaterales normal -->
       <div class="OpLaterales">
         @if (!isLoggedIn) {
           <a routerLink="/login">Iniciar sesión</a>
           <a routerLink="/register">Registrarse</a>
           <button type="button" class="langBtn" (click)="lang.toggle()">
-    {{ lang.current === 'es' ? 'EN' : 'ES' }}
-  </button>
+            {{ lang.current === 'es' ? 'EN' : 'ES' }}
+          </button>
         } @else {
           <a routerLink="/editar-cuenta">Perfil</a>
           <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
           <button type="button" class="langBtn" (click)="lang.toggle()">
-          {{ lang.current === 'es' ? 'EN' : 'ES' }}
+            {{ lang.current === 'es' ? 'EN' : 'ES' }}
           </button>
         }
       </div>
     }
-  }
 
-    <!-- ✅ Hamburguesa: la ocultamos en /empresa (para que no salga el menú) -->
+    <!-- ✅ Hamburguesa: la ocultamos en /empresa -->
     @if (!isEmpresaPage) {
-      <button class="hamburgerBtn" type="button" (click)="toggleMenu()" aria-label="Abrir menú">
+      <button
+        class="hamburgerBtn"
+        type="button"
+        (click)="toggleMenu()"
+        aria-label="Abrir menú"
+      >
         ☰
       </button>
     }
@@ -76,8 +58,65 @@
         <a routerLink="/principal">Recomendaciones</a>
         <a routerLink="/contact">Soporte</a>
         <a routerLink="/about">Eventos</a>
+
+        <!-- ✅ Mi itinerario -->
+        <button type="button" class="itNavBtn" (click)="toggleItinerario()">
+          Mi itinerario
+          @if (itinerario.count > 0) {
+            <span class="itBadge">{{ itinerario.count }}</span>
+          }
+        </button>
       }
     </div>
+
+    <!-- ✅ Popover itinerario (nube flotante) -->
+    @if (itinerarioOpen) {
+      <div class="itBackdrop" (click)="closeItinerario()"></div>
+
+      <div class="itPopover" (click)="$event.stopPropagation()">
+        <div class="itHeader">
+          <strong>Mi itinerario</strong>
+          <button class="itClose" type="button" (click)="closeItinerario()">✕</button>
+        </div>
+
+        <div class="itBody">
+          <ng-container *ngIf="(itinerario.items$ | async) as items">
+            <div class="itEmpty" *ngIf="items.length === 0">
+              Aún no has agregado lugares.
+            </div>
+
+            <div class="itList" *ngIf="items.length > 0">
+              <div class="itItem" *ngFor="let it of items">
+                <img *ngIf="it.imagenUrl" [src]="it.imagenUrl" class="itThumb" />
+
+                <div class="itInfo">
+                  <div class="itName">{{ it.nombre }}</div>
+                  <div class="itSub" *ngIf="it.direccion">{{ it.direccion }}</div>
+                </div>
+
+                <button class="itRemove" type="button" (click)="removeItItem(it.id)">
+                  Quitar
+                </button>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+        <div class="itFooter">
+          <button
+            type="button"
+            class="itClear"
+            (click)="clearItinerario()"
+            [disabled]="itinerario.count === 0"
+          >
+            Limpiar
+          </button>
+          <button type="button" class="itGo" [disabled]="itinerario.count === 0">
+            Confirmar
+          </button>
+        </div>
+      </div>
+    }
   }
 
   <!-- ✅ overlay + sideMenu: ocultos en /empresa también -->
@@ -107,15 +146,15 @@
           <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
         }
 
-        <!-- ✅ BOTÓN IDIOMA EN MÓVIL -->
         <button
-            type="button"
-              class="langBtnMobile"
-                (click)="lang.toggle(); closeMenu()"
-            >
-            Cambiar a {{ lang.current === 'es' ? 'English' : 'Español' }}
-          </button>
+          type="button"
+          class="langBtnMobile"
+          (click)="lang.toggle(); closeMenu()"
+        >
+          Cambiar a {{ lang.current === 'es' ? 'English' : 'Español' }}
+        </button>
       </nav>
     </aside>
   }
+
 </header>
