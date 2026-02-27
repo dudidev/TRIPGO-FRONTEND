@@ -1,4 +1,5 @@
 import { Component, AfterViewInit, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { User } from '../../service/user';
@@ -7,12 +8,14 @@ import { ItinerarioService } from '../../service/itinerario.service';
 
 @Component({
   selector: 'app-nav',
-  imports: [RouterModule],
+  standalone: true,
+  imports: [RouterModule, CommonModule],
   templateUrl: './nav.html',
   styleUrl: './nav.css'
 })
 export class Nav implements AfterViewInit {
   menuOpen = false;
+  itinerarioOpen = false;
 
   @ViewChild('headerRef') headerRef!: ElementRef<HTMLElement>;
 
@@ -20,10 +23,8 @@ export class Nav implements AfterViewInit {
     private userService: User,
     private router: Router,
     public lang: LanguageService,
-    private itinerario: ItinerarioService
-    
+    public itinerario: ItinerarioService
   ) {
-    // Recalcular cuando cambias de ruta (por si aparece/desaparece nav-bar en /empresa)
     this.router.events
       .pipe(filter(e => e instanceof NavigationEnd))
       .subscribe(() => setTimeout(() => this.setNavOffset(), 0));
@@ -31,7 +32,6 @@ export class Nav implements AfterViewInit {
 
   ngAfterViewInit() {
     this.setNavOffset();
-    // Recalcular una vez más por si hay fuentes/imagenes que cambian altura al cargar
     setTimeout(() => this.setNavOffset(), 0);
   }
 
@@ -54,9 +54,7 @@ export class Nav implements AfterViewInit {
     return this.router.url.includes('/empresa');
   }
 
-  itinerarioOpen = false;
-
-   toggleItinerario() {
+  toggleItinerario() {
     this.itinerarioOpen = !this.itinerarioOpen;
   }
 
@@ -72,24 +70,14 @@ export class Nav implements AfterViewInit {
     this.itinerario.clear();
   }
 
-  //  Cierra con ESC
   @HostListener('document:keydown.escape')
   onEsc() {
     this.closeItinerario();
   }
 
-
-
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
-
-    if (this.menuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
-
-    // si el menú afecta alto en móvil, recalcula
+    document.body.style.overflow = this.menuOpen ? 'hidden' : 'auto';
     setTimeout(() => this.setNavOffset(), 0);
   }
 

@@ -11,7 +11,30 @@
     @if (isEmpresaPage) {
       <div class="OpLaterales">
         <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
-      </div>
+        <button type="button" class="langBtn" (click)="lang.toggle()">
+        {{ lang.current === 'es' ? 'EN' : 'ES' }}
+        </button>
+      
+      }
+    </div>
+  }
+
+  <!--  Hamburguesa: la ocultamos en /empresa (para que no salga el menú) -->
+  @if (!isEmpresaPage) {
+    <button class="hamburgerBtn" type="button" (click)="toggleMenu()" aria-label="Abrir menú">
+      ☰
+    </button>
+  }
+</div>
+
+<!--  nav-bar normal: oculto en /empresa -->
+@if (!isEmpresaPage) {
+  <div class="nav-bar">
+    @if (!isLoggedIn) {
+      <a href="/#Nosotros">¿Quienes somos?</a>
+      <a href="/#comoFunciona">Como funciona</a>
+      <a routerLink="/prices">Algunos planes</a>
+      <a routerLink="/contact">Contacto</a>
     } @else {
       <!-- ✅ Tu OpLaterales normal -->
       <div class="OpLaterales">
