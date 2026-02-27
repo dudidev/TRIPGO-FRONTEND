@@ -6,6 +6,7 @@ import { Footer } from '../../shared/footer/footer';
 import { MapaComponent } from '../../shared/mapa/mapa';
 import { Api } from '../../api';
 import { take } from 'rxjs';
+import { ItinerarioService } from '../../service/itinerario.service';
 
 type Opinion = {
   usuario: string;
@@ -26,7 +27,7 @@ type LugarDetalle = {
   opiniones: Opinion[];
   datosGenerales?: string[];
 
-  // ✅ ahora opcionales (porque desde BD puede que no vengan aún)
+  //  ahora opcionales (porque desde BD puede que no vengan aún)
   lat?: number;
   lng?: number;
 
@@ -52,7 +53,9 @@ export class Detalles {
   loading = false;
   errorMsg = '';
 
-  constructor(private route: ActivatedRoute, private api: Api) {}
+  itMsg = '';
+
+  constructor(private route: ActivatedRoute, private api: Api, private itinerario: ItinerarioService) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -73,7 +76,7 @@ export class Detalles {
     this.errorMsg = '';
     this.lugar = null;
 
-    // ✅ Opción A:
+    //  Opción A:
     // 1) Primero intenta en el estado global (si vienes desde la lista ya está cargado)
     this.api.establecimientos$.pipe(take(1)).subscribe({
       next: (listaEstado) => {
@@ -190,6 +193,23 @@ export class Detalles {
 
   agregarItinerario() {
     if (!this.lugar) return;
-    console.log('Agregar a itinerario:', this.lugar);
+
+    // (opcional) limpiar mensaje anterior
+    this.itMsg = '';
+
+    // Construimos el item con lo que ya tienes en tu LugarDetalle
+    const item = {
+      id: this.lugar.slug,                 // tu id actual (string)
+      nombre: this.lugar.nombre,
+      direccion: this.lugar.direccion,
+      imagenUrl: this.lugar.imagenes?.[0] || undefined
+    };
+
+    // Guardar en el itinerario (service ya maneja storage y duplicados si lo programaste así)
+    this.itinerario.add(item);
+
+    //  feedback simple (si luego quieres mostrarlo en HTML)
+    this.itMsg = 'Agregado a tu itinerario ✅';
+    setTimeout(() => (this.itMsg = ''), 1500);
   }
 }
