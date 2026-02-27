@@ -1,129 +1,209 @@
-/* ===== Layout general ===== */
-.empresa-page {
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.empresa-page{
   max-width: 1100px;
   margin: 40px auto;
   padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
 }
 
-/* ===== Cards ===== */
-.card {
+/* ===== CARD (contenedor base) ===== */
+.card{
   background: #ffffff;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+/* Estados vacíos */
+.empty{
+  padding: 14px;
   border-radius: 12px;
-  padding: 25px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-}
-
-.card h2 {
-  margin-bottom: 15px;
-  font-size: 20px;
-  color: #333;
-}
-
-/* ===== Cover ===== */
-.cover {
-  width: 100%;
-  height: 300px;
-  overflow: hidden;
-  border-radius: 10px;
-  margin-bottom: 15px;
-}
-
-.cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* ===== Galería ===== */
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 12px;
-  margin-top: 10px;
-}
-
-.gallery img {
-  width: 100%;
-  height: 130px;
-  object-fit: cover;
-  border-radius: 8px;
-  transition: transform 0.2s ease;
-}
-
-.gallery img:hover {
-  transform: scale(1.05);
-}
-
-/* ===== Texto vacío ===== */
-.empty {
-  padding: 20px;
   background: #f5f5f5;
-  border-radius: 8px;
-  text-align: center;
   color: #777;
+  text-align: center;
   font-style: italic;
 }
 
-/* ===== Banner Horarios ===== */
-.banner {
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  color: white;
-  padding: 25px;
+/* ===== HEADER DEL PANEL ===== */
+.panel-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap: 16px;
+}
+
+.panel-header h2{
+  margin: 0;
+  font-size: 22px;
+  font-weight: 900;
+  color: #0F3B3E;
+}
+
+.muted{
+  margin-top: 6px;
+  color: #666;
+  font-weight: 600;
+}
+
+/* acciones (botones derecha) */
+.actions{
+  display:flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ===== BOTONES ===== */
+/* Botón principal: aplica a Editar y Guardar (no tienen clase) */
+.actions button{
+  padding: 10px 14px;
   border-radius: 12px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  font-size: 16px;
-  font-weight: 500;
-}
-
-.banner div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* ===== Textarea ===== */
-textarea {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  resize: none;
-  margin-top: 10px;
-  font-size: 14px;
-}
-
-/* ===== Botones ===== */
-button {
-  margin-top: 12px;
-  padding: 8px 16px;
-  border-radius: 6px;
   border: none;
   cursor: pointer;
-  font-size: 14px;
-  background-color: #2c5364;
+  background: #2c5364;
   color: white;
-  transition: background 0.2s ease;
+  font-size: 14px;
+  font-weight: 700;
+  transition: background .15s ease, transform .12s ease;
 }
 
-button:hover {
-  background-color: #1e3c47;
+.actions button:hover{
+  background: #1e3c47;
+  transform: translateY(-1px);
 }
 
-/* ===== Ubicación iframe ===== */
-iframe {
+/* Botón secundario: Cancelar */
+.btn-secundario{
+  background: #e9e9e9 !important;
+  color: #222 !important;
+}
+
+.btn-secundario:hover{
+  background: #dcdcdc !important;
+}
+
+/* botón deshabilitado */
+.actions button[disabled]{
+  opacity: .65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ===== LAYOUT 2 COLUMNAS ===== */
+.contenido{
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 22px;
+}
+
+.col-izq section{
+  margin-bottom: 18px;
+}
+
+.col-izq h3{
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 900;
+  color: #0E6973;
+}
+
+.col-der{
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== BOXES DERECHA ===== */
+.box{
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  margin-bottom: 14px;
+}
+
+.box h4{
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 900;
+  color: #0F3B3E;
+}
+
+/* ===== FORM (inputs reales del HTML) ===== */
+.field{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   margin-top: 10px;
-  border-radius: 10px;
 }
 
-/* ===== Responsive ===== */
-@media (max-width: 768px) {
-  .banner {
+label{
+  font-size: 13px;
+  color: #444;
+  font-weight: 700;
+}
+
+/* Como tu HTML usa <input> <textarea> <select> sin clase,
+   los estilamos dentro de empresa-page para no afectar toda la app */
+.empresa-page input,
+.empresa-page textarea,
+.empresa-page select{
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+  background: #fff;
+}
+
+.empresa-page textarea{
+  resize: vertical;
+  min-height: 120px;
+}
+
+.empresa-page input:focus,
+.empresa-page textarea:focus,
+.empresa-page select:focus{
+  border-color: #0f6b73;
+  box-shadow: 0 0 0 3px rgba(15,107,115,0.14);
+}
+
+/* ===== LISTAS / TEXTOS ===== */
+.empresa-page p{
+  color: #333;
+  line-height: 1.55;
+}
+
+.empresa-page ul{
+  padding-left: 18px;
+  margin: 8px 0 0;
+}
+
+.empresa-page li{
+  margin: 6px 0;
+  color: #333;
+}
+
+/* hint */
+.hint{
+  color: #777;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px){
+  .contenido{
+    grid-template-columns: 1fr;
+  }
+
+  .panel-header{
     flex-direction: column;
-    gap: 15px;
+  }
+
+  .actions{
+    width: 100%;
+    justify-content: flex-start;
   }
 }

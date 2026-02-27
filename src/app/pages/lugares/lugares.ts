@@ -6,6 +6,7 @@ import { Nav } from '../../shared/nav/nav';
 import { Footer } from '../../shared/footer/footer';
 import { Api } from '../../api';
 import { Subject, takeUntil } from 'rxjs';
+import { LUGARES_DATA } from '../../data/lugares.data';
 
 type CardItem = {
   slug: string;
@@ -42,6 +43,59 @@ export class LugaresComponent implements OnDestroy {
 
   private destroy$ = new Subject<void>();
 
+// ✅ Mapea idTipo -> key dentro de LUGARES_DATA[town][key]
+// AJUSTA según tus ids reales:
+private TIPO_KEY_BY_ID: Record<number, string> = {
+  14: 'valle-cocora',
+  1: 'hotel',
+  20 : 'mirador',
+  18: 'senderismo'
+
+  
+};
+
+private getTipoKey(): string {
+  return this.TIPO_KEY_BY_ID[this.idTipo] ?? '';
+}
+
+private applyLugaresDataToItems() {
+  const town = (this.townSlug || '').toLowerCase().trim();
+  const tipoKey = this.getTipoKey();
+  if (!town || !tipoKey) return;
+
+  const pack = LUGARES_DATA?.[town]?.[tipoKey];
+  if (!pack) return;
+
+  // ✅ si tu data tiene titulo y hero, úsalo
+  if (pack.titulo) this.titulo = `${pack.titulo} en ${this.townSlug}`;
+
+  if (pack.heroImgs?.length) {
+    this.heroImgs = pack.heroImgs;
+    this.heroIndex = 0;
+    this.startHero();
+  }
+
+  // ✅ armar mapa slug->img
+  const imgBySlug = new Map<string, string>(
+    (pack.items ?? []).map(x => [String(x.slug), String(x.img)])
+  );
+
+    // ✅ DEBUG para confirmar que existe slug "6"
+  console.log('town:', town, 'idTipo:', this.idTipo, 'tipoKey:', tipoKey);
+  console.log('slugs en backend:', this.items.map(x => x.slug));
+  console.log('slugs en data:', [...imgBySlug.keys()]);
+
+  // ✅ aplicar imagen por slug (id_establecimiento)
+  this.items = this.items.map(it => ({
+    ...it,
+    img: imgBySlug.get(String(it.slug)) ?? it.img
+  }));
+
+  this.filtered = this.applySearch(this.query);
+}
+
+
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -61,6 +115,8 @@ export class LugaresComponent implements OnDestroy {
             titulo: e.nombre_establecimiento ?? e.nombre ?? e.direccion ?? 'Sin nombre',
             img: e.imagen ?? 'https://via.placeholder.com/600x400?text=Establecimiento'
           }));
+
+           this.applyLugaresDataToItems();
 
           this.filtered = this.applySearch(this.query);
           this.loading = false;
@@ -86,6 +142,9 @@ export class LugaresComponent implements OnDestroy {
         this.townSlug = params.get('townSlug') || '';
         this.idTipo = Number(params.get('idTipo') || 0);
 
+        // ✅ HERO por pueblo SIEMPRE (así no se rompe Filandia)
+        this.setHeroByTownSlug(this.townSlug);
+
         if (!this.townSlug || !this.idTipo) {
           this.items = [];
           this.filtered = [];
@@ -108,12 +167,12 @@ export class LugaresComponent implements OnDestroy {
           .subscribe({
             next: (nombre) => {
               this.titulo = `${nombre} en ${this.townSlug}`;
-              // opcional: puedes armar hero dinámico por tipo
-              this.setHeroByTipoNombre(nombre);
+              // ❌ NO pises el hero por tipo. El hero es por pueblo.
+              // this.setHeroByTipoNombre(nombre);
             },
             error: () => {
               this.titulo = `Establecimientos en ${this.townSlug}`;
-              this.setHeroFallback();
+              // si falla, igual mantenemos el hero por pueblo
             }
           });
 
@@ -137,23 +196,28 @@ export class LugaresComponent implements OnDestroy {
     this.stopHero();
   }
 
-  private setHeroByTipoNombre(nombre: string) {
-    // ✅ Sin quemar datos de BD: solo estética
-    const n = (nombre || '').toLowerCase();
+  // =========================
+  // HERO por PUEBLO (townSlug)
+  // =========================
+  private setHeroByTownSlug(townSlug: string) {
+    const t = (townSlug || '').toLowerCase().trim();
 
-    if (n.includes('cabalg')) {
+    if (t === 'filandia') {
       this.heroImgs = [
-        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765731482/cabalgata_portada_-_cabal_sd9xro.jpg',
-        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765731467/cabalgata_portada_2-_cabal_vkqbmf.jpg'
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722321/filandia_portada_-_carrucel_yvkncf.jpg',
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770646756/imagen6valle-cocora_r8sw92.jpg',
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765719559/Salento_Portada-_carrucel_xhjred.jpg'
       ];
-    } else if (n.includes('mirador')) {
+    } else if (t === 'salento') {
       this.heroImgs = [
-        'https://via.placeholder.com/1400x500?text=Miradores+1',
-        'https://via.placeholder.com/1400x500?text=Miradores+2'
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765732081/cabalgata_portada_-_5_xjw3xq.jpg',
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729542/portada_8_jrmbd6.jpg',
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765731463/cabalgata_-_portada_4_dma1bo.jpg'
       ];
     } else {
-      // default
-      this.heroImgs = [];
+      // fallback por pueblo desconocido
+      this.setHeroFallback();
+      return;
     }
 
     this.heroIndex = 0;

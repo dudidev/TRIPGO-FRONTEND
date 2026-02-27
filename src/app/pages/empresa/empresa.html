@@ -1,30 +1,119 @@
-<!-- <app-nav></app-nav> -->
- <app-header></app-header>
+<app-nav></app-nav>
 
 <div class="empresa-page">
 
-  <div *ngIf="loading" class="card">
-    Cargando...
-  </div>
+  <div *ngIf="loading" class="card">Cargando...</div>
 
   <div *ngIf="!loading && errorMessage" class="card">
     <p class="empty">{{ errorMessage }}</p>
   </div>
 
-  <div *ngIf="!loading && establecimiento" class="card">
-    <h2>Panel de Empresa</h2>
-    <p><b>Nombre:</b> {{ establecimiento.nombre_establecimiento }}</p>
-    <p><b>Ubicación:</b> {{ establecimiento.ubicacion }}</p>
-    <p><b>Descripción:</b> {{ establecimiento.descripcion }}</p>
-    <p><b>Dirección:</b> {{ establecimiento.direccion }}</p>
-    <p><b>Teléfono:</b> {{ establecimiento.telefono }}</p>
-    <p><b>Horario:</b> {{ establecimiento.horario_apertura }}</p>
+  <div *ngIf="!loading && establecimientoOriginal" class="card">
 
+    <div class="panel-header">
+      <div>
+        <h2>{{ establecimientoOriginal.nombre_establecimiento }}</h2>
+        <p class="muted">📍 {{ establecimientoOriginal.ubicacion }}</p>
+      </div>
 
+      <div class="actions">
+        <button *ngIf="!editMode" (click)="editar()">Editar</button>
 
-    
+        <ng-container *ngIf="editMode">
+          <button (click)="guardarCambios()" [disabled]="saving">
+            {{ saving ? 'Guardando...' : 'Guardar' }}
+          </button>
+          <button class="btn-secundario" (click)="cancelar()" [disabled]="saving">
+            Cancelar
+          </button>
+        </ng-container>
+      </div>
+    </div>
 
-    <button (click)="actualizar()">Guardar cambios</button>
+    <div class="contenido">
+
+      <!-- IZQUIERDA -->
+      <div class="col-izq">
+
+        <section>
+          <h3>Descripción general</h3>
+
+          <p *ngIf="!editMode">{{ establecimientoOriginal.descripcion || '—' }}</p>
+
+          <textarea *ngIf="editMode"
+            rows="6"
+            [(ngModel)]="establecimientoEdit.descripcion"
+          ></textarea>
+        </section>
+
+        <section>
+          <h3>Datos de contacto</h3>
+
+          <p><b>Teléfono:</b>
+            <span *ngIf="!editMode">{{ establecimientoOriginal.telefono || '—' }}</span>
+            <input *ngIf="editMode" [(ngModel)]="establecimientoEdit.telefono" />
+          </p>
+
+          <p><b>Correo:</b>
+            <span *ngIf="!editMode">{{ establecimientoOriginal.correo || '—' }}</span>
+            <input *ngIf="editMode" [(ngModel)]="establecimientoEdit.correo" />
+          </p>
+
+          <p><b>Estado:</b>
+            <span *ngIf="!editMode">{{ establecimientoOriginal.estado || 'activo' }}</span>
+
+            <select *ngIf="editMode" [(ngModel)]="establecimientoEdit.estado">
+              <option value="activo">activo</option>
+              <option value="inactivo">inactivo</option>
+            </select>
+          </p>
+        </section>
+
+      </div>
+
+      <!-- DERECHA -->
+      <div class="col-der">
+
+        <section class="box">
+          <h4>Información bloqueada</h4>
+
+          <p><b>Nombre:</b> {{ establecimientoOriginal.nombre_establecimiento }}</p>
+          <p><b>Ubicación:</b> {{ establecimientoOriginal.ubicacion }}</p>
+          <p><b>Dirección:</b> {{ establecimientoOriginal.direccion || '—' }}</p>
+          <p><b>Tipo:</b> {{ establecimientoOriginal.tipo || '—' }}</p>
+        </section>
+
+        <section class="box">
+          <h4>Horarios</h4>
+
+          <!-- Vista -->
+          <ng-container *ngIf="!editMode">
+            <ul>
+              <li *ngFor="let d of diasSemana">
+                {{ d }}: {{ establecimientoOriginal.horario_apertura || '—' }} - {{ establecimientoOriginal.horario_cierre || '—' }}
+              </li>
+            </ul>
+          </ng-container>
+
+          <!-- Edición (solo horas, días fijos) -->
+          <ng-container *ngIf="editMode">
+            <div class="field">
+              <label>Hora apertura</label>
+              <input [(ngModel)]="establecimientoEdit.horario_apertura" />
+            </div>
+
+            <div class="field">
+              <label>Hora cierre</label>
+              <input [(ngModel)]="establecimientoEdit.horario_cierre" />
+            </div>
+
+            <p class="hint">Los días se muestran fijos por ahora; solo editas las horas.</p>
+          </ng-container>
+        </section>
+
+      </div>
+
+    </div>
   </div>
 
 </div>

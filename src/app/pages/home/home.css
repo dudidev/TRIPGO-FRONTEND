@@ -350,7 +350,145 @@ nav a{
     background-color: #09494f;
 }
 
-/* Carta Premium un poco destacada */
+
 .plan-simple.premium {
     border: 2px solid #E27921;
+}
+
+@media (max-width: 980px) {
+
+
+  .contenido{
+    height: 70vh;                
+    justify-content: center;       
+    padding: 0 18px;
+  }
+
+  .contenido::after{
+    background: linear-gradient(to top, rgba(0,0,0,.15) 20%, rgba(0,0,0,.75) 100%);
+  }
+
+  .contenido h2{
+    width: 100%;
+    margin-right: 0;
+    text-align: center;
+    font-size: clamp(1.6rem, 4vw, 2.6rem);
+  }
+
+
+  .Nosotros{
+    padding: 40px 6%;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .info1,
+  .info2{
+    width: 100%;
+    margin: 0;
+  }
+
+  .planes-grid,
+  .planes-simple-grid,
+  .funciona-grid{
+    gap: 18px;
+  }
+}
+
+
+@media (max-width: 768px) {
+
+
+  .contenido{
+    height: 62vh;
+  }
+
+  .contenido h2{
+    padding: 0 10px;
+    line-height: 1.15;
+  }
+
+
+  .aliados h3{
+    font-size: 1.1em;
+    text-align: center;
+  }
+
+ 
+  .planes-grid{
+    flex-direction: column;     
+    align-items: center;
+  }
+
+  .plan-card{
+    width: min(92%, 420px);  
+  }
+
+  /* PLANES SIMPLES */
+  .planes-simple-grid{
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .plan-simple{
+    width: min(92%, 420px);
+  }
+
+  /* FUNCIONA */
+  .panel-funciona{
+    padding: 45px 6%;
+  }
+  .panel-funciona h2{
+    font-size: 2rem;
+  }
+  .funciona-card{
+    width: min(92%, 420px);
+  }
+}
+
+
+/* 3) Celulares pequeños */
+@media (max-width: 560px) {
+
+  /* HERO */
+  .contenido{
+    height: 58vh;
+  }
+
+  .contenido::after{
+    background: linear-gradient(to top, rgba(0,0,0,.25) 20%, rgba(0,0,0,.85) 100%);
+  }
+
+  .contenido h2{
+    font-size: 1.35rem;
+  }
+
+  /* SECCIONES */
+  .Nosotros h2{
+    font-size: 1.6em;
+  }
+
+  .planes-simples h2{
+    font-size: 1.8rem;
+  }
+
+  .planes h2{
+    font-size: 24px;
+  }
+}
+
+
+/* 4) Muy pequeños (320–380px) */
+@media (max-width: 420px) {
+
+  .contenido{
+    height: 54vh;
+  }
+
+  .contenido h2{
+    font-size: 1.2rem;
+  }
+
+  .plan-card img{
+    height: 150px;
+  }
 }
