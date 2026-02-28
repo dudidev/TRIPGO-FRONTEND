@@ -20,15 +20,17 @@ export class EmpresaComponent implements OnInit {
   saving = false;
   errorMessage = '';
 
-  // Llegada del back
-  establecimientoOriginal: any = null;
+  establecimientos: any[] = [];
+  selectedId: number | null = null;
 
-  // Copia editable
+  establecimientoOriginal: any = null;
   establecimientoEdit: any = null;
 
   editMode = false;
 
-  // días fijos (solo UI)
+  // ✅ NUEVO: controla si mostramos lista aunque ya haya un seleccionado
+  modoLista = false;
+
   readonly diasSemana = [
     'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
   ];
@@ -39,39 +41,88 @@ export class EmpresaComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.obtenerMiEstablecimiento();
+    this.obtenerMisEstablecimientos();
   }
 
-  obtenerMiEstablecimiento() {
+  // ✅ Trae todos
+  obtenerMisEstablecimientos(keepSelected = true) {
     this.loading = true;
     this.errorMessage = '';
     this.editMode = false;
 
-    this.establecimientoService.getMio().subscribe({
-      next: (data) => {
-        // si tu back devuelve {ok,data} cambia esto a data.data
-        const est = data?.data ?? data;
+    this.establecimientoService.getMios().subscribe({
+      next: (resp: any) => {
+        const raw = resp?.data ?? resp;
 
-        this.establecimientoOriginal = est;
-        this.establecimientoEdit = structuredClone(est);
+        // ✅ Parse robusto: si viene array -> ok, si viene objeto -> lo convertimos
+        const list = Array.isArray(raw) ? raw : (raw ? [raw] : []);
+        this.establecimientos = list;
+
         this.loading = false;
 
-        this.api.loadEstablecimientos();
-      },
-      error: (err) => {
-        this.loading = false;
-
-        if (err?.status === 404) {
+        if (this.establecimientos.length === 0) {
           this.establecimientoOriginal = null;
           this.establecimientoEdit = null;
-          this.errorMessage = 'No tienes establecimiento asignado. Contacta soporte.';
+          this.selectedId = null;
+          this.modoLista = false;
+          this.errorMessage = 'No tienes establecimientos asignados. Contacta soporte.';
           return;
         }
 
-        this.errorMessage = 'Error al obtener el establecimiento. Revisa consola.';
-        console.error('getMio error:', err);
+        // ✅ Si hay varios, por defecto mostrar lista (cards)
+        if (this.establecimientos.length > 1) {
+          this.modoLista = true;
+
+          // Si queremos mantener el seleccionado (por ejemplo al refrescar tras guardar)
+          if (keepSelected && this.selectedId) {
+            const found = this.establecimientos.find(e =>
+              Number(e?.id_establecimiento ?? e?.id) === Number(this.selectedId)
+            );
+            if (found) {
+              this.seleccionarEstablecimiento(found, /*salirDeLista*/ false);
+            }
+          }
+        } else {
+          // ✅ Si solo hay 1, lo abrimos directo
+          this.modoLista = false;
+          this.seleccionarEstablecimiento(this.establecimientos[0]);
+        }
+
+        this.api.loadEstablecimientos();
+      },
+      error: (err: any) => {
+        this.loading = false;
+        this.errorMessage = 'Error al obtener los establecimientos. Revisa consola.';
+        console.error('getMios error:', err);
       }
     });
+  }
+
+  // ✅ Selección desde card
+  seleccionarEstablecimiento(est: any, salirDeLista = true) {
+    if (!est) return;
+
+    const id = est.id_establecimiento ?? est.id ?? null;
+    const parsedId = typeof id === 'number' ? id : Number(id);
+
+    this.selectedId = parsedId;
+    this.establecimientoOriginal = est;
+    this.establecimientoEdit = structuredClone(est);
+    this.editMode = false;
+
+    // si viene de cards, salimos de lista al editor
+    if (salirDeLista) this.modoLista = false;
+  }
+
+  // ✅ Volver a cards
+  volverALista() {
+    if (this.establecimientos.length > 1) {
+      this.modoLista = true;
+      this.editMode = false;
+      // no borramos selected para poder re-seleccionar rápido si quieres
+      this.establecimientoOriginal = null;
+      this.establecimientoEdit = null;
+    }
   }
 
   editar() {
@@ -89,7 +140,13 @@ export class EmpresaComponent implements OnInit {
   guardarCambios() {
     if (!this.establecimientoOriginal || !this.establecimientoEdit) return;
 
-    // payload seguro: bloqueados desde original, editables desde edit
+    const id = this.establecimientoOriginal.id_establecimiento ?? this.selectedId;
+
+    if (!id) {
+      alert('No se encontró el id del establecimiento seleccionado.');
+      return;
+    }
+
     const payload = {
       // BLOQUEADOS
       nombre_establecimiento: this.establecimientoOriginal.nombre_establecimiento,
@@ -108,17 +165,20 @@ export class EmpresaComponent implements OnInit {
 
     this.saving = true;
 
-    this.establecimientoService.updateMio(payload).subscribe({
+    this.establecimientoService.updateMioById(Number(id), payload).subscribe({
       next: () => {
         this.saving = false;
         alert('Actualizado correctamente');
+
+        // ✅ refrescamos pero mantenemos el seleccionado
+        this.obtenerMisEstablecimientos(true);
         this.api.loadEstablecimientos();
-        this.obtenerMiEstablecimiento();
       },
-      error: (err) => {
+      error: (err: any) => {
         this.saving = false;
-        console.error('updateMio error:', err);
-        alert('No se pudo actualizar. Revisa consola.');
+        console.error('updateMioById error:', err);
+        const msg = err?.error?.message || 'No se pudo actualizar. Revisa consola.';
+        alert(msg);
       }
     });
   }

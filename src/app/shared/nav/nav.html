@@ -9,43 +9,143 @@
       <a [routerLink]="isLoggedIn ? '/principal' : '/'">TRIPGO</a>
     </div>
 
-    <!-- ✅ Si estoy en /empresa: SOLO Salir -->
-    @if (isEmpresaPage) {
-      <div class="OpLaterales">
-        <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
-      </div>
-    } @else {
-      <div class="OpLaterales">
-        @if (!isLoggedIn) {
-          <a routerLink="/login">Iniciar sesión</a>
-          <a routerLink="/register">Registrarse</a>
-          <button type="button" class="langBtn" (click)="lang.toggle()">
-            {{ lang.current === 'es' ? 'EN' : 'ES' }}
-          </button>
-        } @else {
-          <a routerLink="/editar-cuenta">Perfil</a>
-          <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
-          <button type="button" class="langBtn" (click)="lang.toggle()">
-            {{ lang.current === 'es' ? 'EN' : 'ES' }}
-          </button>
-        }
-      </div>
-    }
+    <!--  RIGHT SIDE: (carrito + perfil/salir/idioma) + hamburguesa -->
+    <div class="rightActions">
 
-    <!-- ✅ Hamburguesa: la ocultamos en /empresa -->
-    @if (!isEmpresaPage) {
-      <button
-        class="hamburgerBtn"
-        type="button"
-        (click)="toggleMenu()"
-        aria-label="Abrir menú"
-      >
-        ☰
-      </button>
-    }
+      <!-- Si estoy en /empresa: SOLO Salir -->
+      @if (isEmpresaPage) {
+        <div class="OpLaterales">
+          <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
+        </div>
+      } @else {
+
+        <!--  Backdrop del itinerario (uno solo) -->
+        @if (itinerarioOpen) {
+          <div class="itBackdrop" (click)="closeItinerario()"></div>
+        }
+
+        <!-- En sesión: mostrar carrito en header -->
+        @if (isLoggedIn) {
+          <div class="itWrap" (click)="$event.stopPropagation()">
+
+            <!--  BOTÓN SOLO ICONO -->
+            <button
+              type="button"
+              class="itHeaderBtn iconOnly"
+              (click)="toggleItinerario()"
+              aria-label="Mi itinerario"
+            >
+            <!-- Icono maletín brutal -->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  class="itIcon"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+>
+  <!-- Asa -->
+  <path d="M9 7V5a3 3 0 0 1 6 0v2" />
+
+  <!-- Cuerpo maletín -->
+  <rect x="3" y="7" width="18" height="13" rx="3" />
+
+  <!-- Línea central -->
+  <path d="M3 13h18" />
+
+  <!-- Cierre -->
+  <circle cx="12" cy="13" r="1.2" fill="currentColor" stroke="none"/>
+</svg>
+
+              @if (itinerario.count > 0) {
+                <span class="itBadge">{{ itinerario.count }}</span>
+              }
+            </button>
+
+            @if (itinerarioOpen) {
+              <div class="itPopover" (click)="$event.stopPropagation()">
+                <div class="itHeader">
+                  <strong>Mi itinerario</strong>
+                  <button class="itClose" type="button" (click)="closeItinerario()">✕</button>
+                </div>
+
+                <div class="itBody">
+                  <ng-container *ngIf="(itinerario.items$ | async) as items">
+                    <div class="itEmpty" *ngIf="items.length === 0">
+                      Aún no has agregado lugares.
+                    </div>
+
+                    <div class="itList" *ngIf="items.length > 0">
+                      <div class="itItem" *ngFor="let it of items">
+                        <img *ngIf="it.imagenUrl" [src]="it.imagenUrl" class="itThumb" />
+
+                        <div class="itInfo">
+                          <div class="itName">{{ it.nombre }}</div>
+                          <div class="itSub" *ngIf="it.direccion">{{ it.direccion }}</div>
+                        </div>
+
+                        <button class="itRemove" type="button" (click)="removeItItem(it.id)">
+                          Quitar
+                        </button>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+
+                <div class="itFooter">
+                  <button
+                    type="button"
+                    class="itClear"
+                    (click)="clearItinerario()"
+                    [disabled]="itinerario.count === 0"
+                  >
+                    Limpiar
+                  </button>
+                  <button type="button" class="itGo" [disabled]="itinerario.count === 0">
+                    Confirmar
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        <div class="OpLaterales">
+          @if (!isLoggedIn) {
+            <a routerLink="/login">Iniciar sesión</a>
+            <a routerLink="/register">Registrarse</a>
+            <button type="button" class="langBtn" (click)="lang.toggle()">
+              {{ lang.current === 'es' ? 'EN' : 'ES' }}
+            </button>
+          } @else {
+            <a routerLink="/editar-cuenta">Perfil</a>
+            <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
+            <button type="button" class="langBtn" (click)="lang.toggle()">
+              {{ lang.current === 'es' ? 'EN' : 'ES' }}
+            </button>
+          }
+        </div>
+      }
+
+      <!--  Hamburguesa (móvil/tablet) -->
+      @if (!isEmpresaPage) {
+        <button
+          class="hamburgerBtn"
+          type="button"
+          (click)="toggleMenu()"
+          aria-label="Abrir menú"
+        >
+          ☰
+        </button>
+      }
+
+    </div>
   </div>
 
-  <!-- ✅ nav-bar normal: oculto en /empresa -->
+  <!--  nav-bar naranja (oculto en /empresa) -->
   @if (!isEmpresaPage) {
     <div class="nav-bar">
       @if (!isLoggedIn) {
@@ -58,68 +158,11 @@
         <a routerLink="/principal">Recomendaciones</a>
         <a routerLink="/contact">Soporte</a>
         <a routerLink="/about">Eventos</a>
-
-        <!-- ✅ Mi itinerario -->
-        <button type="button" class="itNavBtn" (click)="toggleItinerario()">
-          Mi itinerario
-          @if (itinerario.count > 0) {
-            <span class="itBadge">{{ itinerario.count }}</span>
-          }
-        </button>
       }
     </div>
-
-    <!-- ✅ Popover itinerario (nube flotante) -->
-    @if (itinerarioOpen) {
-      <div class="itBackdrop" (click)="closeItinerario()"></div>
-
-      <div class="itPopover" (click)="$event.stopPropagation()">
-        <div class="itHeader">
-          <strong>Mi itinerario</strong>
-          <button class="itClose" type="button" (click)="closeItinerario()">✕</button>
-        </div>
-
-        <div class="itBody">
-          <ng-container *ngIf="(itinerario.items$ | async) as items">
-            <div class="itEmpty" *ngIf="items.length === 0">
-              Aún no has agregado lugares.
-            </div>
-
-            <div class="itList" *ngIf="items.length > 0">
-              <div class="itItem" *ngFor="let it of items">
-                <img *ngIf="it.imagenUrl" [src]="it.imagenUrl" class="itThumb" />
-
-                <div class="itInfo">
-                  <div class="itName">{{ it.nombre }}</div>
-                  <div class="itSub" *ngIf="it.direccion">{{ it.direccion }}</div>
-                </div>
-
-                <button class="itRemove" type="button" (click)="removeItItem(it.id)">
-                  Quitar
-                </button>
-              </div>
-            </div>
-          </ng-container>
-        </div>
-
-        <div class="itFooter">
-          <button
-            type="button"
-            class="itClear"
-            (click)="clearItinerario()"
-            [disabled]="itinerario.count === 0"
-          >
-            Limpiar
-          </button>
-          <button type="button" class="itGo" [disabled]="itinerario.count === 0">
-            Confirmar
-          </button>
-        </div>
-      </div>
-    }
   }
 
-  <!-- ✅ overlay + sideMenu: ocultos en /empresa también -->
+  <!--  overlay + sideMenu -->
   @if (!isEmpresaPage && menuOpen) {
     <div class="menuOverlay" (click)="closeMenu()"></div>
 

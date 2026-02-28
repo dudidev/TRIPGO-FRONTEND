@@ -2,13 +2,43 @@
 
 <div class="empresa-page">
 
+  <!-- LOADING -->
   <div *ngIf="loading" class="card">Cargando...</div>
 
+  <!-- ERROR -->
   <div *ngIf="!loading && errorMessage" class="card">
     <p class="empty">{{ errorMessage }}</p>
   </div>
 
-  <div *ngIf="!loading && establecimientoOriginal" class="card">
+  <!-- ✅ CARDS: si tiene MÁS de 1 y AÚN NO hay seleccionado -->
+  <div
+    *ngIf="!loading && !errorMessage && establecimientos.length > 1 && !establecimientoOriginal"
+    class="card"
+  >
+    <h2 class="cards-title">Selecciona el establecimiento</h2>
+
+    <div class="cards-grid">
+      <button
+        type="button"
+        class="est-card"
+        *ngFor="let est of establecimientos"
+        (click)="seleccionarEstablecimiento(est)"
+      >
+        <div class="est-card__head">
+          <h3 class="est-card__name">{{ est.nombre_establecimiento }}</h3>
+          <span class="est-card__badge">{{ est.estado || 'activo' }}</span>
+        </div>
+
+        <p class="est-card__meta">📍 {{ est.ubicacion || '—' }}</p>
+        <p class="est-card__meta">🏷️ Tipo: {{ est.tipo || '—' }}</p>
+
+        <div class="est-card__cta">Administrar →</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- ✅ EDITOR: solo si ya hay seleccionado -->
+  <div *ngIf="!loading && !errorMessage && establecimientoOriginal" class="card">
 
     <div class="panel-header">
       <div>
@@ -16,13 +46,25 @@
         <p class="muted">📍 {{ establecimientoOriginal.ubicacion }}</p>
       </div>
 
+      <!-- ✅ Acciones a la derecha -->
       <div class="actions">
+
+        <!-- ✅ volver a cards si tiene varios -->
+        <button
+          *ngIf="establecimientos.length > 1 && !editMode"
+          class="btn-secundario"
+          (click)="volverALista()"
+        >
+          ← Volver a mis establecimientos
+        </button>
+
         <button *ngIf="!editMode" (click)="editar()">Editar</button>
 
         <ng-container *ngIf="editMode">
           <button (click)="guardarCambios()" [disabled]="saving">
             {{ saving ? 'Guardando...' : 'Guardar' }}
           </button>
+
           <button class="btn-secundario" (click)="cancelar()" [disabled]="saving">
             Cancelar
           </button>
@@ -40,7 +82,8 @@
 
           <p *ngIf="!editMode">{{ establecimientoOriginal.descripcion || '—' }}</p>
 
-          <textarea *ngIf="editMode"
+          <textarea
+            *ngIf="editMode"
             rows="6"
             [(ngModel)]="establecimientoEdit.descripcion"
           ></textarea>
@@ -49,17 +92,20 @@
         <section>
           <h3>Datos de contacto</h3>
 
-          <p><b>Teléfono:</b>
+          <p>
+            <b>Teléfono:</b>
             <span *ngIf="!editMode">{{ establecimientoOriginal.telefono || '—' }}</span>
             <input *ngIf="editMode" [(ngModel)]="establecimientoEdit.telefono" />
           </p>
 
-          <p><b>Correo:</b>
+          <p>
+            <b>Correo:</b>
             <span *ngIf="!editMode">{{ establecimientoOriginal.correo || '—' }}</span>
             <input *ngIf="editMode" [(ngModel)]="establecimientoEdit.correo" />
           </p>
 
-          <p><b>Estado:</b>
+          <p>
+            <b>Estado:</b>
             <span *ngIf="!editMode">{{ establecimientoOriginal.estado || 'activo' }}</span>
 
             <select *ngIf="editMode" [(ngModel)]="establecimientoEdit.estado">

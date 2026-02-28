@@ -316,7 +316,7 @@
 .home__alliesGrid{
   display:flex;
   flex-wrap:wrap;
-  gap: 10px;
+  gap: 50px;
   justify-content:center;
   margin-top: 12px;
 }
@@ -498,7 +498,7 @@
 .home__partnersStrip .home__partners {
   width: auto;                 /* quita la restricción del 60% en móvil */
   flex: 1;
-  gap: 14px;
+  gap: 45px;
   flex-wrap: wrap;             /* permite bajar a otra línea */
   justify-content: center;     /* centra en vez de space-between */
 }

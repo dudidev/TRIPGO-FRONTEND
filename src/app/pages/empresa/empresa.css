@@ -191,6 +191,80 @@ label{
   font-size: 12px;
   margin-top: 8px;
 }
+/* ===== CARDS (selector de establecimientos) ===== */
+.cards-title{
+  margin: 0 0 14px;
+  font-size: 18px;
+  font-weight: 900;
+  color: #0F3B3E;
+}
+
+.cards-grid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.est-card{
+  text-align: left;
+  width: 100%;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #fff;
+  border-radius: 14px;
+  padding: 14px;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.est-card:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+}
+
+.est-card__head{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.est-card__name{
+  margin: 0;
+  font-size: 15px;
+  font-weight: 900;
+  color: #0E6973;
+}
+
+.est-card__badge{
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(14,105,115,0.12);
+  color: #0E6973;
+  white-space: nowrap;
+}
+
+.est-card__meta{
+  margin: 8px 0 0;
+  color: #444;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.est-card__cta{
+  margin-top: 12px;
+  font-weight: 900;
+  color: #2c5364;
+}
+
+/* Responsive cards */
+@media (max-width: 900px){
+  .cards-grid{
+    grid-template-columns: 1fr;
+  }
+}
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 900px){

@@ -75,10 +75,24 @@ export class Nav implements AfterViewInit {
     this.closeItinerario();
   }
 
+  /* ✅ NUEVO: cerrar itinerario al hacer click fuera */
+  @HostListener('document:click')
+  onDocClick() {
+    // si el menú lateral está abierto, no hacemos nada (evita cierres raros)
+    if (this.menuOpen) return;
+
+    // si está abierto el itinerario y clickean fuera, se cierra.
+    // (en el HTML debes tener stopPropagation en .itWrap/.itPopover)
+    if (this.itinerarioOpen) this.closeItinerario();
+  }
+
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
     document.body.style.overflow = this.menuOpen ? 'hidden' : 'auto';
     setTimeout(() => this.setNavOffset(), 0);
+
+    //  opcional: si abres menú, cierra carrito
+    if (this.menuOpen) this.closeItinerario();
   }
 
   closeMenu() {
