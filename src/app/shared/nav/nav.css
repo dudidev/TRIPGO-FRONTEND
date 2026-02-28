@@ -217,7 +217,7 @@
 .itIcon{
   width: 22px;
   height: 22px;
-  color: var(--primary-color);
+  color: white;
 }
 
 /* badge */
