@@ -3,146 +3,122 @@
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 2000; /* más que overlays si quieres */
+  z-index: 2000;
 }
 
+/* =========================
+   HEADER (VERDE)
+   ========================= */
 .navPrincipal{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--padding-m);
-    background-color: var(--primary-color);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    position: relative;    /* NECESARIO */
-    z-index: 10;           /* Para que quede por encima */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.5); /* Sombra ligera */
-
-    img{
-        width: 70px;
-        height: 50px;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-
-    a{
-        color: var(--bg-color);
-        text-decoration: none;
-        font-size: 1.2rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        transition: color 0.3s ease;
-
-        &:hover,
-        &:focus{
-            color: var(--text-color);
-        }
-    }
-}
-.contLogo{
-    display: flex;
-    h2{
-        font-size: 1.3em;
-
-    }
-}
-.OpLaterales{
-    display: flex;
-    gap: var(--padding-s);
-    a{
-        color: var(--bg-color);
-        text-decoration: none;
-        font-size: 1em;
-        font-weight: 800;
-        transition: color 0.3s ease;
-        padding: 10px;
-
-        &:hover,
-        &:focus{
-            color: var(--text-color);
-        }
-    }
-}
-
-.nav-bar {
-    padding: 8px;
-    display: flex;
-    justify-content: center;
-    gap: var(--padding-m);
-    background-color: var(--secondary-color);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    font-family: var(--font-primary);
-    font-weight: 550;
-    a {
-        color: var(--bg-color);
-        text-decoration: none;
-        padding: 8px 16px;
-        border-radius: 6px;
-        transition: background-color 0.3s ease, color 0.3s ease;
-        font-size:  16px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-    }
-}
-
-.nav-bar a:hover,
-.nav-bar a:focus {
-    background-color: white;
-    color: var(--secondary-color);
-}
-
-.nav-bar a:active {
-    transform: scale(0.95);
-    transition: transform 0.1s ease;
-}
-.btnBurger{
-  display: none; /* por ahora lo dejamos oculto, en el paso 2 lo mostramos en móvil */
-  border: none;
-  background: transparent;
-  color: var(--bg-color);
-  font-size: 28px;
-  cursor: pointer;
-  padding: 6px 10px;
-}
-
-.mobileMenuBackdrop{
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.35);
-  z-index: 999;
-}
-
-.mobileMenu{
-  position: fixed;
-  top: 0;
-  right: 0;
-  height: 100vh;
-  width: min(82vw, 320px);
-  background: #fff;
-  z-index: 1000;
-  padding: 16px;
-  box-shadow: 0 10px 22px rgba(0,0,0,0.25);
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--padding-m);
+  background-color: var(--primary-color);
+  position: relative;
+  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}
+
+.contLogo{
+  display: flex;
+  align-items: center;
   gap: 10px;
 }
 
-.mobileMenu a{
-  text-decoration: none;
-  color: var(--text-color);
-  font-weight: 800;
-  padding: 10px 12px;
-  border-radius: 10px;
+.navPrincipal img{
+  width: 70px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-.mobileMenu a:hover{
-  background: rgba(14,105,115,0.10);
+.navPrincipal a{
+  color: var(--bg-color);
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease;
 }
-/* ====== HAMBURGER BUTTON ====== */
+
+.navPrincipal a:hover,
+.navPrincipal a:focus{
+  color: var(--text-color);
+}
+
+/*  Contenedor derecho para alinear TODO */
+.rightActions{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* LATERALES (Perfil/Salir/Idioma) */
+.OpLaterales{
+  display: flex;
+  align-items: center;
+  gap: var(--padding-s);
+}
+
+.OpLaterales a{
+  color: var(--bg-color);
+  text-decoration: none;
+  font-size: 1em;
+  font-weight: 800;
+  transition: color 0.3s ease;
+  padding: 10px;
+}
+
+.OpLaterales a:hover,
+.OpLaterales a:focus{
+  color: var(--text-color);
+}
+
+/* =========================
+   NAV BAR (NARANJA)
+   ========================= */
+.nav-bar{
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  gap: var(--padding-m);
+  background-color: var(--secondary-color);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  font-family: var(--font-primary);
+  font-weight: 550;
+}
+
+.nav-bar a{
+  color: var(--bg-color);
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.nav-bar a:hover,
+.nav-bar a:focus{
+  background-color: white;
+  color: var(--secondary-color);
+}
+
+.nav-bar a:active{
+  transform: scale(0.95);
+  transition: transform 0.1s ease;
+}
+
+/* =========================
+   HAMBURGER
+   ========================= */
 .hamburgerBtn{
-  display: none; /* desktop no */
+  display: none;
   border: none;
   background: transparent;
   color: var(--bg-color);
@@ -153,7 +129,229 @@
   border-radius: 10px;
 }
 
-/* ====== OVERLAY + SIDE MENU ====== */
+/* =========================
+   IDIOMA
+   ========================= */
+.langBtn{
+  border: 2px solid var(--bg-color);
+  background: transparent;
+  color: var(--bg-color);
+  font-weight: 900;
+  font-size: 0.95em;
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  line-height: 1;
+  transition: 0.2s ease;
+}
+
+.langBtn:hover{
+  background: var(--bg-color);
+  color: var(--primary-color);
+}
+
+.langBtnMobile{
+  margin-top: 8px;
+  border: none;
+  background: var(--primary-color);
+  color: white;
+  font-weight: 900;
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  width: 100%;
+  transition: 0.2s ease;
+}
+
+.langBtnMobile:hover{
+  filter: brightness(1.1);
+}
+
+/* =========================
+   ITINERARIO EN HEADER (ANCLADO AL BOTÓN)
+   ========================= */
+.itWrap{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* botón */
+.itHeaderBtn{
+  position: relative;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: rgba(255,255,255,0.18);
+  color: white;
+  font-weight: 900;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: 0.2s ease;
+}
+
+.itHeaderBtn:hover{
+  background: rgba(255,255,255,0.26);
+  transform: translateY(-1px);
+}
+
+.itHeaderBtn.iconOnly:hover{
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 28px rgba(36,58,94,0.35);
+}
+
+/*  SOLO ICONO */
+.itHeaderBtn.iconOnly{
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  justify-content: center;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+}
+
+.itIcon{
+  width: 22px;
+  height: 22px;
+  color: var(--primary-color);
+}
+
+/* badge */
+.itBadge{
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #ff3b30;
+  color: white;
+  font-size: 12px;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,.3);
+}
+
+/* backdrop único */
+.itBackdrop{
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  z-index: 3500;
+}
+
+/* =========================
+   POPOVER ITINERARIO (PEGADO AL BOTÓN)
+   ========================= */
+.itPopover{
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 380px;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 14px 40px rgba(0,0,0,.28);
+  z-index: 5000;
+  overflow: hidden;
+}
+
+/* triangulito */
+.itPopover::before{
+  content: "";
+  position: absolute;
+  top: -8px;
+  right: 18px;
+  width: 16px;
+  height: 16px;
+  background: white;
+  transform: rotate(45deg);
+  box-shadow: -4px -4px 10px rgba(0,0,0,.06);
+}
+
+.itHeader{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.itClose{
+  border: 0;
+  background: rgba(0,0,0,0.06);
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 10px;
+  padding: 6px 10px;
+}
+
+.itBody{ padding: 12px 16px; }
+.itEmpty{ padding: 14px 0; color: #666; }
+
+.itList{
+  max-height: 330px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.itItem{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.itThumb{
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.itInfo{ flex: 1; }
+.itName{ font-weight: 800; color: #111; }
+.itSub{ font-size: 12px; color: #666; }
+
+.itRemove{
+  border: 0;
+  cursor: pointer;
+  background: #f4f4f4;
+  padding: 7px 12px;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+.itFooter{
+  display: flex;
+  gap: 10px;
+  padding: 14px 16px;
+  border-top: 1px solid #eee;
+}
+
+.itClear, .itGo{
+  flex: 1;
+  border: 0;
+  cursor: pointer;
+  padding: 11px 12px;
+  border-radius: 14px;
+  font-weight: 800;
+}
+
+.itClear{ background: #f4f4f4; }
+.itGo{ background: #0f7a7a; color: white; }
+.itGo:disabled, .itClear:disabled{ opacity: .6; cursor: not-allowed; }
+
+/* =========================
+   SIDE MENU
+   ========================= */
 .menuOverlay{
   position: fixed;
   inset: 0;
@@ -198,7 +396,6 @@
   font-size: 16px;
 }
 
-/* links */
 .sideMenu__links{
   display: flex;
   flex-direction: column;
@@ -213,184 +410,109 @@
   padding: 12px 12px;
   border-radius: 10px;
   background: rgba(14,105,115,0.08);
-  
 }
 
-/* hover suave (no agresivo) */
 .sideMenu__links a:hover{
   background: rgba(14,105,115,0.14);
 }
 
-/* ====== MOBILE RULES (aquí evitamos el doble menú) ====== */
+/* =========================
+   MEDIA QUERIES
+   ========================= */
+
+/* 1) Laptop/Tablet grande */
+@media (max-width: 992px){
+  .navPrincipal img{ width: 64px; height: 46px; }
+  .navPrincipal a{ font-size: 1.1rem; }
+  .OpLaterales a{ padding: 8px; }
+  .itPopover{ width: 360px; }
+}
+
+/* 2) Tablet */
+@media (max-width: 850px){
+  .nav-bar{ gap: 12px; }
+  .nav-bar a{ padding: 8px 12px; font-size: 15px; }
+  .itPopover{ width: 340px; }
+}
+
+/* 3) MOBILE/TABLET */
 @media (max-width: 768px){
+
   .hamburgerBtn{ display: inline-flex; }
 
-  /* escondemos tu nav-bar naranja y opLaterales en móvil */
   .nav-bar{ display: none; }
   .OpLaterales{ display: none; }
-}
-/* ====== MOBILE ====== */
 
-/* Button styles for language toggle */
+  .rightActions{ gap: 10px; }
 
-.langBtn{
-  border: 2px solid var(--bg-color);
-  background: transparent;
-  color: var(--bg-color);
-  font-weight: 900;
-  font-size: 0.95em;
-  padding: 8px 12px;
-  border-radius: 999px;
-  cursor: pointer;
-  line-height: 1;
-  transition: 0.2s ease;
-}
+  /* icono un poco más compacto */
+  .itHeaderBtn.iconOnly{
+    width: 42px;
+    height: 42px;
+  }
+  .itIcon{ width: 21px; height: 21px; }
 
-.langBtn:hover{
-  background: var(--bg-color);
-  color: var(--primary-color);
+  /*  popover pasa a modal */
+  .itPopover{
+    position: fixed;
+    top: calc(var(--nav-offset) + 12px);
+    left: 12px;
+    right: 12px;
+    width: auto;
+  }
+  .itPopover::before{ display: none; }
 }
 
-.langBtnMobile{
-  margin-top: 8px;
-  border: none;
-  background: var(--primary-color);
-  color: white;
-  font-weight: 900;
-  padding: 12px;
-  border-radius: 12px;
-  cursor: pointer;
-  width: 100%;
-  transition: 0.2s ease;
+/* 4) móvil pequeño */
+@media (max-width: 480px){
+  .navPrincipal{ padding: 12px; }
+
+  .contLogo img{ width: 56px; height: 42px; }
+
+  .itHeaderBtn.iconOnly{
+    width: 40px;
+    height: 40px;
+  }
+  .itIcon{ width: 20px; height: 20px; }
+
+  .itBadge{
+    top: -7px;
+    right: -7px;
+    min-width: 18px;
+    height: 18px;
+    font-size: 11px;
+  }
+
+  .itHeader{ padding: 12px 14px; }
+  .itBody{ padding: 10px 14px; }
+  .itFooter{ padding: 12px 14px; }
 }
 
-.langBtnMobile:hover{
-  filter: brightness(1.1);
+.itHeaderBtn.iconOnly{
+  background: rgba(255,255,255,0.20);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.22);
 }
 
-
-/* ====== Itinerario (carrito) en nav ====== */
-.itNavBtn{
-  position: relative;
-  margin-left: 12px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  border: 0;
-  cursor: pointer;
-  font-weight: 600;
-  background: rgba(255,255,255,0.2);
-  color: white;
-  font-size: 16px;
+.itHeaderBtn.iconOnly:hover{
+  background: rgba(255,255,255,0.28);
 }
 
-.itBadge{
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  border-radius: 999px;
-  background: #ff3b30;
-  color: white;
-  font-size: 12px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.itBackdrop{
-  position: fixed;
-  inset: 0;
-  background: transparent;
-  z-index: 999;
-}
-
-.itPopover{
-  position: fixed;
-  right: 24px;
-  top: 120px; /* ajusta si quieres que quede pegado a la barra */
-  width: 360px;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 10px 35px rgba(0,0,0,.25);
-  z-index: 1000;
-  overflow: hidden;
-}
-
-.itHeader{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 14px;
-  border-bottom: 1px solid #eee;
-}
-
-.itClose{
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.itBody{
-  padding: 10px 14px;
-}
-
-.itEmpty{
-  padding: 14px 0;
-  color: #666;
-}
-
-/* ✅ scroll cuando hay muchos */
-.itList{
-  max-height: 320px;
-  overflow-y: auto;
-  padding-right: 4px;
-}
-
-.itItem{
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #f2f2f2;
-}
-
-.itThumb{
+.itHeaderBtn.iconOnly{
   width: 46px;
   height: 46px;
-  border-radius: 12px;
-  object-fit: cover;
+  background: linear-gradient(145deg, rgba(255,255,255,0.22), rgba(255,255,255,0.12));
+  box-shadow: 0 10px 22px rgba(0,0,0,0.28);
 }
 
-.itInfo{ flex: 1; }
-.itName{ font-weight: 700; color: #111; }
-.itSub{ font-size: 12px; color: #666; }
-
-.itRemove{
-  border: 0;
-  cursor: pointer;
-  background: #f4f4f4;
-  padding: 6px 10px;
-  border-radius: 10px;
+.itHeaderBtn.iconOnly:hover{
+  transform: translateY(-3px) scale(1.05);
 }
 
-.itFooter{
-  display: flex;
-  gap: 10px;
-  padding: 12px 14px;
-  border-top: 1px solid #eee;
+/* 5) móvil ultra pequeño */
+@media (max-width: 360px){
+  .itHeaderBtn.iconOnly{
+    width: 38px;
+    height: 38px;
+  }
+  .itIcon{ width: 19px; height: 19px; }
 }
-
-.itClear, .itGo{
-  flex: 1;
-  border: 0;
-  cursor: pointer;
-  padding: 10px;
-  border-radius: 12px;
-}
-
-.itClear{ background: #f4f4f4; }
-.itGo{ background: #0f7a7a; color: white; }
-.itGo:disabled, .itClear:disabled { opacity: .6; cursor: not-allowed; }

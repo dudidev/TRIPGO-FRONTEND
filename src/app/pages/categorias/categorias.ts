@@ -160,7 +160,7 @@ export class Categorias implements OnInit, OnDestroy {
       return;
     }
 
-    // ✅ busca dentro del pueblo actual
+    //  busca dentro del pueblo actual
     this.results = this.search.search(q, 12, { townSlug: this.townSlug });
     this.showPanel = true;
   }
@@ -182,7 +182,7 @@ export class Categorias implements OnInit, OnDestroy {
   }
 
   
-  // ✅ ahora: entrar a un TIPO real por id
+  //  ahora: entrar a un TIPO real por id
   goTipo(idTipo: number) {
     this.router.navigate(['/lugares', this.townSlug, 'tipo', idTipo]);
   }
