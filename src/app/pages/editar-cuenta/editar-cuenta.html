@@ -7,12 +7,32 @@
     <h2>Editar cuenta</h2>
 
     <div class="perfil">
-      <img
-        src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
-        alt="Foto de perfil"
-      />
-      <button class="btn-link" type="button">Cambiar foto</button>
-    </div>
+  <img
+    [src]="fotoPreview || fotoActual || 'https://cdn-icons-png.flaticon.com/512/847/847969.png'"
+    alt="Foto de perfil"
+  />
+
+  <input
+    type="file"
+    accept="image/*"
+    (change)="onFileSelected($event)"
+    hidden
+    #fileInput
+  />
+
+  <button class="btn-link" type="button" (click)="fileInput.click()">
+    Cambiar foto
+  </button>
+
+  <button class="btn-link" type="button" (click)="subirFotoPerfil()" [disabled]="!fotoSeleccionada">
+    Subir
+  </button>
+</div>
+
+    <!-- ANUNCIO / ALERTA -->
+<div *ngIf="mensaje" class="alerta" [ngClass]="tipoMensaje">
+  {{ mensaje }}
+</div>
 
     <form [formGroup]="form" (ngSubmit)="guardar()">
 
@@ -27,14 +47,10 @@
       </div>
 
       <div class="campo">
-        <label> Nueva Contraseña</label>
-        <input type="password" formControlName="contrasena_usuario" />
-      </div>
+  <label>Nueva Contraseña</label>
+  <input type="password" formControlName="password_u" />
+</div>
       
-      <div class="campo">
-        <label>Ciudad</label>
-        <input type="text" formControlName="ciudad_usuario" />
-      </div>
 
       <button class="btn-guardar" type="submit">
         Guardar cambios
