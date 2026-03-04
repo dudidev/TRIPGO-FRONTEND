@@ -6,35 +6,68 @@
   <section class="card">
     <h2>Editar cuenta</h2>
 
+    <!-- FOTO PERFIL -->
     <div class="perfil">
+
       <img
-        src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
+        [src]="fotoPreview || fotoActual || 'https://cdn-icons-png.flaticon.com/512/847/847969.png'"
         alt="Foto de perfil"
       />
-      <button class="btn-link" type="button">Cambiar foto</button>
+
+      <input
+        type="file"
+        accept="image/*"
+        (change)="onFileSelected($event)"
+        hidden
+        #fileInput
+      />
+
+      <button class="btn-link" type="button" (click)="fileInput.click()">
+        Cambiar foto
+      </button>
+
+    </div>
+
+    <!-- MENSAJES -->
+    <div *ngIf="mensaje" class="alerta" [ngClass]="tipoMensaje">
+      {{ mensaje }}
     </div>
 
     <form [formGroup]="form" (ngSubmit)="guardar()">
 
+      <!-- NOMBRE -->
       <div class="campo">
         <label>Nombre</label>
-        <input type="text" formControlName="nombre_usuario" />
+        <input type="text" formControlName="nombre_usuario">
       </div>
 
+      <!-- EMAIL -->
       <div class="campo">
         <label>Email</label>
-        <input type="email" formControlName="correo_usuario" />
+        <input type="email" formControlName="correo_usuario">
       </div>
 
+      <!-- PASSWORD ACTUAL -->
       <div class="campo">
-        <label> Nueva Contraseña</label>
-        <input type="password" formControlName="contrasena_usuario" />
+        <label>Contraseña actual</label>
+        <input type="password" formControlName="password_actual">
       </div>
-      
+
+      <!-- NUEVA PASSWORD -->
       <div class="campo">
-        <label>Ciudad</label>
-        <input type="text" formControlName="ciudad_usuario" />
+        <label>Nueva contraseña</label>
+        <input type="password" formControlName="password_nueva">
       </div>
+
+      <!-- CONFIRMAR PASSWORD -->
+      <div class="campo">
+        <label>Confirmar nueva contraseña</label>
+        <input type="password" formControlName="password_confirmacion">
+      </div>
+
+      <div class="error" *ngIf="form.value.password_nueva && form.value.password_nueva !== form.value.password_confirmacion">
+  Las contraseñas no coinciden
+    </div>
 
       <button class="btn-guardar" type="submit">
         Guardar cambios
@@ -42,6 +75,7 @@
 
     </form>
   </section>
+
 
   <!-- ================== EDITAR ITINERARIOS ================== -->
   <section class="card">
