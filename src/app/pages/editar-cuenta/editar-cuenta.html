@@ -26,6 +26,16 @@
         <input type="email" formControlName="correo_usuario" />
       </div>
 
+      <div class="campo">
+        <label> Nueva Contraseña</label>
+        <input type="password" formControlName="contrasena_usuario" />
+      </div>
+      
+      <div class="campo">
+        <label>Ciudad</label>
+        <input type="text" formControlName="ciudad_usuario" />
+      </div>
+
       <button class="btn-guardar" type="submit">
         Guardar cambios
       </button>
@@ -35,7 +45,7 @@
 
   <!-- ================== EDITAR ITINERARIOS ================== -->
   <section class="card">
-    <h2>Mis itinerarios</h2>
+    <h2>Mis Favoritos</h2>
 
     <div class="itinerario" *ngFor="let iti of itinerarios">
       <div class="info">
