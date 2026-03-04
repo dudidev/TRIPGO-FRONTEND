@@ -21,4 +21,8 @@ private api = "https://tripgo-backend-arehbhbubshxdpg7.chilecentral-01.azurewebs
   return this.http.put(`${this.api}/${id}/foto`, data);
 }
 
+cambiarPassword(id: number, data: { password_actual: string; password_nueva: string }): Observable<any> {
+    return this.http.put(`${this.api}/${id}/password`, data);
+  }
+
 }
