@@ -64,12 +64,17 @@
             <img *ngIf="r.img" [src]="r.img" alt="" />
             <div class="searchItem__text">
             <div class="searchItem__title">
-              {{ r.title }}
-              <span class="tag" [class.tagLugar]="r.kind==='lugar'" [class.tagCat]="r.kind==='categoria'">
-                {{ r.kind }}
+              <span class="searchItem__name">{{ r.title }}</span>
+              <span class="tag"
+                [class.tagLugar]="r.kind==='lugar'"
+                [class.tagCat]="r.kind==='categoria'">
+                
+                {{ r.kind === 'categoria' ? 'Categoría' : 'Lugar' }}
               </span>
+                
             </div>
             <div class="searchItem__sub">{{ r.subtitle }}</div>
+            
 </div>
 
           </button>

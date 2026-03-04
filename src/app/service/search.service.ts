@@ -1,138 +1,133 @@
 import { Injectable } from '@angular/core';
-import { CATEGORIAS_DATA } from '../data/categorias.data';
-import { LUGARES_DATA } from '../data/lugares.data';
 
-export type SearchKind = 'categoria' | 'lugar' | 'itinerario';
+export type SearchKind = 'lugar' | 'categoria';
 
 export type SearchResult = {
   kind: SearchKind;
-  title: string;
-  subtitle: string;
+  title: string;     // nombre visible (establecimiento o tipo)
+  subtitle: string;  // texto pequeño (town, dirección, etc.)
   img?: string;
-  route: any[];
-  townSlug?: string;
-  categoryKey?: string;
-  };
-  export type SearchScope = {
-    townSlug?: string;
-    categoryKey?: string;
-    kinds?: SearchKind[]; // opcional si luego quieres filtrar por tipo
-  };
 
+  // navegación / contexto
+  route: any[];      // comandos router base
+  townSlug?: string;
+  tipoId?: number;
+  lugarId?: number;
+};
+
+export type SearchScope = {
+  townSlug?: string;
+  kinds?: SearchKind[];
+};
+
+type EstablecimientoRaw = any;
+type TipoRaw = { id_tipo: number; nombre_tipo: string };
 
 @Injectable({ providedIn: 'root' })
 export class SearchService {
-
   private index: SearchResult[] = [];
-  private built = false;
+  private ready = false;
 
-  private buildIndexOnce() {
-    if (this.built) return;
+  setFromBackend(establecimientos: EstablecimientoRaw[], tipos: TipoRaw[] = []) {
+    const list = Array.isArray(establecimientos) ? establecimientos : [];
+    const tiposList = Array.isArray(tipos) ? tipos : [];
+
+    // id_tipo -> nombre_tipo
+    const tipoMap = new Map<number, string>();
+    for (const t of tiposList) {
+      const id = Number((t as any)?.id_tipo);
+      const nombre = String((t as any)?.nombre_tipo ?? '').trim();
+      if (!Number.isNaN(id) && nombre) tipoMap.set(id, nombre);
+    }
 
     const results: SearchResult[] = [];
+    const categoriasKeySet = new Set<string>(); // evita duplicados por town+tipo
 
-    // 1️⃣ Categorías + Itinerarios
-    Object.entries(CATEGORIAS_DATA).forEach(([townSlug, town]) => {
+    for (const raw of list) {
+      const lugarId = raw?.id_establecimiento ?? raw?.id ?? null;
+      if (lugarId == null) continue;
 
-      town.categorias.forEach(c => {
-        results.push({
-          kind: 'categoria',
-          title: c.label,
-          subtitle: `${town.nombre} • Categoría`,
-          img: c.img,
-          route: ['/lugares', townSlug, c.key],
+      const nombreLugar = String(raw?.nombre_establecimiento ?? raw?.nombre ?? 'Sin nombre').trim();
+      const direccion = String(raw?.direccion ?? '').trim();
+      const town = String(raw?.ubicacion ?? raw?.town ?? '').toLowerCase().trim();
 
-          townSlug,
-          categoryKey: c.key
-        });
+      const tipoId = Number(raw?.tipo ?? raw?.id_tipo ?? NaN);
+
+      // nombre del tipo: primero del endpoint /tipos, si no viene, intenta raw.nombre_tipo, si no, vacío
+      const nombreTipo =
+        (Number.isNaN(tipoId) ? '' : (tipoMap.get(tipoId) ?? '')) ||
+        String(raw?.nombre_tipo ?? '').trim();
+
+      const img =
+        raw?.img ??
+        raw?.imagen ??
+        raw?.imagen_url ??
+        raw?.foto ??
+        raw?.foto_url ??
+        raw?.portada ??
+        raw?.url ??
+        undefined;
+
+      // 1) LUGAR
+      // ✅ metemos nombreTipo en el subtitle para que buscar "glamping" encuentre establecimientos glamping
+      const subtitleLugar = [nombreTipo, town, direccion].filter(Boolean).join(' • ') || 'Lugar';
+
+      results.push({
+        kind: 'lugar',
+        title: nombreLugar,
+        subtitle: subtitleLugar,
+        img: img ? String(img) : undefined,
+        route: ['/detalles', String(lugarId)],
+        townSlug: town || undefined,
+        tipoId: Number.isNaN(tipoId) ? undefined : tipoId,
+        lugarId: Number(lugarId),
       });
 
-      town.itinerarios.forEach((it, i) => {
-        results.push({
-          kind: 'itinerario',
-          title: it.titulo,
-          subtitle: `${town.nombre} • Itinerario ${i + 1}`,
-          img: it.img,
-          route: ['/categorias', townSlug],
-           townSlug
+      // 2) CATEGORÍA (TIPO)
+      if (town && !Number.isNaN(tipoId)) {
+        const titleTipo = nombreTipo || `Categoría ${tipoId}`;
+        const key = `${town}::${tipoId}`;
 
+        if (!categoriasKeySet.has(key)) {
+          categoriasKeySet.add(key);
 
-        });
-      });
-
-    });
-    
-
-    // Lugares
-    Object.entries(LUGARES_DATA).forEach(([townSlug, byCat]) => {
-      Object.entries(byCat).forEach(([categoryKey, cat]) => {
-
-        cat.items.forEach(item => {
           results.push({
-            kind: 'lugar',
-            title: item.titulo,
-            subtitle: `${townSlug} • ${cat.titulo}`,
-            img: item.img,
-            route: ['/detalles', item.slug], 
-             townSlug,
-             categoryKey
+            kind: 'categoria',
+            title: titleTipo,             // ✅ “Glamping”
+            subtitle: `${town} • Categoría`,
+            route: ['/lugares', town],    // ✅ base route
+            townSlug: town,
+            tipoId,
           });
-        });
-
-      });
-    });
+        }
+      }
+    }
 
     this.index = results;
-    this.built = true;
+    this.ready = true;
+  }
+
+  isReady(): boolean {
+    return this.ready;
   }
 
   search(query: string, limit = 12, scope: SearchScope = {}) {
-  this.buildIndexOnce();
+    const q = this.normalize(query);
+    if (!q) return [];
 
-  const q = this.normalize(query);
-  if (!q) return [];
+    let base = this.index;
 
-  // ✅ 1) aplicar scope/contexto
-  let base = this.index;
+    if (scope.townSlug) base = base.filter(r => r.townSlug === scope.townSlug);
+    if (scope.kinds?.length) base = base.filter(r => scope.kinds!.includes(r.kind));
 
-  if (scope.townSlug) {
-    base = base.filter(r => r.townSlug === scope.townSlug);
+    return base
+      .map(r => ({ r, score: this.scoreMatch(q, `${r.title} ${r.subtitle}`) }))
+      .filter(x => x.score > 1)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit)
+      .map(x => x.r);
   }
 
-  if (scope.categoryKey) {
-    base = base.filter(r => r.categoryKey === scope.categoryKey);
-  }
-
-  if (scope.kinds?.length) {
-    base = base.filter(r => scope.kinds!.includes(r.kind));
-  }
-
-  const scored = base
-    .map(r => {
-      const hay = `${r.title} ${r.subtitle}`;
-      const score = this.scoreMatch(q, hay);
-      return { r, score };
-    })
-    .filter(x => x.score > 10)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, limit)
-    .map(x => x.r);
-
-  return scored;
-}
-
-
-  group(results: SearchResult[]) {
-    return {
-      categorias: results.filter(r => r.kind === 'categoria'),
-      lugares: results.filter(r => r.kind === 'lugar'),
-      itinerarios: results.filter(r => r.kind === 'itinerario'),
-    };
-  }
-
-  // ==============================
-  // TEXT NORMALIZATION
-  // ==============================
   private normalize(text: string): string {
     return (text || '')
       .toLowerCase()
@@ -143,87 +138,61 @@ export class SearchService {
       .trim();
   }
 
-  // ==============================
-  // FUZZY MATCH SCORE
-  // ==============================
   private scoreMatch(query: string, text: string): number {
-  const q = this.normalize(query);
-  const t = this.normalize(text);
-  if (!q || !t) return 0;
+    const q = this.normalize(query);
+    const t = this.normalize(text);
+    if (!q || !t) return 0;
 
-  // match exacto / contiene
-  if (t === q) return 100;
-  if (t.includes(q)) return 90;
+    if (t === q) return 100;
+    if (t.includes(q)) return 90;
 
-  const qTokens = q.split(' ');
-  const tTokens = t.split(' ');
+    const qTokens = q.split(' ');
+    const tTokens = t.split(' ');
 
-  let score = 0;
+    let score = 0;
 
-  for (const qt of qTokens) {
-    if (!qt) continue;
+    for (const qt of qTokens) {
+      if (!qt) continue;
 
-    // si alguna palabra contiene el token (aunque sea parcial)
-    if (tTokens.some(tt => tt.includes(qt))) {
-      score += 20;
-      continue;
+      if (tTokens.some(tt => tt.includes(qt))) {
+        score += 20;
+        continue;
+      }
+
+      let best = Infinity;
+      for (const tt of tTokens) best = Math.min(best, this.damerauLevenshtein(qt, tt));
+
+      const maxDist = Math.min(4, Math.ceil(qt.length * 0.35));
+      if (best <= maxDist) score += Math.max(0, 18 - best * 4);
     }
 
-    // fuzzy: busca la palabra más parecida
-    let best = Infinity;
-    for (const tt of tTokens) {
-      const d = this.damerauLevenshtein(qt, tt);
-      if (d < best) best = d;
-    }
-
-    // ✅ tolerancia dinámica: 35% de la longitud (máx 4)
-    const maxDist = Math.min(4, Math.ceil(qt.length * 0.35));
-
-    if (best <= maxDist) {
-      // mientras más parecido, más puntos
-      score += Math.max(0, 18 - best * 4);
-    }
+    return score;
   }
 
-  return score;
-}
+  private damerauLevenshtein(a: string, b: string): number {
+    const m = a.length, n = b.length;
+    if (m === 0) return n;
+    if (n === 0) return m;
 
-  // ==============================
-  // LEVENSHTEIN DISTANCE
-  // ==============================
-private damerauLevenshtein(a: string, b: string): number {
-  const m = a.length, n = b.length;
-  if (m === 0) return n;
-  if (n === 0) return m;
+    const dp: number[][] = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+    for (let i = 0; i <= m; i++) dp[i][0] = i;
+    for (let j = 0; j <= n; j++) dp[0][j] = j;
 
-  const dp: number[][] = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+    for (let i = 1; i <= m; i++) {
+      for (let j = 1; j <= n; j++) {
+        const cost = a[i - 1] === b[j - 1] ? 0 : 1;
 
-  for (let i = 0; i <= m; i++) dp[i][0] = i;
-  for (let j = 0; j <= n; j++) dp[0][j] = j;
+        dp[i][j] = Math.min(
+          dp[i - 1][j] + 1,
+          dp[i][j - 1] + 1,
+          dp[i - 1][j - 1] + cost
+        );
 
-  for (let i = 1; i <= m; i++) {
-    for (let j = 1; j <= n; j++) {
-      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-
-      dp[i][j] = Math.min(
-        dp[i - 1][j] + 1,      // borrar
-        dp[i][j - 1] + 1,      // insertar
-        dp[i - 1][j - 1] + cost // sustituir
-      );
-
-      // ✅ transposición (letras invertidas)
-      if (
-        i > 1 && j > 1 &&
-        a[i - 1] === b[j - 2] &&
-        a[i - 2] === b[j - 1]
-      ) {
-        dp[i][j] = Math.min(dp[i][j], dp[i - 2][j - 2] + cost);
+        if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) {
+          dp[i][j] = Math.min(dp[i][j], dp[i - 2][j - 2] + cost);
+        }
       }
     }
+    return dp[m][n];
   }
-
-  return dp[m][n];
-}
-
-
 }
