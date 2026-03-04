@@ -208,15 +208,18 @@ onFileSelected(event: any) {
         user.foto_perfil = this.fotoActual;
         localStorage.setItem('user', JSON.stringify(user));
 
-        this.mensaje = '✅ Foto actualizada correctamente.';
+        this.mensaje = ' Foto actualizada correctamente.';
         this.tipoMensaje = 'exito';
       },
 
       error: (err) => {
-        console.log(err);
-        this.mensaje = '❌ Error al subir la foto.';
-        this.tipoMensaje = 'error';
-      }
+  console.log('STATUS:', err.status);
+  console.log('URL:', err.url);
+  console.log('ERROR BODY:', err.error);
+  console.log('FULL:', err);
+  this.mensaje = `❌ Error al subir foto. Status: ${err.status}`;
+  this.tipoMensaje = 'error';
+}
     });
 
   }
