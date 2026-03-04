@@ -81,7 +81,7 @@ export class Detalles {
     this.api.establecimientos$.pipe(take(1)).subscribe({
       next: (listaEstado) => {
         const foundEnEstado = this.findById(listaEstado, idParam);
-
+        console.log('RAW DETALLE (estado):', foundEnEstado);
         if (foundEnEstado) {
           this.lugar = this.mapToLugarDetalle(foundEnEstado, idParam);
           this.loading = false;
@@ -92,12 +92,14 @@ export class Detalles {
         this.api.getEstablecimientos().pipe(take(1)).subscribe({
           next: (listaBackend) => {
             const foundEnBackend = this.findById(listaBackend, idParam);
+            console.log('RAW DETALLE (backend):', foundEnBackend);
 
             if (!foundEnBackend) {
               this.lugar = null;
               this.errorMsg =
                 'No encontramos este lugar. Puede que el enlace esté mal o aún no exista información.';
               this.loading = false;
+              console.log('RAW DETALLE (backend):', foundEnBackend);
               return;
             }
 
@@ -164,10 +166,23 @@ export class Detalles {
     if (raw?.estado) datosGenerales.push(`Estado: ${raw.estado}`);
 
     // Coordenadas: por ahora opcionales (si no vienen, el HTML no mostrará el mapa)
-    const lat =
-      raw?.lat != null ? Number(raw.lat) : raw?.latitude != null ? Number(raw.latitude) : undefined;
-    const lng =
-      raw?.lng != null ? Number(raw.lng) : raw?.longitude != null ? Number(raw.longitude) : undefined;
+        const lat =
+        raw?.latitud != null
+          ? Number(raw.latitud)
+          : raw?.lat != null
+          ? Number(raw.lat)
+          : raw?.latitude != null
+          ? Number(raw.latitude)
+          : undefined;
+
+      const lng =
+        raw?.longitud != null
+          ? Number(raw.longitud)
+          : raw?.lng != null
+          ? Number(raw.lng)
+          : raw?.longitude != null
+          ? Number(raw.longitude)
+          : undefined;
 
     // Opiniones: por ahora vacío (luego conectamos comentarios si aplica)
     const opiniones: Opinion[] = [];
