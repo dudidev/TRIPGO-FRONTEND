@@ -34,21 +34,33 @@
         {{ townSlug | titlecase }} <span class="pin"></span>
       </h2>
 
-      <!-- BUSCADOR -->
+
+
       <div class="home__searchWrap">
-        <form class="home__search" (ngSubmit)="onSearch()">
-          <input
-            type="text"
-            name="q"
-            [(ngModel)]="query"
-            placeholder="¿Qué quieres hacer hoy?"
-            class="home__searchInput"
-          />
-          <button class="home__searchBtn" type="submit">
-            Buscar
-          </button>
-        </form>
-      </div>
+
+         <a class="back-btn" [routerLink]="['/principal']">
+      ← Volver a Pueblos
+    </a>
+
+  <form class="home__search" (ngSubmit)="onSearch()">
+
+   
+    <div class="searchPill">
+      <input
+        type="text"
+        name="q"
+        [(ngModel)]="query"
+        placeholder="¿Qué quieres hacer hoy?"
+        class="home__searchInput"
+      />
+
+      <button class="home__searchBtn" type="submit">
+        Buscar
+      </button>
+    </div>
+
+  </form>
+</div>
 
 
       <!-- TIPOS -->

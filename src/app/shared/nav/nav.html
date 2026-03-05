@@ -172,4 +172,36 @@
   </aside>
   }
 
+
+  @if (enviandoEmail) {
+<div class="overlayProcesando">
+
+  <div class="overlayCard">
+
+    <div class="loaderTripgo"></div>
+
+    <h2>Estamos contactando los establecimientos</h2>
+
+    <p>
+      TripGo está enviando tu itinerario a los lugares seleccionados.
+      Esto puede tardar unos segundos.
+    </p>
+
+    <div class="overlaySteps">
+      <span class="step active">Preparando</span>
+      <span class="dot"></span>
+      <span class="step active">Enviando</span>
+      <span class="dot"></span>
+      <span class="step">Confirmando</span>
+    </div>
+
+    <div class="overlayBrand">
+      TRIPGO · conectando experiencias
+    </div>
+
+  </div>
+
+</div>
+}
+
 </header>
