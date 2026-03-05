@@ -35,33 +35,32 @@
       </h2>
 
 
+<!-- BUSCADOR + VOLVER -->
+<div class="home__searchWrap">
 
-      <div class="home__searchWrap">
-
-         <a class="back-btn" [routerLink]="['/principal']">
-      ← Volver a Pueblos
-    </a>
+  <a class="back-btn" [routerLink]="['/principal']">
+    ← Volver a Pueblos
+  </a>
 
   <form class="home__search" (ngSubmit)="onSearch()">
-
-   
     <div class="searchPill">
+
       <input
         type="text"
         name="q"
         [(ngModel)]="query"
-        placeholder="¿Qué quieres hacer hoy?"
+        placeholder="Encuentra el mejor lugar"
         class="home__searchInput"
       />
 
       <button class="home__searchBtn" type="submit">
         Buscar
       </button>
+
     </div>
-
   </form>
-</div>
 
+</div>
 
       <!-- TIPOS -->
       <div class="cats-grid">
