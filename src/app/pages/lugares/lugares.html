@@ -1,5 +1,6 @@
 <app-nav></app-nav>
 
+
 <section class="results">
 
   <!-- ================= HERO ================= -->
@@ -41,7 +42,11 @@
       </p>
     </div>
 
+    
+
   </header>
+
+  
 
 
   <!-- ================= PANEL ================= -->
@@ -51,7 +56,15 @@
     <main class="results__main">
 
       <!-- BUSCADOR -->
+
+      
       <form class="results__search" (ngSubmit)="onSearch()">
+
+        
+  <a class="back-btn" [routerLink]="['/lugares', townSlug]">
+    ← Volver a categorías
+  </a>
+
         <div class="searchPill">
           <input
             type="text"

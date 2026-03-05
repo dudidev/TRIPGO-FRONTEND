@@ -189,7 +189,7 @@ export class EditarCuentaComponent implements OnInit {
     if (!this.fotoSeleccionada) return done();
 
     const fd = new FormData();
-    fd.append('imagen', this.fotoSeleccionada);
+    fd.append('foto', this.fotoSeleccionada);
 
     this.mensaje = 'Subiendo foto...';
     this.tipoMensaje = 'cargando';
@@ -213,6 +213,7 @@ export class EditarCuentaComponent implements OnInit {
         console.log('ERROR BODY:', err.error);
         this.mensaje = `✅ Perfil guardado, pero ❌ falló la foto. Status: ${err.status}`;
         this.tipoMensaje = 'error';
+        done();
       }
     });
   }

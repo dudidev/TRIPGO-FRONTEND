@@ -202,6 +202,30 @@ font-size: 2em;
   box-shadow: 0 12px 24px rgba(243,156,18,0.35);
 }
 
+.backbar{
+  max-width: 1200px;
+  margin: 18px auto 0;
+  padding: 0 5px;
+}
+
+.back-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding:6px 10px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 12px;
+  color: #0f6b73;
+  background: rgba(15,107,115,0.10);
+  border: 1px solid rgba(15,107,115,0.22);
+}
+
+.back-btn:hover{
+  filter: brightness(0.98);
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
   .imagenes {

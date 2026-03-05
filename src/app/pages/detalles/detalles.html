@@ -1,5 +1,16 @@
 <app-nav></app-nav>
 
+<!-- ✅ VOLVER A CATEGORÍA -->
+<div class="backbar">
+  <a
+  class="back-btn"
+  *ngIf="townSlug && idTipo"
+  [routerLink]="['/lugares', townSlug, 'tipo', idTipo]"
+>
+  ← Volver a Lugares
+</a>
+</div>
+
 <!-- LOADING -->
 <div class="detalle-container" *ngIf="loading">
   <h2>Cargando...</h2>
@@ -153,7 +164,7 @@
     </ng-template>
 
     <br>
-    <a routerLink='/home' class="btn-itinerario">Volver al inicio</a>
+    <a routerLink='/' class="btn-itinerario">Volver al inicio</a>
   </div>
 </ng-template>
 
