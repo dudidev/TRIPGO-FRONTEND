@@ -5,6 +5,8 @@ import { filter } from 'rxjs/operators';
 import { User } from '../../service/user';
 import { LanguageService } from '../../service/language.service';
 import { ItinerarioService } from '../../service/itinerario.service';
+import { environment } from '../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-nav',
@@ -16,12 +18,14 @@ import { ItinerarioService } from '../../service/itinerario.service';
 export class Nav implements AfterViewInit {
   menuOpen = false;
   itinerarioOpen = false;
+  enviandoEmail = false;
 
   @ViewChild('headerRef') headerRef!: ElementRef<HTMLElement>;
 
   constructor(
     private userService: User,
     private router: Router,
+    private http: HttpClient,
     public lang: LanguageService,
     public itinerario: ItinerarioService
   ) {
@@ -81,6 +85,8 @@ export class Nav implements AfterViewInit {
     // si el menú lateral está abierto, no hacemos nada (evita cierres raros)
     if (this.menuOpen) return;
 
+    if (this.enviandoEmail) return;
+
     // si está abierto el itinerario y clickean fuera, se cierra.
     // (en el HTML debes tener stopPropagation en .itWrap/.itPopover)
     if (this.itinerarioOpen) this.closeItinerario();
@@ -100,6 +106,40 @@ export class Nav implements AfterViewInit {
     document.body.style.overflow = 'auto';
     setTimeout(() => this.setNavOffset(), 0);
   }
+
+  confirmarItinerario() {
+  if (this.itinerario.count === 0 || this.enviandoEmail) return;
+
+  this.enviandoEmail = true;
+
+  const usuario = this.userService.getCurrentUser();
+  const token = localStorage.getItem('token'); // ← agregar esto
+
+  this.http.post(
+    `${environment.apiBaseUrl}/itinerario/enviar-email`,
+    {
+      email: usuario.correo_usuario,
+      nombre: usuario.nombre_usuario,
+      items: this.itinerario.items.map(i => ({
+        nombre: i.nombre,
+        direccion: i.direccion ?? '',
+        imagenUrl: i.imagenUrl ?? null,
+      }))
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` } // ← agregar esto
+    }
+  ).subscribe({
+    next: () => {
+      this.enviandoEmail = false;
+      this.itinerario.clear();
+      this.closeItinerario();
+    },
+    error: () => {
+      this.enviandoEmail = false;
+    }
+  });
+}
 
   logout(): void {
     this.userService.logout();
