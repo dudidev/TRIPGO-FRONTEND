@@ -24,6 +24,7 @@ type CardItem = {
 export class LugaresComponent implements OnDestroy {
   query = '';
 
+  
   townSlug = '';
   idTipo = 0;
 
@@ -55,7 +56,8 @@ private TIPO_KEY_BY_ID: Record<number, string> = {
 };
 
 private getTipoKey(): string {
-  return this.TIPO_KEY_BY_ID[this.idTipo] ?? '';
+  const id = Number(this.idTipo) || 0; // ✅ asegura number válido
+  return this.TIPO_KEY_BY_ID[id] ?? '';
 }
 
 private applyLugaresDataToItems() {
@@ -253,6 +255,11 @@ private applyLugaresDataToItems() {
   }
 
   openItem(item: CardItem) {
-    this.router.navigate(['/detalles', item.slug]);
-  }
+  this.router.navigate(['/detalles', item.slug], {
+    queryParams: {
+      townSlug: this.townSlug,
+      idTipo: this.idTipo
+    }
+  });
+}
 }

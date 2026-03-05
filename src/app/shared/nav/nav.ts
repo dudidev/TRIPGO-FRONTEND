@@ -85,6 +85,8 @@ export class Nav implements AfterViewInit {
     // si el menú lateral está abierto, no hacemos nada (evita cierres raros)
     if (this.menuOpen) return;
 
+    if (this.enviandoEmail) return;
+
     // si está abierto el itinerario y clickean fuera, se cierra.
     // (en el HTML debes tener stopPropagation en .itWrap/.itPopover)
     if (this.itinerarioOpen) this.closeItinerario();

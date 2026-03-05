@@ -95,42 +95,60 @@
 
 /* BUSCADOR pill */
 .home__searchWrap{
-  display:flex;
-  justify-content:center;
-  margin-top: -1px; /* flota sobre el strip */
-  padding: 0 14px 18px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;              /* igual que lugares */
+  margin: 26px 0;
 }
+
+
 
 .home__search{
-  width: min(520px, 100%);
-  display:flex;
-  background:#0E6973;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 100px;             /* ✅ separa back y search pill como en lugares */
+  margin: 26px 0;
   border-radius: 999px;
-  padding: 6px;
-  gap: 8px;
-  box-shadow: 0 10px 18px rgba(0,0,0,.12);
-  
 }
 
+.searchPill{
+  width: min(520px, 95%);
+  display: grid;
+  grid-template-columns: 1fr 110px;
+  border: 5px solid #0E6973;
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+  background: #fff;
+}
 .home__searchInput{
-  flex:1;
-  border:none;
-  outline:none;
-  border-radius: 999px;
+  border: none;
+  outline: none;
   padding: 10px 14px;
+  font-size: 14px;
   font-weight: 700;
+  background: #fff;
 }
 
+/* botón buscar (naranja) */
 .home__searchBtn{
-  border:none;
+  border: none;
   border-radius: 999px;
-  padding: 10px 16px;
-  background:#E27921;
-  color:#fff;
-  font-weight:900;
-  cursor:pointer;
+  cursor: pointer;
+  background: #E27921;
+  color: #fff;
+  font-weight: 900;
+  font-size: 13px;
 }
 
+
+.home__searchBtn:hover{
+  filter: brightness(1.05);
+}
 /* GRID CATEGORÍAS */
 .cats-grid{
   width: 100%;
@@ -283,6 +301,28 @@
   line-height: 1.2;
 }
 
+
+/* botón volver (igual al que ya tienes) */
+.back-btn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 999px;
+  text-decoration: none;
+  color: #0E6973;
+  background: rgba(14,105,115,0.08);
+  border: 1px solid rgba(14,105,115,0.18);
+  transition: all .15s ease;
+  white-space: nowrap;
+}
+
+.back-btn:hover{
+  background: rgba(14,105,115,0.15);
+}
+
 /* RESPONSIVE */
 @media (max-width: 980px){
   .panel{ grid-template-columns: 1fr; }
@@ -292,7 +332,13 @@
 }
 
 @media (max-width: 560px){
-  .hero{ height: 210px; }
-  .cats-grid{ grid-template-columns: 1fr; }
-  .cat-card{ max-width: 100%; }
+  .home__searchWrap{
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .searchPill{
+    width: min(520px, 95%);
+  }
 }

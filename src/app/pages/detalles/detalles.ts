@@ -44,6 +44,9 @@ type LugarDetalle = {
   styleUrl: './detalles.css',
 })
 export class Detalles {
+
+  townSlug: string = '';
+  idTipo: number = 0;
   slug = '';
 
   // lugar actual (o null si no existe)
@@ -58,19 +61,19 @@ export class Detalles {
   constructor(private route: ActivatedRoute, private api: Api, private itinerario: ItinerarioService) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
-      // En tu app, este "slug" es realmente el ID que navegas desde la lista
-      this.slug = params.get('slug') || '';
-      if (!this.slug) {
-        this.lugar = null;
-        this.errorMsg = 'No llegó un identificador válido.';
-        return;
-      }
 
-      this.cargarDetalle(this.slug);
-    });
-  }
+  this.route.queryParamMap.subscribe(q => {
+    this.townSlug = q.get('townSlug') || '';
+    this.idTipo = Number(q.get('idTipo') || 0);
+  });
 
+  this.route.paramMap.subscribe(params => {
+    this.slug = params.get('slug') || '';
+    if (!this.slug) return;
+
+    this.cargarDetalle(this.slug);
+  });
+}
   private cargarDetalle(idParam: string): void {
     this.loading = true;
     this.errorMsg = '';
