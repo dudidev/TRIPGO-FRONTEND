@@ -44,58 +44,7 @@
 
     private destroy$ = new Subject<void>();
 
-  // ✅ Mapea idTipo -> key dentro de LUGARES_DATA[town][key]
-  // AJUSTA según tus ids reales:
-  // private TIPO_KEY_BY_ID: Record<number, string> = {
-  //   14: 'valle-cocora',
-  //   1: 'hotel',
-  //   20 : 'mirador',
-  //   18: 'senderismo'
-
-    
-  // };
-
-  // private getTipoKey(): string {
-  //   const id = Number(this.idTipo) || 0; // ✅ asegura number válido
-  //   return this.TIPO_KEY_BY_ID[id] ?? '';
-  // }
-
-  // private applyLugaresDataToItems() {
-  //   const town = (this.townSlug || '').toLowerCase().trim();
-  //   const tipoKey = this.getTipoKey();
-  //   if (!town || !tipoKey) return;
-
-  //   const pack = LUGARES_DATA?.[town]?.[tipoKey];
-  //   if (!pack) return;
-
-  //   // ✅ si tu data tiene titulo y hero, úsalo
-  //   if (pack.titulo) this.titulo = `${pack.titulo} en ${this.townSlug}`;
-
-  //   if (pack.heroImgs?.length) {
-  //     this.heroImgs = pack.heroImgs;
-  //     this.heroIndex = 0;
-  //     this.startHero();
-  //   }
-
-  //   // ✅ armar mapa slug->img
-  //   const imgBySlug = new Map<string, string>(
-  //     (pack.items ?? []).map(x => [String(x.slug), String(x.img)])
-  //   );
-
-  //     // ✅ DEBUG para confirmar que existe slug "6"
-  //   console.log('town:', town, 'idTipo:', this.idTipo, 'tipoKey:', tipoKey);
-  //   console.log('slugs en backend:', this.items.map(x => x.slug));
-  //   console.log('slugs en data:', [...imgBySlug.keys()]);
-
-  //   // ✅ aplicar imagen por slug (id_establecimiento)
-  //   this.items = this.items.map(it => ({
-  //     ...it,
-  //     img: imgBySlug.get(String(it.slug)) ?? it.img
-  //   }));
-
-  //   this.filtered = this.applySearch(this.query);
-  // }
-
+  
 
 
     constructor(
@@ -105,7 +54,7 @@
     ) {}
 
     ngOnInit(): void {
-      console.log('✅ LugaresComponent.ngOnInit ejecutado');
+      console.log(' LugaresComponent.ngOnInit ejecutado');
 
       // 1) Estado global de establecimientos
       this.api.establecimientos$
@@ -144,7 +93,7 @@
           this.townSlug = params.get('townSlug') || '';
           this.idTipo = Number(params.get('idTipo') || 0);
 
-          // ✅ HERO por pueblo SIEMPRE (así no se rompe Filandia)
+          //  HERO por pueblo SIEMPRE (así no se rompe Filandia)
           this.setHeroByTownSlug(this.townSlug);
 
           if (!this.townSlug || !this.idTipo) {
@@ -155,14 +104,14 @@
             return;
           }
 
-          // ✅ Reset UI
+          //  Reset UI
           this.loading = true;
           this.errorMsg = '';
           this.items = [];
           this.filtered = [];
           this.query = '';
 
-          // ✅ título: traer nombre del tipo
+          //  título: traer nombre del tipo
           this.titulo = `Establecimientos en ${this.townSlug}`;
           this.api.getTipoNombreById(this.idTipo)
             .pipe(takeUntil(this.destroy$))
@@ -178,7 +127,7 @@
               }
             });
 
-          // ✅ Cargar establecimientos filtrados
+          //  Cargar establecimientos filtrados
           this.api.loadEstablecimientosByTownAndTipoId(this.townSlug, this.idTipo);
         });
     }
