@@ -1,0 +1,26 @@
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ConfirmService } from '../../service/confirm.service';
+
+@Component({
+  selector: 'app-confirm-dialog',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './confirm-dialog.html',
+  styleUrls: ['./confirm-dialog.css']
+})
+export class ConfirmDialogComponent {
+  confirmService = inject(ConfirmService);
+
+  onConfirm() {
+    this.confirmService.confirm();
+  }
+
+  onCancel() {
+    this.confirmService.cancel();
+  }
+
+  onOverlayClick() {
+    this.confirmService.close();
+  }
+}

@@ -7,11 +7,13 @@ import { LanguageService } from '../../service/language.service';
 import { ItinerarioService } from '../../service/itinerario.service';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog';
+import{ConfirmService} from '../../service/confirm.service';
 
 @Component({
   selector: 'app-nav',
   standalone: true,
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, ConfirmDialogComponent],
   templateUrl: './nav.html',
   styleUrl: './nav.css'
 })
@@ -27,7 +29,8 @@ export class Nav implements AfterViewInit {
     private router: Router,
     private http: HttpClient,
     public lang: LanguageService,
-    public itinerario: ItinerarioService
+    public itinerario: ItinerarioService,
+    private confirmService: ConfirmService
   ) {
     this.router.events
       .pipe(filter(e => e instanceof NavigationEnd))
@@ -145,4 +148,19 @@ export class Nav implements AfterViewInit {
     this.closeItinerario();
     this.router.navigate(['/login']);
   }
+  async confirmLogout() {
+    console.log("CLICK SALIR");
+  const ok = await this.confirmService.open({
+    title: 'Cerrar sesión',
+    message: '¿Seguro que deseas cerrar sesión?',
+    confirmText: 'Sí, salir',
+    cancelText: 'Cancelar',
+    variant: 'warning'
+  });
+
+    console.log("RESPUESTA:", ok);
+  if (ok) {
+    this.logout();
+  }
+}
 }
