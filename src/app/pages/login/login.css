@@ -179,6 +179,46 @@ input:focus {
   object-fit: contain;
   display: block;
 }
+/* ===== TOAST ===== */
+
+.toast{
+  position: fixed;
+  top: 90px; /* debajo del nav */
+  right: 20px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: white;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+  font-weight: 600;
+  font-size: 14px;
+  z-index: 5000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: slideToast 0.3s ease;
+}
+
+.toast-success{
+  border-left: 6px solid #22c55e;
+  color: #166534;
+}
+
+.toast-error{
+  border-left: 6px solid #ef4444;
+  color: #991b1b;
+}
+
+/* animación suave */
+@keyframes slideToast{
+  from{
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to{
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
 
 
 

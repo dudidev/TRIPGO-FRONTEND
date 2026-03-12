@@ -1,5 +1,5 @@
 <header #headerRef class="headerFixed">
-
+  <app-confirm-dialog></app-confirm-dialog> 
   <div class="navPrincipal">
     <div class="contLogo">
       <img
@@ -14,7 +14,7 @@
       <!-- Si estoy en /empresa: SOLO Salir -->
       @if (isEmpresaPage) {
       <div class="OpLaterales">
-        <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
+        <a href="#" (click)="confirmLogout(); $event.preventDefault()">Salir</a>
       </div>
       } @else {
 
@@ -103,7 +103,7 @@
         </button>
         } @else {
         <a routerLink="/editar-cuenta">Perfil</a>
-        <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
+        <a href="#" (click)="confirmLogout(); $event.preventDefault()">Salir</a>
         <button type="button" class="langBtn" (click)="lang.toggle()">
           {{ lang.current === 'es' ? 'EN' : 'ES' }}
         </button>
@@ -162,7 +162,7 @@
       <a routerLink="/contact" (click)="closeMenu()">Soporte</a>
       <a routerLink="/about" (click)="closeMenu()">Eventos</a>
       <a routerLink="/editar-cuenta" (click)="closeMenu()">Perfil</a>
-      <a href="#" (click)="logout(); $event.preventDefault()">Salir</a>
+      <a href="#" (click)="confirmLogout(); $event.preventDefault()">Salir</a>
       }
 
       <button type="button" class="langBtnMobile" (click)="lang.toggle(); closeMenu()">
@@ -205,3 +205,4 @@
 }
 
 </header>
+  

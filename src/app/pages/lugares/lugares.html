@@ -98,19 +98,23 @@
       <section class="cards" *ngIf="!loading && !errorMsg">
 
         <button
-          class="card"
-          type="button"
-          *ngFor="let item of filtered"
-          (click)="openItem(item)"
-        >
-          <img
-            [src]="item.img"
-            [alt]="item.titulo"
-          />
-          <div class="card__label">
-            {{ item.titulo }}
-          </div>
-        </button>
+  class="card"
+  type="button"
+  *ngFor="let item of filtered"
+  (click)="openItem(item)"
+>
+  <img
+    *ngIf="item.img"
+    [src]="item.img"
+    [alt]="item.titulo"
+  />
+  <div class="card__noImg" *ngIf="!item.img">
+    <span>{{ item.titulo }}</span>
+  </div>
+  <div class="card__label">
+    {{ item.titulo }}
+  </div>
+</button>
 
       </section>
 

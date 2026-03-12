@@ -42,15 +42,22 @@ export class Login {
       localStorage.setItem('token', res.token);
       localStorage.setItem('user', JSON.stringify(res.user));
 
-      if (res.user.rol === 'empresa') {
-        this.router.navigate(['/empresa']);
-      } else {
-        this.router.navigate(['/principal']);
-      }
+      this.showSuccess('Inicio de sesión exitoso');
+
+      setTimeout(() => {
+
+        if (res.user.rol === 'empresa') {
+          this.router.navigate(['/empresa']);
+        } else {
+          this.router.navigate(['/principal']);
+        }
+
+      }, 900); 
 
     },
     error: () => {
       this.errorMessage = 'Usuario o contraseña inválidos';
+      setTimeout(() => this.errorMessage = '', 1200);
     }
   });
 }
