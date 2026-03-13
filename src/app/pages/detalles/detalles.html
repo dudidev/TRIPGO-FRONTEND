@@ -19,9 +19,22 @@
 
 <div class="detalle-container" *ngIf="!loading && lugar as l; else notFound">
 
-  <h1>{{ l.nombre }}</h1>
-  <p class="direccion">📍 {{ l.direccion }}</p>
+   <div class="titulo-favorito">
+    <h1>{{ l.nombre }}</h1>
 
+    <button
+      class="btn-favorito"
+      type="button"
+      (click)="toggleFavorito()"
+      [attr.aria-label]="esFavorito ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+      [title]="esFavorito ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+    >
+      {{ esFavorito ? '♥' : '♡' }}
+    </button>
+  </div>
+
+  <p class="fav-msg" *ngIf="favMsg">{{ favMsg }}</p>
+   <p class="direccion">📍 {{ l.direccion }}</p>
   <!-- IMÁGENES -->
   <div class="imagenes" *ngIf="l.imagenes?.length; else noImages">
     <img class="principal" [src]="l.imagenes[0]" [alt]="l.nombre" />

@@ -7,11 +7,12 @@
   color: #2c3e50;
 }
 
-h1{
-color: black;
-font-size: 2em;
-}
 /* ===== HEADER ===== */
+h1 {
+  color: black;
+  font-size: 2em;
+}
+
 .detalle-container h1 {
   font-size: 32px;
   font-weight: 700;
@@ -22,6 +23,59 @@ font-size: 2em;
   color: #7f8c8d;
   margin-bottom: 24px;
   font-size: 14px;
+}
+
+/* ===== FAVORITOS ===== */
+.titulo-favorito {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.titulo-favorito h1 {
+  margin: 0;
+  flex: 1;
+}
+
+.btn-favorito {
+  border: none;
+  background: #fff;
+  cursor: pointer;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.10);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  flex-shrink: 0;
+}
+
+.btn-favorito span {
+  font-size: 30px;
+  line-height: 1;
+  color: #999;
+}
+
+.btn-favorito.activo span {
+  color: #e63946;
+}
+
+.btn-favorito:hover {
+  transform: scale(1.08);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+}
+
+.fav-msg {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  color: #d14b72;
+  font-weight: 500;
 }
 
 /* ===== GALERÍA ===== */
@@ -38,12 +92,10 @@ font-size: 2em;
   border-radius: 16px;
 }
 
-/* Imagen principal */
 .imagenes .principal {
   height: 420px;
 }
 
-/* Secundarias */
 .secundarias {
   display: grid;
   grid-template-rows: repeat(2, 1fr);
@@ -77,6 +129,10 @@ font-size: 2em;
   color: #555;
 }
 
+.descripcion {
+  white-space: pre-line;
+}
+
 /* ===== MAPA ===== */
 .mapa {
   width: 100%;
@@ -84,6 +140,7 @@ font-size: 2em;
   border-radius: 14px;
   overflow: hidden;
   background: #eee;
+  margin-top: 10px;
 }
 
 .mapa img {
@@ -92,21 +149,23 @@ font-size: 2em;
   object-fit: cover;
 }
 
-/* ===== OPINIONES ===== */
-/* ===== OPINIONES MODERNAS ===== */
+.mapa app-mapa {
+  display: block;
+}
 
+/* ===== OPINIONES ===== */
 .opinion-card {
   background: #ffffff;
   border-radius: 16px;
   padding: 16px 18px;
   margin-bottom: 16px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
   transition: transform .2s ease, box-shadow .2s ease;
 }
 
 .opinion-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 30px rgba(0,0,0,0.08);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
 }
 
 .opinion-header {
@@ -114,11 +173,7 @@ font-size: 2em;
   align-items: center;
   margin-bottom: 10px;
 }
-.descripcion {
-  white-space: pre-line;
-}
 
-/* Avatar circular */
 .avatar {
   width: 42px;
   height: 42px;
@@ -133,13 +188,11 @@ font-size: 2em;
   margin-right: 12px;
 }
 
-/* Info usuario */
 .user-info strong {
   display: block;
   font-size: 14px;
 }
 
-/* Estrellas */
 .stars {
   font-size: 14px;
   color: #f1c40f;
@@ -164,7 +217,7 @@ font-size: 2em;
   padding: 18px;
   border-radius: 16px;
   margin-bottom: 18px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
 }
 
 .col-der h4 {
@@ -199,83 +252,68 @@ font-size: 2em;
 
 .btn-itinerario:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(243,156,18,0.35);
+  box-shadow: 0 12px 24px rgba(243, 156, 18, 0.35);
 }
 
-.backbar{
+/* ===== VOLVER ===== */
+.backbar {
   max-width: 1200px;
   margin: 18px auto 0;
   padding: 0 5px;
 }
 
-.back-btn{
+.back-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding:6px 10px;
+  padding: 6px 10px;
   border-radius: 12px;
   text-decoration: none;
   font-weight: 700;
   font-size: 12px;
   color: #0f6b73;
-  background: rgba(15,107,115,0.10);
-  border: 1px solid rgba(15,107,115,0.22);
+  background: rgba(15, 107, 115, 0.10);
+  border: 1px solid rgba(15, 107, 115, 0.22);
 }
 
-.back-btn:hover{
+.back-btn:hover {
   filter: brightness(0.98);
 }
 
-.titulo-favorito {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+/* ===== RESPONSIVE: TABLET GRANDE ===== */
+@media (max-width: 1024px) {
+  .detalle-container {
+    padding: 0 18px;
+  }
+
+  .backbar {
+    padding: 0 18px;
+  }
+
+  .contenido {
+    gap: 24px;
+  }
+
+  .imagenes .principal {
+    height: 360px;
+  }
+
+  .secundarias img {
+    height: 173px;
+  }
 }
 
-.titulo-favorito h1 {
-  margin: 0;
-}
-
-.btn-favorito {
-  border: none;
-  background: #fff;
-  cursor: pointer;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.10);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  flex-shrink: 0;
-}
-
-.btn-favorito span {
-  font-size: 30px;
-  line-height: 1;
-  color: #999;
-}
-
-.btn-favorito.activo span {
-  color: #e63946;
-}
-
-.btn-favorito:hover {
-  transform: scale(1.08);
-  box-shadow: 0 10px 24px rgba(0,0,0,0.14);
-}
-
-.fav-msg {
-  margin-top: 8px;
-  margin-bottom: 8px;
-  font-size: 0.95rem;
-  color: #d14b72;
-  font-weight: 500;
-}
-/* ===== RESPONSIVE ===== */
+/* ===== RESPONSIVE: TABLET ===== */
 @media (max-width: 900px) {
+  .detalle-container {
+    margin: 28px auto;
+    padding: 0 16px;
+  }
+
+  .backbar {
+    padding: 0 16px;
+  }
+
   .imagenes {
     grid-template-columns: 1fr;
   }
@@ -285,23 +323,195 @@ font-size: 2em;
     grid-template-rows: none;
   }
 
+  .imagenes .principal {
+    height: 320px;
+  }
+
   .secundarias img {
     height: 140px;
   }
 
   .contenido {
     grid-template-columns: 1fr;
+    gap: 28px;
   }
 
   .col-der {
     position: static;
   }
-}
-.mapa{
-  margin-top: 10px;
+
+  .titulo-favorito {
+    gap: 10px;
+  }
+
+  .btn-favorito {
+    width: 42px;
+    height: 42px;
+  }
+
+  .btn-favorito span {
+    font-size: 26px;
+  }
 }
 
-/* si quieres que el mapa se vea como tarjeta */
-.mapa app-mapa{
-  display: block;
+/* ===== RESPONSIVE: MÓVIL ===== */
+@media (max-width: 600px) {
+  .detalle-container {
+    margin: 22px auto;
+    padding: 0 14px;
+  }
+
+  .backbar {
+    margin: 14px auto 0;
+    padding: 0 14px;
+  }
+
+  .detalle-container h1,
+  .titulo-favorito h1 {
+    font-size: 24px;
+  }
+
+  .detalle-container .direccion {
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+
+  .titulo-favorito {
+    align-items: center;
+    gap: 10px;
+  }
+
+  .btn-favorito {
+    width: 38px;
+    height: 38px;
+  }
+
+  .btn-favorito span {
+    font-size: 24px;
+  }
+
+  .fav-msg {
+    font-size: 0.9rem;
+  }
+
+  .imagenes {
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .imagenes .principal {
+    height: 240px;
+  }
+
+  .secundarias {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .secundarias img {
+    height: 110px;
+  }
+
+  .contenido {
+    gap: 22px;
+  }
+
+  .col-izq section {
+    margin-bottom: 28px;
+  }
+
+  .col-izq h3 {
+    font-size: 18px;
+  }
+
+  .col-izq p,
+  .opinion-text,
+  .col-der li {
+    font-size: 13px;
+  }
+
+  .col-der .box {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .col-der h4 {
+    font-size: 15px;
+  }
+
+  .btn-itinerario {
+    font-size: 15px;
+    padding: 13px;
+  }
+
+  .mapa {
+    height: 220px;
+  }
+
+  .avatar {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+    margin-right: 10px;
+  }
+
+  .stars,
+  .user-info strong {
+    font-size: 13px;
+  }
+
+  .back-btn {
+    font-size: 11px;
+    padding: 6px 9px;
+  }
+}
+
+/* ===== RESPONSIVE: MÓVIL PEQUEÑO ===== */
+@media (max-width: 400px) {
+  .detalle-container {
+    padding: 0 12px;
+  }
+
+  .backbar {
+    padding: 0 12px;
+  }
+
+  .detalle-container h1,
+  .titulo-favorito h1 {
+    font-size: 20px;
+  }
+
+  .titulo-favorito {
+    gap: 8px;
+  }
+
+  .btn-favorito {
+    width: 34px;
+    height: 34px;
+  }
+
+  .btn-favorito span {
+    font-size: 20px;
+  }
+
+  .imagenes .principal {
+    height: 200px;
+  }
+
+  .secundarias img {
+    height: 90px;
+  }
+
+  .mapa {
+    height: 190px;
+  }
+
+  .opinion-card {
+    padding: 14px;
+  }
+
+  .btn-itinerario {
+    font-size: 14px;
+    padding: 12px;
+  }
 }
