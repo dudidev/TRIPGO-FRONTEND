@@ -7,6 +7,7 @@ import { MapaComponent } from '../../shared/mapa/mapa';
 import { Api } from '../../api';
 import { take } from 'rxjs';
 import { ItinerarioService } from '../../service/itinerario.service';
+import { FavoritosService,FavoritoItem } from '../../service/favoritos.service';
 
 type Opinion = {
   usuario: string;
@@ -58,7 +59,11 @@ export class Detalles {
 
   itMsg = '';
 
-  constructor(private route: ActivatedRoute, private api: Api, private itinerario: ItinerarioService) {}
+  esFavorito = false;
+  favMsg = '';
+
+
+  constructor(private route: ActivatedRoute, private api: Api, private itinerario: ItinerarioService,   private favoritosService: FavoritosService) {}
 
   ngOnInit(): void {
 
@@ -87,6 +92,7 @@ export class Detalles {
         console.log('RAW DETALLE (estado):', foundEnEstado);
         if (foundEnEstado) {
           this.lugar = this.mapToLugarDetalle(foundEnEstado, idParam);
+          this.esFavorito = this.favoritosService.isFavorito(this.lugar.slug)
           this.loading = false;
           return;
         }
@@ -230,4 +236,26 @@ export class Detalles {
     this.itMsg = 'Agregado a tu itinerario ✅';
     setTimeout(() => (this.itMsg = ''), 1500);
   }
+    toggleFavorito() {
+    if (!this.lugar) return;
+
+    this.favMsg = '';
+
+    const item: FavoritoItem = {
+      id: this.lugar.slug,
+      nombre: this.lugar.nombre,
+      direccion: this.lugar.direccion,
+      imagenUrl: this.lugar.imagenes?.[0] || undefined
+    };
+
+    const resultado = this.favoritosService.toggleFavorito(item);
+
+    this.esFavorito = resultado;
+    this.favMsg = resultado
+      ? 'Agregado a favoritos ❤️'
+      : 'Eliminado de favoritos 🤍';
+
+    setTimeout(() => (this.favMsg = ''), 1500);
+  }
+
 }
