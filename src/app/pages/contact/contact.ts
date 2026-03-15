@@ -8,6 +8,7 @@ type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
 @Component({
   selector: 'app-contact',
+  standalone: true,
   imports: [Nav, Footer, ReactiveFormsModule],
   templateUrl: './contact.html',
   styleUrl: './contact.css'

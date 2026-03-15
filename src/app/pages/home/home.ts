@@ -5,6 +5,7 @@ import { Nav } from '../../shared/nav/nav';
 
 @Component({
   selector: 'app-home',
+  standalone: true,
   imports: [Footer, RouterLink, Nav],
   templateUrl: './home.html',
   styleUrl: './home.css'

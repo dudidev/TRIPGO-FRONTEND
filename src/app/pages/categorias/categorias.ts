@@ -17,7 +17,7 @@ type TipoItem = {
 @Component({
   selector: 'app-categorias',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, Nav, Footer],
+  imports: [CommonModule, FormsModule, RouterModule, Nav, Footer, RouterModule],
   templateUrl: './categorias.html',
   styleUrls: ['./categorias.css']
 })

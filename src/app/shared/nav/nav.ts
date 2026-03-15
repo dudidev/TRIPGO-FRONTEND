@@ -14,7 +14,7 @@ import{ConfirmService} from '../../service/confirm.service';
   selector: 'app-nav',
   standalone: true,
   imports: [RouterModule, CommonModule, ConfirmDialogComponent],
-  templateUrl: './nav.html',
+  templateUrl: './nav.html', 
   styleUrl: './nav.css'
 })
 export class Nav implements AfterViewInit {
@@ -110,13 +110,13 @@ export class Nav implements AfterViewInit {
     setTimeout(() => this.setNavOffset(), 0);
   }
 
-  confirmarItinerario() {
+ private enviarItinerario() {
   if (this.itinerario.count === 0 || this.enviandoEmail) return;
 
   this.enviandoEmail = true;
 
   const usuario = this.userService.getCurrentUser();
-  const token = localStorage.getItem('token'); // ← agregar esto
+  const token = localStorage.getItem('token');
 
   this.http.post(
     `${environment.apiBaseUrl}/itinerario/enviar-email`,
@@ -130,7 +130,7 @@ export class Nav implements AfterViewInit {
       }))
     },
     {
-      headers: { Authorization: `Bearer ${token}` } // ← agregar esto
+      headers: { Authorization: `Bearer ${token}` }
     }
   ).subscribe({
     next: () => {
@@ -142,6 +142,22 @@ export class Nav implements AfterViewInit {
       this.enviandoEmail = false;
     }
   });
+}
+
+async confirmarItinerario() {
+  if (this.itinerario.count === 0 || this.enviandoEmail) return;
+
+  const ok = await this.confirmService.open({
+    title: 'Confirmar itinerario',
+    message: '¿Deseas confirmar tus lugares seleccionados?',
+    confirmText: 'Sí, confirmar',
+    cancelText: 'Cancelar',
+    variant: 'warning'
+  });
+
+  if (ok) {
+    this.enviarItinerario();
+  }
 }
 
   logout(): void {
