@@ -153,19 +153,86 @@
     private setHeroByTownSlug(townSlug: string) {
       const t = (townSlug || '').toLowerCase().trim();
 
-      if (t === 'filandia') {
-        this.heroImgs = [
-          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722321/filandia_portada_-_carrucel_yvkncf.jpg',
-          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1770646756/imagen6valle-cocora_r8sw92.jpg',
-          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765719559/Salento_Portada-_carrucel_xhjred.jpg'
-        ];
-      } else if (t === 'salento') {
+      if (t === 'salento') {
         this.heroImgs = [
           'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765732081/cabalgata_portada_-_5_xjw3xq.jpg',
           'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729542/portada_8_jrmbd6.jpg',
           'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765731463/cabalgata_-_portada_4_dma1bo.jpg'
         ];
-      } else {
+      } else if (t === 'filandia') {
+        this.heroImgs = [
+          '',
+          '',
+          ''
+   
+        ];
+      } else if (t === 'calarca') {
+        this.heroImgs = [
+          '',
+          '',
+          ''
+        ];
+      }else if (t === 'montenegro') {
+        this.heroImgs = [
+          '',
+          '',
+          ''
+        ];
+      }else if (t === 'quimbaya') {
+        this.heroImgs = [
+          '',
+          '',
+          ''
+        ];
+      }else if (t === 'circasia') {
+        this.heroImgs = [
+          '',
+          '',
+          ''
+        ];
+      }else if (t === 'armenia') {
+        this.heroImgs = [
+          '',
+          '',
+          ''
+        ];
+
+      }else if (t === 'buenavista') {
+        this.heroImgs = [
+          '',
+          '',
+          ''
+        ];
+
+      }else if (t === 'pijao') {
+        this.heroImgs = [
+          '',
+          '',
+          ''
+        ];
+
+      }else if (t === 'cordoba') {
+        this.heroImgs = [
+          '',
+          '',
+          ''
+        ];
+
+      }else if (t === 'tebaida') {
+        this.heroImgs = [
+          '',
+          '',
+          ''
+        ];
+
+      }else if (t === 'genova') {
+        this.heroImgs = [
+          '',
+          '',
+          ''
+        ];
+
+      }else {
         // fallback por pueblo desconocido
         this.setHeroFallback();
         return;

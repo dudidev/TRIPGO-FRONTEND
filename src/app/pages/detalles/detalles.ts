@@ -34,7 +34,7 @@ type LugarDetalle = {
 @Component({
   selector: 'app-detalles',
   standalone: true,
-  imports: [Nav, CommonModule, Footer, RouterModule, MapaComponent],
+  imports: [Nav, CommonModule, Footer, RouterModule, MapaComponent,],
   templateUrl: './detalles.html',
   styleUrl: './detalles.css',
 })

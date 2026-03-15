@@ -7,6 +7,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [Nav, Footer, FormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css'

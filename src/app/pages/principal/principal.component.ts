@@ -13,7 +13,7 @@ import { take } from 'rxjs';
 @Component({
   selector: 'app-principal',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, Nav, Footer],
+  imports: [CommonModule, RouterModule, FormsModule, Nav, Footer, RouterModule],
   templateUrl: './principal.component.html',
   styleUrls: ['./principal.component.css']
 })
