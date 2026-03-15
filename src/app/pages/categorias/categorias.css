@@ -368,6 +368,6 @@
   }
 
   .searchPill{
-    width: min(520px, 95%);
+    width: min(520px, 100%);
   }
 }

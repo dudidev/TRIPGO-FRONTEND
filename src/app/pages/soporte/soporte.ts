@@ -23,9 +23,9 @@ export class Soporte {
   categories = [
     { value: 'general',    icon: '🧭', label: 'General' },
     { value: 'cuenta',     icon: '👤', label: 'Mi cuenta' },
-    { value: 'pagos',      icon: '💳', label: 'Pagos' },
-    { value: 'tecnico',    icon: '🛠️', label: 'Técnico' },
     { value: 'reservas',   icon: '📅', label: 'Reservas' },
+    { value: 'tecnico',    icon: '🛠️', label: 'Técnico' },
+    
   ];
 
   priorities = [

@@ -208,6 +208,20 @@ input:focus {
   color: #991b1b;
 }
 
+.recuperar-contraseña{
+  margin-top: 12px;
+  font-size: 13px;
+  color: #0f6b73;  
+}
+
+.recuperar-contraseña a{
+  color: #0f6b73;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+
+
 /* animación suave */
 @keyframes slideToast{
   from{
