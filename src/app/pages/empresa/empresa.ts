@@ -21,6 +21,9 @@ export class EmpresaComponent implements OnInit {
   errorMessage = '';
 
   establecimientos: any[] = [];
+  establecimientosFiltrados: any[] = [];
+  searchTerm = '';
+
   selectedId: number | null = null;
 
   establecimientoOriginal: any = null;
@@ -28,8 +31,9 @@ export class EmpresaComponent implements OnInit {
 
   editMode = false;
 
-  // ✅ NUEVO: controla si mostramos lista aunque ya haya un seleccionado
   modoLista = false;
+  imagenesLugar: any[] = [];
+  loadingImagenes = false;
 
   readonly diasSemana = [
     'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
@@ -44,7 +48,6 @@ export class EmpresaComponent implements OnInit {
     this.obtenerMisEstablecimientos();
   }
 
-  // ✅ Trae todos
   obtenerMisEstablecimientos(keepSelected = true) {
     this.loading = true;
     this.errorMessage = '';
@@ -54,9 +57,10 @@ export class EmpresaComponent implements OnInit {
       next: (resp: any) => {
         const raw = resp?.data ?? resp;
 
-        // ✅ Parse robusto: si viene array -> ok, si viene objeto -> lo convertimos
         const list = Array.isArray(raw) ? raw : (raw ? [raw] : []);
         this.establecimientos = list;
+        this.establecimientosFiltrados = [...this.establecimientos];
+        this.searchTerm = '';
 
         this.loading = false;
 
@@ -69,21 +73,18 @@ export class EmpresaComponent implements OnInit {
           return;
         }
 
-        // ✅ Si hay varios, por defecto mostrar lista (cards)
         if (this.establecimientos.length > 1) {
           this.modoLista = true;
 
-          // Si queremos mantener el seleccionado (por ejemplo al refrescar tras guardar)
           if (keepSelected && this.selectedId) {
             const found = this.establecimientos.find(e =>
               Number(e?.id_establecimiento ?? e?.id) === Number(this.selectedId)
             );
             if (found) {
-              this.seleccionarEstablecimiento(found, /*salirDeLista*/ false);
+              this.seleccionarEstablecimiento(found, false);
             }
           }
         } else {
-          // ✅ Si solo hay 1, lo abrimos directo
           this.modoLista = false;
           this.seleccionarEstablecimiento(this.establecimientos[0]);
         }
@@ -98,7 +99,35 @@ export class EmpresaComponent implements OnInit {
     });
   }
 
-  // ✅ Selección desde card
+  filtrarEstablecimientos() {
+    const termino = this.searchTerm.trim().toLowerCase();
+
+    if (!termino) {
+      this.establecimientosFiltrados = [...this.establecimientos];
+      return;
+    }
+
+    this.establecimientosFiltrados = this.establecimientos.filter((est) => {
+      const nombre = String(est?.nombre_establecimiento ?? '').toLowerCase();
+      const ubicacion = String(est?.ubicacion ?? '').toLowerCase();
+      const tipo = String(est?.tipo ?? '').toLowerCase();
+      const direccion = String(est?.direccion ?? '').toLowerCase();
+      const estado = String(est?.estado ?? '').toLowerCase();
+
+      return (
+        nombre.includes(termino) ||
+        ubicacion.includes(termino) ||
+        tipo.includes(termino) ||
+        direccion.includes(termino) ||
+        estado.includes(termino)
+      );
+    });
+  }
+
+  limpiarBusqueda() {
+    this.searchTerm = '';
+    this.establecimientosFiltrados = [...this.establecimientos];
+  }
   seleccionarEstablecimiento(est: any, salirDeLista = true) {
     if (!est) return;
 
@@ -110,16 +139,35 @@ export class EmpresaComponent implements OnInit {
     this.establecimientoEdit = structuredClone(est);
     this.editMode = false;
 
-    // si viene de cards, salimos de lista al editor
+    this.obtenerImagenesLugar(parsedId);
+
     if (salirDeLista) this.modoLista = false;
   }
+    obtenerImagenesLugar(id: number) {
+    if (!id) {
+      this.imagenesLugar = [];
+      return;
+    }
 
-  // ✅ Volver a cards
+    this.loadingImagenes = true;
+
+    this.establecimientoService.getImagenesLugar(id).subscribe({
+      next: (resp: any) => {
+        this.imagenesLugar = resp?.imagenes ?? [];
+        this.loadingImagenes = false;
+      },
+      error: (err: any) => {
+        console.error('getImagenesLugar error:', err);
+        this.imagenesLugar = [];
+        this.loadingImagenes = false;
+      }
+    });
+  }
+
   volverALista() {
     if (this.establecimientos.length > 1) {
       this.modoLista = true;
       this.editMode = false;
-      // no borramos selected para poder re-seleccionar rápido si quieres
       this.establecimientoOriginal = null;
       this.establecimientoEdit = null;
     }
@@ -148,13 +196,10 @@ export class EmpresaComponent implements OnInit {
     }
 
     const payload = {
-      // BLOQUEADOS
       nombre_establecimiento: this.establecimientoOriginal.nombre_establecimiento,
       ubicacion: this.establecimientoOriginal.ubicacion,
       direccion: this.establecimientoOriginal.direccion,
       tipo: this.establecimientoOriginal.tipo,
-
-      // EDITABLES
       descripcion: this.establecimientoEdit.descripcion,
       telefono: this.establecimientoEdit.telefono,
       correo: this.establecimientoEdit.correo,
@@ -169,8 +214,6 @@ export class EmpresaComponent implements OnInit {
       next: () => {
         this.saving = false;
         alert('Actualizado correctamente');
-
-        // ✅ refrescamos pero mantenemos el seleccionado
         this.obtenerMisEstablecimientos(true);
         this.api.loadEstablecimientos();
       },
