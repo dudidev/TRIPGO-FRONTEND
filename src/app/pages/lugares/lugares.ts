@@ -215,19 +215,21 @@ No uses markdown, no uses asteriscos ni listas con guiones. Habla de forma natur
       salento: [
         'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765732081/cabalgata_portada_-_5_xjw3xq.jpg',
         'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729542/portada_8_jrmbd6.jpg',
-        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765731463/cabalgata_-_portada_4_dma1bo.jpg'
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773601569/mirador_ss0bel.webp',
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1771997990/mirador_alto_de_la_cruz_vl62jj.jpg',
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729538/portada_6_lbjntm.jpg'
       ],
-      filandia  : ['', '', ''],
-      calarca   : ['', '', ''],
-      montenegro: ['', '', ''],
-      quimbaya  : ['', '', ''],
-      circasia  : ['', '', ''],
-      armenia   : ['', '', ''],
-      buenavista: ['', '', ''],
-      pijao     : ['', '', ''],
-      cordoba   : ['', '', ''],
-      tebaida   : ['', '', ''],
-      genova    : ['', '', ''],
+      filandia  : ['', '', '', ''],
+      calarca   : ['', '', '', ''],
+      montenegro: ['', '', '', ''],
+      quimbaya  : ['', '', '', ''],
+      circasia  : ['', '', '', ''],
+      armenia   : ['', '', '', ''],
+      buenavista: ['', '', '', ''],
+      pijao     : ['', '', '', ''],
+      cordoba   : ['', '', '', ''],
+      tebaida   : ['', '', '', ''],
+      genova    : ['', '', '', ''],
     };
 
     this.heroImgs  = heroMap[t]?.filter(Boolean) ?? [];
