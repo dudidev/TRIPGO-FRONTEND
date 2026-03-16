@@ -1,184 +1,238 @@
 <app-nav></app-nav>
 
-<!-- ✅ VOLVER A CATEGORÍA -->
-<div class="backbar">
-  <a
-  class="back-btn"
-  *ngIf="townSlug && idTipo"
-  [routerLink]="['/lugares', townSlug, 'tipo', idTipo]"
->
-  ← Volver a Lugares
-</a>
-</div>
 
-<!-- LOADING -->
-<div class="detalle-container" *ngIf="loading">
-  <h2>Cargando...</h2>
-  <p>Estamos trayendo la información del lugar.</p>
-</div>
 
-<div class="detalle-container" *ngIf="!loading && lugar as l; else notFound">
-
-   <div class="titulo-favorito">
-    <h1>{{ l.nombre }}</h1>
-
-    <button
-      class="btn-favorito"
-      type="button"
-      (click)="toggleFavorito()"
-      [attr.aria-label]="esFavorito ? 'Quitar de favoritos' : 'Agregar a favoritos'"
-      [title]="esFavorito ? 'Quitar de favoritos' : 'Agregar a favoritos'"
-    >
-      {{ esFavorito ? '♥' : '♡' }}
-    </button>
-  </div>
-
-  <p class="fav-msg" *ngIf="favMsg">{{ favMsg }}</p>
-   <p class="direccion">📍 {{ l.direccion }}</p>
-  <!-- IMÁGENES -->
-  <div class="imagenes" *ngIf="l.imagenes?.length; else noImages">
-    <img class="principal" [src]="l.imagenes[0]" [alt]="l.nombre" />
-
-    <div class="secundarias" *ngIf="l.imagenes.length > 1">
-      <img
-        *ngFor="let img of l.imagenes.slice(1)"
-        [src]="img"
-        [alt]="l.nombre"
-      />
-    </div>
-  </div>
-
-  <ng-template #noImages>
-    <div class="imagenes imagenes--empty">
-      <p>No hay imágenes disponibles todavía.</p>
-    </div>
-  </ng-template>
-
-  <div class="contenido">
-
-    <!-- IZQUIERDA -->
-    <div class="col-izq">
-
-      <section>
-        <h3>Descripción general</h3>
-        <p class="descripcion">{{ l.descripcion }}</p>
-      </section>
-
-      <section>
-        <h3>Ubicación</h3>
-
-        <!-- ✅ Solo mostramos el mapa si hay lat/lng -->
-        <div class="mapa" *ngIf="l.lat != null && l.lng != null; else noUbicacion">
-          <app-mapa
-            [lat]="l.lat"
-            [lng]="l.lng"
-            [zoom]="15"
-            [label]="l.nombre"
-            [openOnClick]="true"
-          ></app-mapa>
-        </div>
-
-        <ng-template #noUbicacion>
-          <p>Ubicación no disponible por ahora.</p>
-        </ng-template>
-      </section>
-
-      <section>
-        <h3>Opiniones</h3>
-
-        <ng-container *ngIf="l.opiniones?.length; else noOpinions">
-          <div class="opinion-card" *ngFor="let op of l.opiniones">
-            <div class="opinion-header">
-              <div class="avatar">
-                {{ op.usuario?.charAt(0) || '?' }}
-              </div>
-
-              <div class="user-info">
-                <strong>{{ op.usuario }}</strong>
-                <div class="stars">
-                  <span *ngFor="let s of [1,2,3,4,5]">
-                    {{ s <= op.rating ? '★' : '☆' }}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <p class="opinion-text">{{ op.comentario }}</p>
-          </div>
-        </ng-container>
-
-        <ng-template #noOpinions>
-          <p>Aún no hay opiniones para este lugar.</p>
-        </ng-template>
-
-      </section>
-
-    </div>
-
-    <!-- DERECHA -->
-    <div class="col-der">
-      <section class="box" *ngIf="l.datosGenerales?.length; else noDatos">
-        <h4>Información relevante</h4>
-        <ul>
-          <li *ngFor="let d of l.datosGenerales">{{ d }}</li>
-        </ul>
-      </section>
-
-      <ng-template #noDatos>
-        <section class="box">
-          <h4>Información relevante</h4>
-          <p>No hay información adicional por ahora.</p>
-        </section>
-      </ng-template>
-
-      <section class="box" *ngIf="l.promociones; else noPromo">
-        <h4>Algunas promociones</h4>
-        <p>{{ l.promociones }}</p>
-      </section>
-
-      <ng-template #noPromo>
-        <section class="box">
-          <h4>Algunas promociones</h4>
-          <p>No hay promociones disponibles por ahora.</p>
-        </section>
-      </ng-template>
-
-      <section class="box">
-        <h4>Horarios</h4>
-
-        <ng-container *ngIf="l.horarios?.length; else noHours">
-          <ul>
-            <li *ngFor="let h of l.horarios">{{ h }}</li>
-          </ul>
-        </ng-container>
-
-        <ng-template #noHours>
-          <p>No hay horarios disponibles.</p>
-        </ng-template>
-      </section>
-
-      <button class="btn-itinerario" (click)="agregarItinerario()">
-        Agregar a itinerario
-      </button>
-
-    </div>
-
-  </div>
+<div class="det__loading" *ngIf="loading">
+  <div class="det__spinner"></div>
+  <p>Cargando lugar...</p>
 </div>
 
 <ng-template #notFound>
-  <div class="detalle-container">
+  <div class="det__empty">
+    <span>🗺️</span>
     <h2>No encontramos este lugar</h2>
-
-    <!-- ✅ Si viene un mensaje de error, lo mostramos -->
-    <p *ngIf="errorMsg; else defaultNotFound">{{ errorMsg }}</p>
-    <ng-template #defaultNotFound>
-      <p>Puede que el enlace esté mal o aún no exista información para este lugar.</p>
-    </ng-template>
-
-    <br>
-    <a routerLink='/' class="btn-itinerario">Volver al inicio</a>
+    <p>{{ errorMsg || 'Puede que el enlace esté mal o aún no exista información.' }}</p>
+    <a routerLink="/" class="det__emptyBtn">Volver al inicio</a>
   </div>
 </ng-template>
+
+<div *ngIf="!loading && lugar as l; else notFound">
+
+  <!-- ═══════════ HERO GALERÍA ═══════════ -->
+  <section class="det__hero">
+
+    <ng-container *ngIf="l.imagenes?.length === 1">
+      <div class="det__heroSingle">
+        <img [src]="getImagen(0)" [alt]="l.nombre" />
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="l.imagenes?.length === 2">
+      <div class="det__heroTwo">
+        <img [src]="getImagen(0)" [alt]="l.nombre" />
+        <img [src]="getImagen(1)" [alt]="l.nombre" />
+      </div>
+    </ng-container>
+
+
+    <ng-container *ngIf="l.imagenes?.length >= 3">
+      <div class="det__heroGrid">
+        <img class="det__heroMain" [src]="getImagen(0)" [alt]="l.nombre" />
+        <div class="det__heroSide">
+          <img [src]="getImagen(1)" [alt]="l.nombre" />
+          <div class="det__heroMoreWrap">
+            <img [src]="getImagen(2)" [alt]="l.nombre" />
+            <div class="det__heroMoreBadge" *ngIf="l.imagenes.length > 3">
+              +{{ l.imagenes.length - 3 }} más
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="!l.imagenes?.length">
+      <div class="det__heroEmpty"><span>📷</span><p>Sin imágenes disponibles</p></div>
+    </ng-container>
+
+    <div class="det__heroOverlay">
+      <div class="det__heroInfo">
+        <a class="back-btn" *ngIf="townSlug && idTipo" 
+     [routerLink]="['/lugares', townSlug, 'tipo', idTipo]">
+    ← Volver a Lugares
+  </a>
+        <div class="det__heroBadge">{{ townSlug | titlecase }} · Quindío</div>
+        <h1 class="det__heroTitle">{{ l.nombre }}</h1>
+        <p class="det__heroAddr">📍 {{ l.direccion }}</p>
+      </div>
+      <button class="det__heroFav" (click)="toggleFavorito()" [title]="esFavorito ? 'Quitar' : 'Favorito'">
+        {{ esFavorito ? '♥' : '♡' }}
+      </button>
+    </div>
+  </section>
+
+  <p class="det__favMsg" *ngIf="favMsg">{{ favMsg }}</p>
+
+  <div class="det__body">
+
+    <main class="det__main">
+
+      <section class="det__section">
+        <h2 class="det__sectionTitle"><span class="det__sectionIcon">📖</span>Descripción general</h2>
+        <p class="det__desc">{{ l.descripcion }}</p>
+      </section>
+
+      <section class="det__section">
+        <h2 class="det__sectionTitle"><span class="det__sectionIcon">✨</span>Servicios y amenidades</h2>
+        <div class="det__amenities" *ngIf="l.servicios?.length; else noServicios">
+          <div class="det__amenity" *ngFor="let s of l.servicios">
+            <span class="det__amenityDot"></span>{{ s }}
+          </div>
+        </div>
+        <ng-template #noServicios>
+          <p class="det__emptyText">Los servicios de este lugar estarán disponibles pronto.</p>
+        </ng-template>
+      </section>
+
+      <section class="det__section">
+        <h2 class="det__sectionTitle"><span class="det__sectionIcon">🕐</span>Horarios y ubicación</h2>
+        <div class="det__hoursGrid" *ngIf="l.horarios?.length; else noHorarios">
+          <div class="det__hourItem" *ngFor="let h of l.horarios">
+            <span class="det__hourLabel">Horario</span>
+            <span class="det__hourVal">{{ h }}</span>
+          </div>
+        </div>
+        <ng-template #noHorarios>
+          <p class="det__emptyText" style="margin-bottom:1rem">Horarios no disponibles.</p>
+        </ng-template>
+        <div class="det__mapWrap" *ngIf="l.lat != null && l.lng != null; else noMapa">
+          <app-mapa [lat]="l.lat" [lng]="l.lng" [zoom]="15" [label]="l.nombre" [openOnClick]="true"></app-mapa>
+        </div>
+        <ng-template #noMapa>
+          <div class="det__mapEmpty">📍 Ubicación no disponible por ahora.</div>
+        </ng-template>
+      </section>
+
+      <section class="det__section">
+        <h2 class="det__sectionTitle"><span class="det__sectionIcon">⭐</span>Opiniones</h2>
+        <ng-container *ngIf="l.opiniones?.length; else noOpinions">
+          <div class="det__opinion" *ngFor="let op of l.opiniones">
+            <div class="det__opinionHeader">
+              <div class="det__opinionAvatar">{{ op.usuario?.charAt(0) || '?' }}</div>
+              <div>
+                <strong>{{ op.usuario }}</strong>
+                <div class="det__stars">
+                  <span *ngFor="let s of [1,2,3,4,5]">{{ s <= op.rating ? '★' : '☆' }}</span>
+                </div>
+              </div>
+            </div>
+            <p class="det__opinionText">{{ op.comentario }}</p>
+          </div>
+        </ng-container>
+        <ng-template #noOpinions>
+          <p class="det__emptyText">Aún no hay opiniones para este lugar.</p>
+        </ng-template>
+      </section>
+
+    </main>
+
+    <aside class="det__side">
+
+      <div class="det__card">
+        <h3 class="det__cardTitle">📞 Información de contacto</h3>
+        <div class="det__infoList" *ngIf="l.datosGenerales?.length">
+          <div class="det__infoRow" *ngFor="let d of l.datosGenerales">
+            <span class="det__infoIcon">
+              {{ d.startsWith('Teléfono') ? '📱' : d.startsWith('Correo') ? '✉️' : '✅' }}
+            </span>
+            <div>
+              <div class="det__infoLabel">{{ d.split(':')[0] }}</div>
+              <div class="det__infoVal">{{ d.split(':').slice(1).join(':').trim() }}</div>
+            </div>
+          </div>
+        </div>
+        <p class="det__emptyText" *ngIf="!l.datosGenerales?.length">Sin información de contacto aún.</p>
+
+        <div class="det__promo" *ngIf="l.promociones">
+          <span class="det__promoIcon">🎉</span>
+          <div>
+            <div class="det__promoLabel">Promoción activa</div>
+            <div class="det__promoText">{{ l.promociones }}</div>
+          </div>
+        </div>
+
+        <div class="det__ctaRow">
+          <button class="det__ctaBtn det__ctaWa" type="button">💬 WhatsApp</button>
+          <button class="det__ctaBtn det__ctaIt" type="button" (click)="agregarItinerario()">
+            📋 Itinerario <span *ngIf="itMsg">✓</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="det__card det__card--menu">
+        <div class="det__menuHeader">
+          <div>
+            <h3 class="det__cardTitle" style="margin-bottom:2px">💰 Saquemos cuentas</h3>
+            <p class="det__menuSub">Selecciona lo que quieres disfrutar</p>
+          </div>
+          <div class="det__menuRate">
+            <span class="det__menuRateLabel">Tasa</span>
+            <span class="det__menuRateVal">1 USD = ${{ tasaCopUsd | number:'1.0-0' }}</span>
+          </div>
+        </div>
+
+        <div class="det__menuBody">
+          <ng-container *ngFor="let grupo of menuAgrupado">
+            <div class="det__menuCatLabel">{{ grupo.cat }}</div>
+            <div
+              class="det__menuItem"
+              *ngFor="let item of grupo.items"
+              [class.det__menuItem--on]="item.selected"
+              (click)="toggleItem(item)"
+            >
+              <div class="det__menuCheck">
+                <div class="det__menuCheck">
+  <span *ngIf="item.selected" style="color:#fff;font-size:11px;font-weight:900;line-height:1">✓</span>
+</div>
+              </div>
+              <span class="det__menuName">{{ item.nombre }}</span>
+              <div class="det__menuPrices">
+                <span class="det__menuCOP">${{ item.precio | number:'1.0-0' }}</span>
+                <span class="det__menuUSD">≈ ${{ item.precio / tasaCopUsd | number:'1.2-2' }} USD</span>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+        <div class="det__menuTotal" [class.det__menuTotal--active]="totalCOP > 0">
+          <div class="det__menuTotalLeft">
+            <span class="det__menuTotalLabel">Total estimado</span>
+            <span class="det__menuTotalCount" *ngIf="itemsSeleccionados > 0">
+              {{ itemsSeleccionados }} ítem{{ itemsSeleccionados !== 1 ? 's' : '' }}
+            </span>
+            <span class="det__menuTotalCount" *ngIf="itemsSeleccionados === 0">
+              Selecciona ítems
+            </span>
+          </div>
+          <div class="det__menuTotalRight">
+            <span class="det__menuTotalCOP">${{ totalCOP | number:'1.0-0' }}</span>
+            <span class="det__menuTotalUSD">≈ ${{ totalCOP / tasaCopUsd | number:'1.2-2' }} USD</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="det__ctaMain" type="button" (click)="agregarItinerario()">
+        <span>✅</span>
+        <div>
+          <div class="det__ctaMainTitle">Agregar a mi itinerario</div>
+          <div class="det__ctaMainSub">Guarda este lugar para tu viaje</div>
+        </div>
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
+          <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+    </aside>
+  </div>
+</div>
 
 <app-footer></app-footer>

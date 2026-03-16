@@ -62,7 +62,7 @@ export const CATEGORIAS_DATA: Record<string, CategoriaData> = {
       'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773339192/el-cafe-de-carlos_o7o6zj.webp',
       'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773339182/cafe-bar-de-carlos-2_g2kpnb.webp',
       'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773339718/finca_la_bella_extr5h.webp',
-      ''
+      
     ],
     categorias: [
       { key: 'miradores', label: 'Miradores', img: 'https://via.placeholder.com/600x400?text=MIRADORES' },
