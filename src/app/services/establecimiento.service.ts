@@ -28,6 +28,9 @@ export class EstablecimientoService {
   updateMioById(id: number, payload: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/establecimientos/mios/${id}`, payload);
   }
+    getImagenesLugar(id: number) {
+    return this.http.get(`${this.baseUrl}/lugares/${id}/imagenes`);
+  }
 
   // ✅ crear establecimiento
   crear(payload: any): Observable<any> {

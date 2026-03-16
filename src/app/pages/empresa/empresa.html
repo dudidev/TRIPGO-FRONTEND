@@ -3,53 +3,104 @@
 <div class="empresa-page">
 
   <!-- LOADING -->
-  <div *ngIf="loading" class="card">Cargando...</div>
+  <div *ngIf="loading" class="card card--state">
+    <p class="state-text">Cargando...</p>
+  </div>
 
   <!-- ERROR -->
-  <div *ngIf="!loading && errorMessage" class="card">
+  <div *ngIf="!loading && errorMessage" class="card card--state">
     <p class="empty">{{ errorMessage }}</p>
   </div>
 
-  <!-- ✅ CARDS: si tiene MÁS de 1 y AÚN NO hay seleccionado -->
+  <!-- CARDS -->
   <div
     *ngIf="!loading && !errorMessage && establecimientos.length > 1 && !establecimientoOriginal"
-    class="card"
+    class="card card--selector"
   >
+    <div class="section-head section-head--search">
+  <div>
+    <span class="section-kicker">Panel de empresa</span>
     <h2 class="cards-title">Selecciona el establecimiento</h2>
+    <p class="section-subtext">Administra la información de cada uno de tus establecimientos.</p>
+  </div>
 
-    <div class="cards-grid">
+    <div class="search-panel" *ngIf="establecimientos.length > 1">
+        <div class="search-box">
+          <span class="search-box__icon">🔎</span>
+          <input
+            type="text"
+            class="search-box__input"
+            placeholder="Buscar por nombre, ubicación, tipo o estado"
+            [(ngModel)]="searchTerm"
+            (input)="filtrarEstablecimientos()"
+          />
+
+          <button
+            type="button"
+            class="search-box__clear"
+            *ngIf="searchTerm"
+            (click)="limpiarBusqueda()"
+          >
+            ✕
+          </button>
+        </div>
+
+        <p class="search-results">
+          {{ establecimientosFiltrados.length }}
+          resultado{{ establecimientosFiltrados.length !== 1 ? 's' : '' }}
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="empty empty--search"
+      *ngIf="searchTerm.trim() && establecimientosFiltrados.length === 0"
+    >
+      No encontramos establecimientos con ese criterio.
+    </div>
+
+    <div class="cards-grid" *ngIf="establecimientosFiltrados.length > 0">
       <button
         type="button"
         class="est-card"
-        *ngFor="let est of establecimientos"
+        *ngFor="let est of establecimientosFiltrados"
         (click)="seleccionarEstablecimiento(est)"
       >
-        <div class="est-card__head">
-          <h3 class="est-card__name">{{ est.nombre_establecimiento }}</h3>
+        <div class="est-card__top">
+          <div class="est-card__icon">🏢</div>
           <span class="est-card__badge">{{ est.estado || 'activo' }}</span>
         </div>
 
-        <p class="est-card__meta">📍 {{ est.ubicacion || '—' }}</p>
-        <p class="est-card__meta">🏷️ Tipo: {{ est.tipo || '—' }}</p>
+        <div class="est-card__content">
+          <h3 class="est-card__name">{{ est.nombre_establecimiento }}</h3>
+          <p class="est-card__meta">📍 {{ est.ubicacion || '—' }}</p>
+          <p class="est-card__meta">🏷️ Tipo: {{ est.tipo || '—' }}</p>
+        </div>
 
-        <div class="est-card__cta">Administrar →</div>
+        <div class="est-card__footer">
+          <span class="est-card__cta">Administrar</span>
+        </div>
       </button>
     </div>
   </div>
 
-  <!-- ✅ EDITOR: solo si ya hay seleccionado -->
-  <div *ngIf="!loading && !errorMessage && establecimientoOriginal" class="card">
+  <!-- EDITOR -->
+  <div *ngIf="!loading && !errorMessage && establecimientoOriginal" class="empresa-panel">
 
-    <div class="panel-header">
-      <div>
-        <h2>{{ establecimientoOriginal.nombre_establecimiento }}</h2>
-        <p class="muted">📍 {{ establecimientoOriginal.ubicacion }}</p>
+    <div class="panel-hero">
+      <div class="panel-hero__content">
+        <div class="panel-hero__badgeRow">
+          <span class="panel-hero__kicker">Panel de administración</span>
+          <span class="panel-hero__status">
+            {{ establecimientoOriginal.estado || 'activo' }}
+          </span>
+        </div>
+
+        <h2 class="panel-hero__title">{{ establecimientoOriginal.nombre_establecimiento }}</h2>
+        <p class="panel-hero__location">📍 {{ establecimientoOriginal.ubicacion }}</p>
       </div>
 
-      <!-- ✅ Acciones a la derecha -->
-      <div class="actions">
-
-        <!-- ✅ volver a cards si tiene varios -->
+      <div class="actions panel-hero__actions">
         <button
           *ngIf="establecimientos.length > 1 && !editMode"
           class="btn-secundario"
@@ -58,11 +109,11 @@
           ← Volver a mis establecimientos
         </button>
 
-        <button *ngIf="!editMode" (click)="editar()">Editar</button>
+        <button *ngIf="!editMode" class="btn-principal" (click)="editar()">Editar</button>
 
         <ng-container *ngIf="editMode">
-          <button (click)="guardarCambios()" [disabled]="saving">
-            {{ saving ? 'Guardando...' : 'Guardar' }}
+          <button class="btn-principal" (click)="guardarCambios()" [disabled]="saving">
+            {{ saving ? 'Guardando...' : 'Guardar cambios' }}
           </button>
 
           <button class="btn-secundario" (click)="cancelar()" [disabled]="saving">
@@ -71,48 +122,121 @@
         </ng-container>
       </div>
     </div>
+        <section class="panel-block panel-block--gallery">
+      <div class="block-head">
+        <div class="block-head__icon">🖼️</div>
+        <div>
+          <h3>Imágenes del establecimiento</h3>
+          <p class="block-sub">Aquí se muestran las imágenes registradas para este lugar.</p>
+        </div>
+      </div>
+
+      <div class="block-body">
+        <p *ngIf="loadingImagenes" class="text-content">Cargando imágenes...</p>
+
+        <ng-container *ngIf="!loadingImagenes">
+          <div *ngIf="imagenesLugar.length > 0; else sinImagenes" class="galeria-empresa">
+
+            <div class="galeria-empresa__principal">
+              <img
+                [src]="imagenesLugar[0]?.url"
+                alt="Imagen principal del establecimiento"
+              />
+            </div>
+
+            <div class="galeria-empresa__secundarias" *ngIf="imagenesLugar.length > 1">
+              <img
+                *ngFor="let img of imagenesLugar.slice(1)"
+                [src]="img.url"
+                alt="Imagen del establecimiento"
+              />
+            </div>
+
+          </div>
+
+          <ng-template #sinImagenes>
+            <p class="empty">Este establecimiento aún no tiene imágenes registradas.</p>
+          </ng-template>
+        </ng-container>
+      </div>
+    </section>
 
     <div class="contenido">
 
       <!-- IZQUIERDA -->
       <div class="col-izq">
 
-        <section>
-          <h3>Descripción general</h3>
+        <section class="panel-block">
+          <div class="block-head">
+            <div class="block-head__icon">📝</div>
+            <div>
+              <h3>Descripción general</h3>
+              <p class="block-sub">Presenta la información principal del establecimiento.</p>
+            </div>
+          </div>
 
-          <p *ngIf="!editMode">{{ establecimientoOriginal.descripcion || '—' }}</p>
+          <div class="block-body">
+            <p *ngIf="!editMode" class="text-content">
+              {{ establecimientoOriginal.descripcion || '—' }}
+            </p>
 
-          <textarea
-            *ngIf="editMode"
-            rows="6"
-            [(ngModel)]="establecimientoEdit.descripcion"
-          ></textarea>
+            <textarea
+              *ngIf="editMode"
+              rows="6"
+              [(ngModel)]="establecimientoEdit.descripcion"
+              class="input-control textarea-control"
+            ></textarea>
+          </div>
         </section>
 
-        <section>
-          <h3>Datos de contacto</h3>
+        <section class="panel-block">
+          <div class="block-head">
+            <div class="block-head__icon">📞</div>
+            <div>
+              <h3>Datos de contacto</h3>
+              <p class="block-sub">Actualiza los canales principales de contacto.</p>
+            </div>
+          </div>
 
-          <p>
-            <b>Teléfono:</b>
-            <span *ngIf="!editMode">{{ establecimientoOriginal.telefono || '—' }}</span>
-            <input *ngIf="editMode" [(ngModel)]="establecimientoEdit.telefono" />
-          </p>
+          <div class="block-body contact-grid">
 
-          <p>
-            <b>Correo:</b>
-            <span *ngIf="!editMode">{{ establecimientoOriginal.correo || '—' }}</span>
-            <input *ngIf="editMode" [(ngModel)]="establecimientoEdit.correo" />
-          </p>
+            <div class="info-item">
+              <label>Teléfono</label>
+              <p *ngIf="!editMode" class="info-value">{{ establecimientoOriginal.telefono || '—' }}</p>
+              <input
+                *ngIf="editMode"
+                [(ngModel)]="establecimientoEdit.telefono"
+                class="input-control"
+              />
+            </div>
 
-          <p>
-            <b>Estado:</b>
-            <span *ngIf="!editMode">{{ establecimientoOriginal.estado || 'activo' }}</span>
+            <div class="info-item">
+              <label>Correo</label>
+              <p *ngIf="!editMode" class="info-value">{{ establecimientoOriginal.correo || '—' }}</p>
+              <input
+                *ngIf="editMode"
+                [(ngModel)]="establecimientoEdit.correo"
+                class="input-control"
+              />
+            </div>
 
-            <select *ngIf="editMode" [(ngModel)]="establecimientoEdit.estado">
-              <option value="activo">activo</option>
-              <option value="inactivo">inactivo</option>
-            </select>
-          </p>
+            <div class="info-item info-item--full">
+              <label>Estado</label>
+              <p *ngIf="!editMode" class="info-value">
+                <span class="status-pill">{{ establecimientoOriginal.estado || 'activo' }}</span>
+              </p>
+
+              <select
+                *ngIf="editMode"
+                [(ngModel)]="establecimientoEdit.estado"
+                class="input-control"
+              >
+                <option value="activo">activo</option>
+                <option value="inactivo">inactivo</option>
+              </select>
+            </div>
+
+          </div>
         </section>
 
       </div>
@@ -120,40 +244,70 @@
       <!-- DERECHA -->
       <div class="col-der">
 
-        <section class="box">
-          <h4>Información bloqueada</h4>
+        <section class="box box--info">
+          <div class="block-head block-head--small">
+            <div class="block-head__icon">🔒</div>
+            <div>
+              <h4>Información bloqueada</h4>
+              <p class="block-sub">Datos base del establecimiento.</p>
+            </div>
+          </div>
 
-          <p><b>Nombre:</b> {{ establecimientoOriginal.nombre_establecimiento }}</p>
-          <p><b>Ubicación:</b> {{ establecimientoOriginal.ubicacion }}</p>
-          <p><b>Dirección:</b> {{ establecimientoOriginal.direccion || '—' }}</p>
-          <p><b>Tipo:</b> {{ establecimientoOriginal.tipo || '—' }}</p>
+          <div class="summary-list">
+            <div class="summary-row">
+              <span class="summary-label">Nombre</span>
+              <span class="summary-value">{{ establecimientoOriginal.nombre_establecimiento }}</span>
+            </div>
+
+            <div class="summary-row">
+              <span class="summary-label">Ubicación</span>
+              <span class="summary-value">{{ establecimientoOriginal.ubicacion }}</span>
+            </div>
+
+            <div class="summary-row">
+              <span class="summary-label">Dirección</span>
+              <span class="summary-value">{{ establecimientoOriginal.direccion || '—' }}</span>
+            </div>
+
+            <div class="summary-row">
+              <span class="summary-label">Tipo</span>
+              <span class="summary-value">{{ establecimientoOriginal.tipo || '—' }}</span>
+            </div>
+          </div>
         </section>
 
-        <section class="box">
-          <h4>Horarios</h4>
+        <section class="box box--hours">
+          <div class="block-head block-head--small">
+            <div class="block-head__icon">🕒</div>
+            <div>
+              <h4>Horarios</h4>
+              <p class="block-sub">Control de apertura y cierre.</p>
+            </div>
+          </div>
 
-          <!-- Vista -->
           <ng-container *ngIf="!editMode">
-            <ul>
-              <li *ngFor="let d of diasSemana">
-                {{ d }}: {{ establecimientoOriginal.horario_apertura || '—' }} - {{ establecimientoOriginal.horario_cierre || '—' }}
-              </li>
-            </ul>
+            <div class="schedule-list">
+              <div class="schedule-row" *ngFor="let d of diasSemana">
+                <span class="schedule-day">{{ d }}</span>
+                <span class="schedule-time">
+                  {{ establecimientoOriginal.horario_apertura || '—' }} - {{ establecimientoOriginal.horario_cierre || '—' }}
+                </span>
+              </div>
+            </div>
           </ng-container>
 
-          <!-- Edición (solo horas, días fijos) -->
           <ng-container *ngIf="editMode">
             <div class="field">
               <label>Hora apertura</label>
-              <input [(ngModel)]="establecimientoEdit.horario_apertura" />
+              <input [(ngModel)]="establecimientoEdit.horario_apertura" class="input-control" />
             </div>
 
             <div class="field">
               <label>Hora cierre</label>
-              <input [(ngModel)]="establecimientoEdit.horario_cierre" />
+              <input [(ngModel)]="establecimientoEdit.horario_cierre" class="input-control" />
             </div>
 
-            <p class="hint">Los días se muestran fijos por ahora; solo editas las horas.</p>
+            <p class="hint">Los días se mantienen fijos por ahora; solo editas las horas.</p>
           </ng-container>
         </section>
 
