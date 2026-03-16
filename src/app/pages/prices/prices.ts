@@ -17,7 +17,7 @@ type Plan = {
 @Component({
   selector: 'app-prices',
   standalone: true,
-  imports: [CommonModule, Nav, Footer],
+  imports: [CommonModule, Nav, Footer, DecimalPipe],
   templateUrl: './prices.html',
   styleUrls: ['./prices.css']
 })

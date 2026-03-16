@@ -1,154 +1,195 @@
 <app-nav></app-nav>
 
-
 <section class="results">
 
-  <!-- ================= HERO ================= -->
+  <!-- ═══════════ HERO ═══════════ -->
   <header class="results__hero">
-
-    <!-- Carrusel -->
     <div class="results__heroCarousel">
-
-      <!-- Si hay imágenes -->
       <ng-container *ngIf="heroImgs?.length; else heroFallback">
         <img
           *ngFor="let img of heroImgs; let i = index"
           class="results__heroImg"
           [class.active]="i === heroIndex"
-          [src]="img"
-          alt="Hero"
+          [src]="img" alt="Hero"
         />
       </ng-container>
-
-      <!-- Fallback si no hay imágenes -->
       <ng-template #heroFallback>
-        <img
-          class="results__heroImg active"
-          [src]="'https://via.placeholder.com/1400x500?text=' + (titulo | uppercase)"
-          alt="Hero"
-        />
+        <div class="results__heroPlaceholder"></div>
       </ng-template>
-
     </div>
 
-    <!-- Overlay -->
     <div class="results__heroOverlay">
-      <h1 class="results__title">
-        {{ titulo | uppercase }}
-      </h1>
-
-      <p class="results__subtitle">
-        {{ townSlug | titlecase }} • Quindío
-      </p>
+      <div class="results__heroContent">
+        <a class="back-btn" [routerLink]="['/lugares', townSlug]">
+          ← Volver a categorías
+        </a>
+        <div class="results__heroBadge">{{ townSlug | titlecase }} · Quindío</div>
+        <h1 class="results__title">{{ titulo }}</h1>
+        <p class="results__subtitle">
+          {{ filtered.length }} lugar{{ filtered.length !== 1 ? 'es' : '' }} disponible{{ filtered.length !== 1 ? 's' : '' }}
+        </p>
+      </div>
     </div>
-
-    
-
   </header>
 
-  
+  <!-- ═══════════ SEARCH BAR ═══════════ -->
+  <div class="results__searchBar">
+    <form class="searchPill" (ngSubmit)="onSearch()">
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" class="searchPill__icon">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+        <path d="M20 20l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <input
+        type="text" name="q" [(ngModel)]="query"
+        placeholder="Busca dentro de {{ titulo }}..."
+        autocomplete="off" [disabled]="loading"
+      />
+      <button type="submit" [disabled]="loading">Buscar</button>
+    </form>
+  </div>
 
-
-  <!-- ================= PANEL ================= -->
+  <!-- ═══════════ PANEL ═══════════ -->
   <div class="results__panel">
 
-    <!-- ================= MAIN ================= -->
+    <!-- ═══════════ MAIN ═══════════ -->
     <main class="results__main">
-
-      <!-- BUSCADOR -->
-
-      
-      <form class="results__search" (ngSubmit)="onSearch()">
-
-        
-  <a class="back-btn" [routerLink]="['/lugares', townSlug]">
-    ← Volver a categorías
-  </a>
-
-        <div class="searchPill">
-          <input
-            type="text"
-            name="q"
-            [(ngModel)]="query"
-            placeholder="Encuentra el mejor lugar"
-            autocomplete="off"
-            [disabled]="loading"
-          />
-          <button type="submit" [disabled]="loading">
-            Buscar
-          </button>
-        </div>
-      </form>
-
-
-      <!-- ================= ESTADOS ================= -->
 
       <!-- Loading -->
       <div *ngIf="loading" class="results__state">
-        Cargando establecimientos...
+        <div class="results__spinner"></div>
+        <p>Cargando experiencias...</p>
       </div>
 
-      <!-- Error o vacío -->
-      <div *ngIf="!loading && errorMsg" class="results__state">
-        {{ errorMsg }}
+      <!-- Error -->
+      <div *ngIf="!loading && errorMsg" class="results__state results__state--empty">
+        <span class="results__emptyIcon">🗺️</span>
+        <p>{{ errorMsg }}</p>
       </div>
 
-
-      <!-- ================= GRID ================= -->
-      <section class="cards" *ngIf="!loading && !errorMsg">
-
+      <!-- Grid de cards -->
+      <div class="cards" *ngIf="!loading && !errorMsg">
         <button
-  class="card"
-  type="button"
-  *ngFor="let item of filtered"
-  (click)="openItem(item)"
->
-  <img
-    *ngIf="item.img"
-    [src]="item.img"
-    [alt]="item.titulo"
-  />
-  <div class="card__noImg" *ngIf="!item.img">
-    <span>{{ item.titulo }}</span>
-  </div>
-  <div class="card__label">
-    {{ item.titulo }}
-  </div>
-</button>
-
-      </section>
+          class="card"
+          type="button"
+          *ngFor="let item of filtered"
+          (click)="openItem(item)"
+        >
+          <div class="card__imgWrap">
+            <img *ngIf="item.img" [src]="item.img" [alt]="item.titulo" />
+            <div class="card__noImg" *ngIf="!item.img">
+              <span>{{ item.titulo[0] }}</span>
+            </div>
+          </div>
+          <div class="card__body">
+            <h3 class="card__name">{{ item.titulo }}</h3>
+            <span class="card__cta">Ver más →</span>
+          </div>
+        </button>
+      </div>
 
     </main>
 
+ <aside class="cat__side">
+  <div class="aiPanel">
 
-    <!-- ================= SIDEBAR ================= -->
-    <aside class="results__side">
-
-      <div class="sideCard">
-        <h3>Sugerencias itinerario</h3>
-        <p class="sideSub">selecciona la opción que desees</p>
-
-        <div class="itinerary">
-          <button class="itineraryItem" type="button">
-            1. Plan clásico
-          </button>
-          <button class="itineraryItem" type="button">
-            2. Plan aventura
-          </button>
-          <button class="itineraryItem" type="button">
-            3. Plan gastronómico
-          </button>
-          <button class="itineraryItem" type="button">
-            4. Plan romántico
-          </button>
+    <!-- Header -->
+    <div class="aiPanel__header">
+      <div class="aiPanel__headerLeft">
+        <div class="aiPanel__avatar">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
+            <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z"
+              fill="#fff" opacity="0.9"/>
+          </svg>
         </div>
+        <div>
+          <h3 class="aiPanel__name">Asistente TRIPGO</h3>
+          <div class="aiPanel__status">
+            <span class="aiPanel__dot"></span>
+            En línea · IA activa
+          </div>
+        </div>
+      </div>
+      <div class="aiPanel__badge">IA</div>
+    </div>
 
+    <!-- Sugerencias rápidas -->
+    <div class="aiPanel__suggestions">
+      <span class="aiPanel__sugLabel">Sugerencias rápidas</span>
+      <div class="aiPanel__chips">
+        <button class="aiPanel__chip" type="button"
+          (click)="askAI('¿Qué lugares me recomiendas en ' + townSlug + '?')">
+          📍 Lugares top
+        </button>
+        <button class="aiPanel__chip" type="button"
+          (click)="askAI('Plan romántico en ' + townSlug)">
+          💫 Plan romántico
+        </button>
+        <button class="aiPanel__chip" type="button"
+          (click)="askAI('Plan aventura en ' + townSlug)">
+          🏔️ Aventura
+        </button>
+        <button class="aiPanel__chip" type="button"
+          (click)="askAI('¿Qué comer en ' + townSlug + '?')">
+          🍽️ Gastronomía
+        </button>
+      </div>
+    </div>
+
+    <!-- Mensajes -->
+    <div class="aiPanel__chat" #chatBox>
+      <div
+        *ngFor="let msg of chatMessages"
+        class="aiMsg"
+        [class.aiMsg--user]="msg.role==='user'"
+        [class.aiMsg--ai]="msg.role==='ai'"
+      >
+        <div *ngIf="msg.role==='ai'" class="aiMsg__avatar">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24">
+            <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="#fff"/>
+          </svg>
+        </div>
+        <div class="aiMsg__bubble" [class.aiMsg__bubble--user]="msg.role==='user'">
+          {{ msg.text }}
+        </div>
       </div>
 
-    </aside>
+      <!-- Loading dots -->
+      <div *ngIf="aiLoading" class="aiMsg aiMsg--ai">
+        <div class="aiMsg__avatar">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24">
+            <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="#fff"/>
+          </svg>
+        </div>
+        <div class="aiMsg__bubble">
+          <div class="aiDots"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <form class="aiPanel__inputWrap" (ngSubmit)="sendAIMessage()">
+      <input
+        type="text"
+        [(ngModel)]="aiQuery"
+        name="aiQuery"
+        placeholder="Pregunta lo que quieras..."
+        (focus)="onAiInputFocus()"
+        [disabled]="aiLoading"
+        autocomplete="off"
+      />
+      <button type="submit" [disabled]="aiLoading || !aiQuery.trim()">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+          <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"
+            stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </form>
 
   </div>
+</aside>
 
+  </div>
 </section>
 
 <app-footer></app-footer>

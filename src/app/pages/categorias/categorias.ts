@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -9,10 +9,8 @@ import { CATEGORIAS_DATA, CategoriaData } from '../../data/categorias.data';
 import { Api } from '../../api';
 import { portadaTipo } from '../../shared/tipos-portada';
 
-type TipoItem = {
-  id_tipo: number;
-  nombre_tipo: string;
-};
+type TipoItem    = { id_tipo: number; nombre_tipo: string; };
+type ChatMessage = { role: 'user' | 'ai'; text: string; };
 
 @Component({
   selector: 'app-categorias',
@@ -21,174 +19,236 @@ type TipoItem = {
   templateUrl: './categorias.html',
   styleUrls: ['./categorias.css']
 })
-export class Categorias implements OnInit, OnDestroy {
+export class Categorias implements OnInit, OnDestroy, AfterViewChecked {
 
+  @ViewChild('chatBox') chatBox!: ElementRef;
 
   portadaTipo = portadaTipo;
-  //  ahora el slug viene como townSlug
-  townSlug = '';
 
-  query = '';
-  results: SearchResult[] = [];
+  townSlug = '';
+  query    = '';
+  results  : SearchResult[] = [];
   showPanel = false;
 
-  //  seguimos usando data estática SOLO para slider/itinerarios del pueblo
   data?: CategoriaData;
-
-  //  tipos dinámicos del backend
-  tipos: TipoItem[] = [];
+  tipos        : TipoItem[] = [];
   loadingTipos = false;
 
-  private timerId: any = null;
+  // ── Hero slider ───────────────────────────────
+  private timerId  : any = null;
   private slideIndex = 0;
-  showA = true;
+  showA  = true;
+  leftA  = ''; leftB  = '';
+  rightA = ''; rightB = '';
 
-  leftA = '';
-  leftB = '';
-  rightA = '';
-  rightB = '';
+  // ── AI Chat ───────────────────────────────────
+  aiQuery   = '';
+  aiLoading = false;
+  showProModal = false;
+
+  chatMessages: ChatMessage[] = [
+    { role: 'ai', text: '¡Hola! Soy tu asistente de viaje. ¿Qué tipo de experiencia buscas hoy? 🌿' }
+  ];
+  private shouldScrollChat = false;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private search: SearchService,
-    private api: Api
+    private route  : ActivatedRoute,
+    private router : Router,
+    private search : SearchService,
+    private api    : Api
   ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.townSlug = params.get('townSlug') || '';
 
-      //  data estática (solo estética: slider/itinerarios)
       this.data = CATEGORIAS_DATA[this.townSlug] ?? {
-        nombre: this.townSlug || 'Destino',
-        sliderImgs: [],
-        categorias: [],
-        itinerarios: []
+        nombre      : this.townSlug || 'Destino',
+        sliderImgs  : [],
+        categorias  : [],
+        itinerarios : []
       };
 
       this.ensureFallbacks();
       this.startAutoSlider();
-
-      //  cargar tipos reales del backend (lo importante)
       this.cargarTipos();
     });
   }
 
   ngOnDestroy(): void {
     this.stopAutoSlider();
+  // this.closeProModal(); // ← limpieza
+ 
   }
 
-  private cargarTipos() {
-    if (!this.townSlug) {
-      this.tipos = [];
-      return;
+  ngAfterViewChecked(): void {
+    if (this.shouldScrollChat) {
+      this.scrollChatToBottom();
+      this.shouldScrollChat = false;
     }
+  }
 
+  // ── Tipos ─────────────────────────────────────
+  private cargarTipos(): void {
+    if (!this.townSlug) { this.tipos = []; return; }
     this.loadingTipos = true;
     this.api.getTiposByTown(this.townSlug).subscribe({
-      next: (data: any[]) => {
-        // backend devuelve: [{ id_tipo, nombre_tipo }]
+      next : (data: any[]) => {
         this.tipos = (data ?? []).map(x => ({
-          id_tipo: Number(x.id_tipo),
-          nombre_tipo: String(x.nombre_tipo ?? '')
+          id_tipo     : Number(x.id_tipo),
+          nombre_tipo : String(x.nombre_tipo ?? '')
         }));
         this.loadingTipos = false;
       },
-      error: () => {
-        this.tipos = [];
-        this.loadingTipos = false;
-      }
+      error: () => { this.tipos = []; this.loadingTipos = false; }
     });
   }
 
-  private ensureFallbacks() {
-    const imgs = this.data?.sliderImgs ?? [];
-    const fallback = 'https://via.placeholder.com/900x500?text=SLIDE';
+  // ── Search ────────────────────────────────────
+  onSearch(): void {
+    const q = this.query.trim();
+    if (!q) { this.results = []; this.showPanel = false; return; }
+    this.results   = this.search.search(q, 12, { townSlug: this.townSlug });
+    this.showPanel = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  goResult(r: SearchResult): void {
+    this.showPanel = false;
+    document.body.style.overflow = '';
+    this.query = '';
+    if (r.kind === 'lugar') { this.router.navigate(['/detalles', r.route[1] ?? r.route]); return; }
+    this.router.navigate(r.route);
+  }
+
+  closePanel(): void {
+    this.showPanel = false;
+    document.body.style.overflow = '';
+  }
+
+  // ── Navigation ────────────────────────────────
+  goTipo(idTipo: number): void {
+    this.router.navigate(['/lugares', this.townSlug, 'tipo', idTipo]);
+  }
+
+  goItinerary(index: number): void {
+    const it = this.data?.itinerarios?.[index];
+    if (it) this.askAI(`${it.titulo} en ${this.townSlug}`);
+  }
+
+  // ── AI Chat ───────────────────────────────────
+  askAI(prompt: string): void {
+    this.aiQuery = prompt;
+    this.sendAIMessage();
+  }
+
+  onAiInputFocus(): void {
+  const isProUser = false; // reemplaza con tu lógica de auth
+  if (!isProUser) {
+    this.showProModal = true;
+    //  document.body.style.overflow = 'hidden'; /    // ← bloquea scroll
+    // document.body.style.position = 'fixed';      // ← fija la página
+    document.body.style.width = '100%';   
+  }
+}
+
+closeProModal(): void {
+  this.showProModal = false;
+  document.body.style.overflow = '';
+  document.body.style.position = '';
+  document.body.style.width = '';
+}
+
+  async sendAIMessage(): Promise<void> {
+    const text = this.aiQuery.trim();
+    if (!text || this.aiLoading) return;
+
+    this.chatMessages.push({ role: 'user', text });
+    this.aiQuery      = '';
+    this.aiLoading    = true;
+    this.shouldScrollChat = true;
+
+    const tiposCtx    = this.tipos.map(t => t.nombre_tipo).join(', ');
+    const systemPrompt = `Eres un asistente de viaje especialista en el Eje Cafetero colombiano, específicamente en ${this.townSlug}, Quindío.
+Las categorías disponibles en este pueblo son: ${tiposCtx || 'variadas'}.
+Responde siempre en español, de forma breve (máximo 3-4 oraciones), amigable y concreta.
+Recomienda categorías o experiencias según lo que pida el usuario. No uses markdown ni listas con guiones.`;
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body   : JSON.stringify({
+          model     : 'claude-sonnet-4-20250514',
+          max_tokens: 300,
+          system    : systemPrompt,
+          messages  : [
+            ...this.chatMessages.slice(-6).map(m => ({
+              role   : m.role === 'user' ? 'user' : 'assistant',
+              content: m.text
+            })),
+            { role: 'user', content: text }
+          ]
+        })
+      });
+
+      const data   = await response.json();
+      const aiText = data?.content?.[0]?.text ?? 'No pude generar una respuesta. Intenta de nuevo.';
+      this.chatMessages.push({ role: 'ai', text: aiText });
+
+    } catch {
+      this.chatMessages.push({ role: 'ai', text: 'Hubo un error al conectar con la IA. Intenta de nuevo más tarde.' });
+    }
+
+    this.aiLoading    = false;
+    this.shouldScrollChat = true;
+  }
+
+  private scrollChatToBottom(): void {
+    try {
+      if (this.chatBox?.nativeElement)
+        this.chatBox.nativeElement.scrollTop = this.chatBox.nativeElement.scrollHeight;
+    } catch {}
+  }
+
+  // ── Hero slider ───────────────────────────────
+  private ensureFallbacks(): void {
+    const imgs     = this.data?.sliderImgs ?? [];
+    const fallback = 'https://via.placeholder.com/900x500?text=TRIPGO';
 
     if (!imgs.length) {
-      this.leftA = fallback; this.leftB = fallback;
-      this.rightA = fallback; this.rightB = fallback;
+      this.leftA = fallback; this.leftB  = fallback;
+      this.rightA= fallback; this.rightB = fallback;
       return;
     }
 
     this.slideIndex = 0;
-    this.showA = true;
-
-    this.leftA = imgs[0] ?? fallback;
+    this.showA  = true;
+    this.leftA  = imgs[0] ?? fallback;
     this.rightA = imgs[1] ?? imgs[0] ?? fallback;
-
-    this.leftB = imgs[2] ?? imgs[0] ?? fallback;
+    this.leftB  = imgs[2] ?? imgs[0] ?? fallback;
     this.rightB = imgs[3] ?? imgs[1] ?? imgs[0] ?? fallback;
   }
 
-  private startAutoSlider() {
+  private startAutoSlider(): void {
     this.stopAutoSlider();
     const imgs = this.data?.sliderImgs ?? [];
     if (imgs.length <= 1) return;
 
     this.timerId = setInterval(() => {
       this.slideIndex = (this.slideIndex + 2) % imgs.length;
+      const nL = imgs[this.slideIndex] ?? imgs[0];
+      const nR = imgs[(this.slideIndex + 1) % imgs.length] ?? imgs[0];
 
-      const nextLeft = imgs[this.slideIndex] ?? imgs[0];
-      const nextRight = imgs[(this.slideIndex + 1) % imgs.length] ?? imgs[0];
-
-      if (this.showA) {
-        this.leftB = nextLeft;
-        this.rightB = nextRight;
-      } else {
-        this.leftA = nextLeft;
-        this.rightA = nextRight;
-      }
+      if (this.showA) { this.leftB  = nL; this.rightB = nR; }
+      else            { this.leftA  = nL; this.rightA = nR; }
 
       this.showA = !this.showA;
     }, 3000);
   }
 
-  private stopAutoSlider() {
-    if (this.timerId) {
-      clearInterval(this.timerId);
-      this.timerId = null;
-    }
-  }
-
-  onSearch() {
-    const q = this.query.trim();
-    if (!q) {
-      this.results = [];
-      this.showPanel = false;
-      return;
-    }
-
-    //  busca dentro del pueblo actual
-    this.results = this.search.search(q, 12, { townSlug: this.townSlug });
-    this.showPanel = true;
-  }
-
-  goResult(r: SearchResult) {
-    this.showPanel = false;
-    this.query = '';
-
-    if (r.kind === 'lugar') {
-      this.router.navigate(['/detalles', r.route[1] ?? r.route]);
-      return;
-    }
-
-    this.router.navigate(r.route);
-  }
-
-  closePanel() {
-    this.showPanel = false;
-  }
-
-  
-  //  ahora: entrar a un TIPO real por id
-  goTipo(idTipo: number) {
-    this.router.navigate(['/lugares', this.townSlug, 'tipo', idTipo]);
-  }
-
-  goItinerary(index: number) {
-    const it = this.data?.itinerarios?.[index];
-    console.log('Click itinerario:', index + 1, it?.titulo, 'en', this.townSlug);
+  private stopAutoSlider(): void {
+    if (this.timerId) clearInterval(this.timerId);
+    this.timerId = null;
   }
 }

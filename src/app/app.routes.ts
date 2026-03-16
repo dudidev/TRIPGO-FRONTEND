@@ -11,6 +11,7 @@ import { Detalles } from './pages/detalles/detalles';
 import { EditarCuentaComponent } from './pages/editar-cuenta/editar-cuenta';
 import { About } from './pages/about/about'; 
 import { Prices } from './pages/prices/prices';
+import { Soporte } from './pages/soporte/soporte';
 
 
 
@@ -42,6 +43,7 @@ export const routes: Routes = [
   { path: 'empresa', component: EmpresaComponent, canActivate: [empresaGuard] },
   {path: 'about', component: About},
   {path: 'prices', component: Prices},
+  {path: 'soporte', component: Soporte},
 
  
 

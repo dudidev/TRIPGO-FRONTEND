@@ -95,6 +95,7 @@ export class SearchService {
             kind: 'categoria',
             title: titleTipo,             // ✅ “Glamping”
             subtitle: `${town} • Categoría`,
+            img: img ? String(img) : undefined,  
             route: ['/lugares', town],    // ✅ base route
             townSlug: town,
             tipoId,
