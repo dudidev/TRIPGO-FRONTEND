@@ -6,7 +6,7 @@ import { EstablecimientoService } from '../../services/establecimiento.service';
 import { Nav } from '../../shared/nav/nav';
 import { Footer } from '../../shared/footer/footer';
 import { Api } from '../../api';
-import{ConfirmService} from '../../service/confirm.service' // ajusta la ruta
+import { ConfirmService } from '../../service/confirm.service';
 
 @Component({
   selector: 'app-empresa',
@@ -35,6 +35,9 @@ export class EmpresaComponent implements OnInit, OnDestroy {
   modoLista = false;
   imagenesLugar: any[] = [];
   loadingImagenes = false;
+
+  // 👇 Mapa id → primera imagen URL
+  imagenesPreview: Map<number, string> = new Map();
 
   // Slider
   sliderIndex = 0;
@@ -88,6 +91,9 @@ export class EmpresaComponent implements OnInit, OnDestroy {
           return;
         }
 
+        // 👇 Cargar preview de imágenes para todas las cards
+        this.cargarImagenesPreviews();
+
         if (this.establecimientos.length > 1) {
           this.modoLista = true;
           if (keepSelected && this.selectedId) {
@@ -109,6 +115,30 @@ export class EmpresaComponent implements OnInit, OnDestroy {
         console.error('getMios error:', err);
       }
     });
+  }
+
+  // 👇 Llama al endpoint de imágenes por cada establecimiento y guarda la primera
+  private cargarImagenesPreviews() {
+    this.establecimientos.forEach(est => {
+      const id = Number(est?.id_establecimiento ?? est?.id);
+      if (!id || this.imagenesPreview.has(id)) return;
+
+      this.establecimientoService.getImagenesLugar(id).subscribe({
+        next: (resp: any) => {
+          const imagenes = resp?.imagenes ?? [];
+          if (imagenes.length > 0) {
+            this.imagenesPreview.set(id, imagenes[0].url);
+          }
+        },
+        error: () => {}
+      });
+    });
+  }
+
+  // 👇 Helper para usar en el HTML
+  getPreviewImagen(est: any): string | null {
+    const id = Number(est?.id_establecimiento ?? est?.id);
+    return this.imagenesPreview.get(id) ?? null;
   }
 
   filtrarEstablecimientos() {
@@ -202,13 +232,20 @@ export class EmpresaComponent implements OnInit, OnDestroy {
 
     const archivo = input.files[0];
     input.value = '';
-
     this.uploadingImagen = true;
 
     this.establecimientoService.subirImagenLugar(this.selectedId, archivo).subscribe({
       next: () => {
         this.uploadingImagen = false;
         this.obtenerImagenesLugar(this.selectedId!);
+        // Actualizar preview del mapa
+        this.establecimientoService.getImagenesLugar(this.selectedId!).subscribe({
+          next: (resp: any) => {
+            const imgs = resp?.imagenes ?? [];
+            if (imgs.length > 0) this.imagenesPreview.set(this.selectedId!, imgs[0].url);
+          },
+          error: () => {}
+        });
         this.confirmService.open({
           title: '¡Imagen subida!',
           message: 'La imagen se agregó correctamente al establecimiento.',
