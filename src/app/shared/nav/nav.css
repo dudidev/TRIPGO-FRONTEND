@@ -548,6 +548,9 @@
 
 /* 3) MOBILE/TABLET */
 @media (max-width: 768px){
+  .empresa-salir {
+    display: flex !important;
+  }
 
   .hamburgerBtn{ display: inline-flex; }
 

@@ -5,7 +5,7 @@
       <img
         src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764678577/ChatGPT_Image_12_nov_2025_17_33_14_1_hj26hs.png"
         alt="TripGo" />
-      <a [routerLink]="isLoggedIn ? '/principal' : '/'">TRIPGO</a>
+      <a [routerLink]="isLoggedIn ? (isEmpresaPage ? '/empresa' : '/principal') : '/'">TRIPGO</a>
     </div>
 
     <!--  RIGHT SIDE: (carrito + perfil/salir/idioma) + hamburguesa -->
@@ -13,7 +13,7 @@
 
       <!-- Si estoy en /empresa: SOLO Salir -->
       @if (isEmpresaPage) {
-      <div class="OpLaterales">
+      <div class="OpLaterales empresa-salir">
         <a href="#" (click)="confirmLogout(); $event.preventDefault()">Salir</a>
       </div>
       } @else {

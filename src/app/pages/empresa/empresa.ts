@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -6,15 +6,16 @@ import { EstablecimientoService } from '../../services/establecimiento.service';
 import { Nav } from '../../shared/nav/nav';
 import { Footer } from '../../shared/footer/footer';
 import { Api } from '../../api';
+import{ConfirmService} from '../../service/confirm.service' // ajusta la ruta
 
 @Component({
   selector: 'app-empresa',
   standalone: true,
   imports: [Nav, Footer, CommonModule, FormsModule],
   templateUrl: './empresa.html',
-  styleUrl:'./empresa.css'
+  styleUrl: './empresa.css'
 })
-export class EmpresaComponent implements OnInit {
+export class EmpresaComponent implements OnInit, OnDestroy {
 
   loading = false;
   saving = false;
@@ -35,18 +36,34 @@ export class EmpresaComponent implements OnInit {
   imagenesLugar: any[] = [];
   loadingImagenes = false;
 
+  // Slider
+  sliderIndex = 0;
+  sliderProgress = 0;
+  private sliderTimer: any;
+  private readonly sliderInterval = 4000;
+
+  // Imágenes
+  uploadingImagen = false;
+
   readonly diasSemana = [
     'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
   ];
 
   constructor(
     private establecimientoService: EstablecimientoService,
-    private api: Api
+    private api: Api,
+    private confirmService: ConfirmService
   ) {}
 
   ngOnInit(): void {
     this.obtenerMisEstablecimientos();
   }
+
+  ngOnDestroy(): void {
+    clearInterval(this.sliderTimer);
+  }
+
+  // ── Establecimientos ──────────────────────────────────────────
 
   obtenerMisEstablecimientos(keepSelected = true) {
     this.loading = true;
@@ -56,12 +73,10 @@ export class EmpresaComponent implements OnInit {
     this.establecimientoService.getMios().subscribe({
       next: (resp: any) => {
         const raw = resp?.data ?? resp;
-
         const list = Array.isArray(raw) ? raw : (raw ? [raw] : []);
         this.establecimientos = list;
         this.establecimientosFiltrados = [...this.establecimientos];
         this.searchTerm = '';
-
         this.loading = false;
 
         if (this.establecimientos.length === 0) {
@@ -75,14 +90,11 @@ export class EmpresaComponent implements OnInit {
 
         if (this.establecimientos.length > 1) {
           this.modoLista = true;
-
           if (keepSelected && this.selectedId) {
             const found = this.establecimientos.find(e =>
               Number(e?.id_establecimiento ?? e?.id) === Number(this.selectedId)
             );
-            if (found) {
-              this.seleccionarEstablecimiento(found, false);
-            }
+            if (found) this.seleccionarEstablecimiento(found, false);
           }
         } else {
           this.modoLista = false;
@@ -101,25 +113,17 @@ export class EmpresaComponent implements OnInit {
 
   filtrarEstablecimientos() {
     const termino = this.searchTerm.trim().toLowerCase();
-
     if (!termino) {
       this.establecimientosFiltrados = [...this.establecimientos];
       return;
     }
-
     this.establecimientosFiltrados = this.establecimientos.filter((est) => {
-      const nombre = String(est?.nombre_establecimiento ?? '').toLowerCase();
-      const ubicacion = String(est?.ubicacion ?? '').toLowerCase();
-      const tipo = String(est?.tipo ?? '').toLowerCase();
-      const direccion = String(est?.direccion ?? '').toLowerCase();
-      const estado = String(est?.estado ?? '').toLowerCase();
-
       return (
-        nombre.includes(termino) ||
-        ubicacion.includes(termino) ||
-        tipo.includes(termino) ||
-        direccion.includes(termino) ||
-        estado.includes(termino)
+        String(est?.nombre_establecimiento ?? '').toLowerCase().includes(termino) ||
+        String(est?.ubicacion ?? '').toLowerCase().includes(termino) ||
+        String(est?.tipo ?? '').toLowerCase().includes(termino) ||
+        String(est?.direccion ?? '').toLowerCase().includes(termino) ||
+        String(est?.estado ?? '').toLowerCase().includes(termino)
       );
     });
   }
@@ -128,33 +132,31 @@ export class EmpresaComponent implements OnInit {
     this.searchTerm = '';
     this.establecimientosFiltrados = [...this.establecimientos];
   }
+
   seleccionarEstablecimiento(est: any, salirDeLista = true) {
     if (!est) return;
-
     const id = est.id_establecimiento ?? est.id ?? null;
     const parsedId = typeof id === 'number' ? id : Number(id);
-
     this.selectedId = parsedId;
     this.establecimientoOriginal = est;
     this.establecimientoEdit = structuredClone(est);
     this.editMode = false;
-
     this.obtenerImagenesLugar(parsedId);
-
     if (salirDeLista) this.modoLista = false;
   }
-    obtenerImagenesLugar(id: number) {
-    if (!id) {
-      this.imagenesLugar = [];
-      return;
-    }
 
+  // ── Imágenes + Slider ─────────────────────────────────────────
+
+  obtenerImagenesLugar(id: number) {
+    if (!id) { this.imagenesLugar = []; return; }
     this.loadingImagenes = true;
+    clearInterval(this.sliderTimer);
 
     this.establecimientoService.getImagenesLugar(id).subscribe({
       next: (resp: any) => {
         this.imagenesLugar = resp?.imagenes ?? [];
         this.loadingImagenes = false;
+        if (this.imagenesLugar.length > 0) this.iniciarSlider();
       },
       error: (err: any) => {
         console.error('getImagenesLugar error:', err);
@@ -164,12 +166,80 @@ export class EmpresaComponent implements OnInit {
     });
   }
 
+  iniciarSlider() {
+    this.sliderIndex = 0;
+    this.resetSliderTimer();
+  }
+
+  sliderGoTo(index: number) {
+    this.sliderIndex = (index + this.imagenesLugar.length) % this.imagenesLugar.length;
+    this.resetSliderTimer();
+  }
+
+  sliderNext() { this.sliderGoTo(this.sliderIndex + 1); }
+  sliderPrev() { this.sliderGoTo(this.sliderIndex - 1); }
+
+  private resetSliderTimer() {
+    clearInterval(this.sliderTimer);
+    this.sliderProgress = 0;
+    let elapsed = 0;
+    const step = 50;
+    this.sliderTimer = setInterval(() => {
+      elapsed += step;
+      this.sliderProgress = (elapsed / this.sliderInterval) * 100;
+      if (elapsed >= this.sliderInterval) {
+        elapsed = 0;
+        this.sliderNext();
+      }
+    }, step);
+  }
+
+  // ── Subir imagen ──────────────────────────────────────────────
+
+  onArchivoSeleccionado(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length || !this.selectedId) return;
+
+    const archivo = input.files[0];
+    input.value = '';
+
+    this.uploadingImagen = true;
+
+    this.establecimientoService.subirImagenLugar(this.selectedId, archivo).subscribe({
+      next: () => {
+        this.uploadingImagen = false;
+        this.obtenerImagenesLugar(this.selectedId!);
+        this.confirmService.open({
+          title: '¡Imagen subida!',
+          message: 'La imagen se agregó correctamente al establecimiento.',
+          confirmText: 'Aceptar',
+          cancelText: '',
+          variant: 'info'
+        });
+      },
+      error: (err: any) => {
+        this.uploadingImagen = false;
+        console.error('subirImagenLugar error:', err);
+        this.confirmService.open({
+          title: 'Error al subir',
+          message: err?.error?.message || 'No se pudo subir la imagen. Intenta de nuevo.',
+          confirmText: 'Entendido',
+          cancelText: '',
+          variant: 'danger'
+        });
+      }
+    });
+  }
+
+  // ── Edición ───────────────────────────────────────────────────
+
   volverALista() {
     if (this.establecimientos.length > 1) {
       this.modoLista = true;
       this.editMode = false;
       this.establecimientoOriginal = null;
       this.establecimientoEdit = null;
+      clearInterval(this.sliderTimer);
     }
   }
 
@@ -187,25 +257,29 @@ export class EmpresaComponent implements OnInit {
 
   guardarCambios() {
     if (!this.establecimientoOriginal || !this.establecimientoEdit) return;
-
     const id = this.establecimientoOriginal.id_establecimiento ?? this.selectedId;
-
     if (!id) {
-      alert('No se encontró el id del establecimiento seleccionado.');
+      this.confirmService.open({
+        title: 'Error',
+        message: 'No se encontró el id del establecimiento seleccionado.',
+        confirmText: 'Entendido',
+        cancelText: '',
+        variant: 'danger'
+      });
       return;
     }
 
     const payload = {
-      nombre_establecimiento: this.establecimientoOriginal.nombre_establecimiento,
-      ubicacion: this.establecimientoOriginal.ubicacion,
-      direccion: this.establecimientoOriginal.direccion,
-      tipo: this.establecimientoOriginal.tipo,
-      descripcion: this.establecimientoEdit.descripcion,
-      telefono: this.establecimientoEdit.telefono,
-      correo: this.establecimientoEdit.correo,
-      horario_apertura: this.establecimientoEdit.horario_apertura,
-      horario_cierre: this.establecimientoEdit.horario_cierre,
-      estado: this.establecimientoEdit.estado ?? 'activo'
+      nombre_establecimiento : this.establecimientoOriginal.nombre_establecimiento,
+      ubicacion              : this.establecimientoOriginal.ubicacion,
+      direccion              : this.establecimientoOriginal.direccion,
+      tipo                   : this.establecimientoOriginal.tipo,
+      descripcion            : this.establecimientoEdit.descripcion,
+      telefono               : this.establecimientoEdit.telefono,
+      correo                 : this.establecimientoEdit.correo,
+      horario_apertura       : this.establecimientoEdit.horario_apertura,
+      horario_cierre         : this.establecimientoEdit.horario_cierre,
+      estado                 : this.establecimientoEdit.estado ?? 'activo'
     };
 
     this.saving = true;
@@ -213,15 +287,26 @@ export class EmpresaComponent implements OnInit {
     this.establecimientoService.updateMioById(Number(id), payload).subscribe({
       next: () => {
         this.saving = false;
-        alert('Actualizado correctamente');
+        this.confirmService.open({
+          title: '¡Cambios guardados!',
+          message: 'La información del establecimiento se actualizó correctamente.',
+          confirmText: 'Aceptar',
+          cancelText: '',
+          variant: 'info'
+        });
         this.obtenerMisEstablecimientos(true);
         this.api.loadEstablecimientos();
       },
       error: (err: any) => {
         this.saving = false;
         console.error('updateMioById error:', err);
-        const msg = err?.error?.message || 'No se pudo actualizar. Revisa consola.';
-        alert(msg);
+        this.confirmService.open({
+          title: 'Error al guardar',
+          message: err?.error?.message || 'No se pudo actualizar. Revisa consola.',
+          confirmText: 'Entendido',
+          cancelText: '',
+          variant: 'danger'
+        });
       }
     });
   }
