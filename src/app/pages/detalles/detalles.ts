@@ -39,33 +39,21 @@ type LugarDetalle = {
 })
 export class Detalles implements OnInit {
 
-  townSlug = '';
-  idTipo   = 0;
-  slug     = '';
+  townSlug   = '';
+  idTipo     = 0;
+  slug       = '';
 
-  lugar    : LugarDetalle | null = null;
-  loading  = false;
-  errorMsg = '';
-  itMsg    = '';
-  favMsg   = '';
+  lugar      : LugarDetalle | null = null;
+  loading    = false;
+  errorMsg   = '';
+  itMsg      = '';
+  favMsg     = '';
   esFavorito = false;
 
-  // ── Calculadora ──────────────────────────────────────────────
-  menuItems      : ItemMenu[] = [];
-  totalCOP       = 0;
-  tasaCopUsd     = TASA_COP_USD;
-
-  // ✅ después — recalcula cuando cambia menuItems
-private buildMenu(): void {
-  const map = new Map<string, ItemMenu[]>();
-  for (const item of this.menuItems) {
-    if (!map.has(item.categoria)) map.set(item.categoria, []);
-    map.get(item.categoria)!.push(item);
-  }
-  this.menuAgrupado = Array.from(map.entries()).map(([cat, items]) => ({ cat, items }));
-}
-
-menuAgrupado: { cat: string; items: ItemMenu[] }[] = [];
+  menuItems  : ItemMenu[] = [];
+  totalCOP   = 0;
+  tasaCopUsd = TASA_COP_USD;
+  menuAgrupado: { cat: string; items: ItemMenu[] }[] = [];
 
   get totalUSD(): string { return copToUsd(this.totalCOP); }
   get itemsSeleccionados(): number { return this.menuItems.filter(i => i.selected).length; }
@@ -78,25 +66,26 @@ menuAgrupado: { cat: string; items: ItemMenu[] }[] = [];
   ) {}
 
   ngOnInit(): void {
+    this.favoritosService.cargarCacheDesdeBackend();
+
     this.route.queryParamMap.subscribe(q => {
       this.townSlug = q.get('townSlug') || '';
       this.idTipo   = Number(q.get('idTipo') || 0);
     });
 
-    // ← Ahora sí carga el detalle, ya con idTipo listo
     this.route.paramMap.pipe(take(1)).subscribe(params => {
       this.slug = params.get('slug') || '';
       if (!this.slug) return;
       this.cargarDetalle(this.slug);
     });
-
   }
 
   getImagen(index: number): string {
-  return this.lugar?.imagenes?.[index] ?? '';
-}
+    return this.lugar?.imagenes?.[index] ?? '';
+  }
 
   // ── Carga detalle ─────────────────────────────────────────────
+
   private cargarDetalle(idParam: string): void {
     this.loading  = true;
     this.errorMsg = '';
@@ -124,68 +113,80 @@ menuAgrupado: { cat: string; items: ItemMenu[] }[] = [];
   }
 
   private setLugar(rows: any[], idParam: string): void {
-    this.lugar     = this.mapToLugarDetalle(rows, idParam);
-    this.esFavorito= this.favoritosService.isFavorito(this.lugar.slug);
+    this.lugar      = this.mapToLugarDetalle(rows, idParam);
+    this.esFavorito = this.favoritosService.isFavorito(this.lugar.slug);
 
-     // Si el backend no trae servicios, usa los quemados por tipo
-  if (!this.lugar.servicios?.length) {
-    this.lugar.servicios = getServiciosByTipo(this.idTipo);
-  }
+    if (!this.lugar.servicios?.length) {
+      this.lugar.servicios = getServiciosByTipo(this.idTipo);
+    }
 
     this.initMenu(rows[0]);
-    this.loading   = false;
+    this.loading = false;
   }
 
   // ── Calculadora ───────────────────────────────────────────────
-  private initMenu(raw: any): void {
-  console.log('>>> idTipo:', this.idTipo); // ← agrega esto
-  const backendProductos = raw?.productos ?? raw?.menu ?? null;
-  if (Array.isArray(backendProductos) && backendProductos.length) {
-    this.menuItems = backendProductos.map((p: any) => ({
-      categoria: String(p.categoria ?? '📋 Servicios'),
-      nombre   : String(p.nombre ?? p.name ?? 'Servicio'),
-      precio   : Number(p.precio ?? p.price ?? 0),
-      selected : false
-    }));
-  } else {
-    this.menuItems = getMenuByTipo(this.idTipo);
-  }
-  this.calcularTotal();
-  this.buildMenu();
-}
 
-  // ✅ después — reemplaza el objeto, Angular detecta el cambio
-toggleItem(item: ItemMenu): void {
-  const index = this.menuItems.indexOf(item);
-  if (index > -1) {
-    this.menuItems[index] = { ...item, selected: !item.selected };
+  private initMenu(raw: any): void {
+    const backendProductos = raw?.productos ?? raw?.menu ?? null;
+    if (Array.isArray(backendProductos) && backendProductos.length) {
+      this.menuItems = backendProductos.map((p: any) => ({
+        categoria: String(p.categoria ?? '📋 Servicios'),
+        nombre   : String(p.nombre ?? p.name ?? 'Servicio'),
+        precio   : Number(p.precio ?? p.price ?? 0),
+        selected : false
+      }));
+    } else {
+      this.menuItems = getMenuByTipo(this.idTipo);
+    }
+    this.calcularTotal();
+    this.buildMenu();
   }
-  this.calcularTotal();
-  this.buildMenu();
-}
+
+  private buildMenu(): void {
+    const map = new Map<string, ItemMenu[]>();
+    for (const item of this.menuItems) {
+      if (!map.has(item.categoria)) map.set(item.categoria, []);
+      map.get(item.categoria)!.push(item);
+    }
+    this.menuAgrupado = Array.from(map.entries()).map(([cat, items]) => ({ cat, items }));
+  }
+
+  toggleItem(item: ItemMenu): void {
+    const index = this.menuItems.indexOf(item);
+    if (index > -1) {
+      this.menuItems[index] = { ...item, selected: !item.selected };
+    }
+    this.calcularTotal();
+    this.buildMenu();
+  }
 
   private calcularTotal(): void {
-  this.totalCOP = this.menuItems
-    .filter(i => i.selected)
-    .reduce((acc, i) => acc + i.precio, 0);
-  console.log('Total:', this.totalCOP, 'Items:', this.menuItems.filter(i=>i.selected).length);
-}
+    this.totalCOP = this.menuItems
+      .filter(i => i.selected)
+      .reduce((acc, i) => acc + i.precio, 0);
+  }
 
   // ── Favoritos ─────────────────────────────────────────────────
+
   toggleFavorito(): void {
     if (!this.lugar) return;
+
     const item: FavoritoItem = {
       id       : this.lugar.slug,
       nombre   : this.lugar.nombre,
       direccion: this.lugar.direccion,
       imagenUrl: this.lugar.imagenes?.[0] || undefined
     };
-    this.esFavorito = this.favoritosService.toggleFavorito(item);
-    this.favMsg     = this.esFavorito ? 'Agregado a favoritos ❤️' : 'Eliminado de favoritos 🤍';
-    setTimeout(() => (this.favMsg = ''), 1500);
-  }
+
+    this.favoritosService.toggleFavorito(item).subscribe(esAhoraFavorito => {
+      this.esFavorito = esAhoraFavorito;
+      this.favMsg     = esAhoraFavorito ? 'Agregado a favoritos ❤️' : 'Eliminado de favoritos 🤍';
+      setTimeout(() => (this.favMsg = ''), 1500);
+    });
+  } // 👈 llave de cierre que faltaba
 
   // ── Itinerario ────────────────────────────────────────────────
+
   agregarItinerario(): void {
     if (!this.lugar) return;
     this.itinerario.add({
@@ -199,6 +200,7 @@ toggleItem(item: ItemMenu): void {
   }
 
   // ── Helpers ───────────────────────────────────────────────────
+
   private findAllById(lista: any[], idParam: string): any[] {
     const id = String(idParam);
     return (lista ?? []).filter(e => String(e?.id_establecimiento ?? e?.id ?? '') === id);

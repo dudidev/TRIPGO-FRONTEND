@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { User } from './user';
+import { environment } from '../../environments/environment';
 
 export type FavoritoItem = {
   id: string;
@@ -8,99 +12,94 @@ export type FavoritoItem = {
   imagenUrl?: string;
 };
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class FavoritosService {
-  private storageKey = 'tripgo_favoritos';
+  private baseUrl = environment.apiBaseUrl;
 
-  constructor(private userService: User) {}
+  constructor(
+    private userService: User,
+    private http: HttpClient
+  ) {}
 
   private getCurrentUserId(): string | null {
     const user = this.userService.getCurrentUser();
     if (!user) return null;
-
     return String(user.id);
   }
 
-  private readStorage(): Record<string, FavoritoItem[]> {
-    const raw = localStorage.getItem(this.storageKey);
-    if (!raw) return {};
-
-    try {
-      return JSON.parse(raw);
-    } catch {
-      return {};
-    }
-  }
-
-  private saveStorage(data: Record<string, FavoritoItem[]>): void {
-    localStorage.setItem(this.storageKey, JSON.stringify(data));
-  }
-
-  getFavoritos(): FavoritoItem[] {
+  // ── Obtener todos los favoritos del usuario ───────────────────
+  getFavoritosDesdeBackend(): Observable<FavoritoItem[]> {
     const userId = this.getCurrentUserId();
-    if (!userId) return [];
+    if (!userId) return of([]);
 
-    const allFavoritos = this.readStorage();
-    return allFavoritos[userId] || [];
+    return this.http.get<any[]>(`${this.baseUrl}/favoritos/${userId}`).pipe(
+      map(data => data.map(f => ({
+        id       : String(f.id_establecimiento),
+        nombre   : f.nombre_establecimiento ?? '',
+        direccion: f.direccion ?? '',
+        imagenUrl: f.imagenUrl ?? undefined
+      }))),
+      catchError(() => of([]))
+    );
   }
 
+  // ── Verificar si un lugar es favorito ─────────────────────────
   isFavorito(lugarId: string): boolean {
-    return this.getFavoritos().some(fav => String(fav.id) === String(lugarId));
+    // Como ahora es async, esto se usa solo como cache local en memoria
+    return this._cacheFavoritos.has(String(lugarId));
   }
 
-  addFavorito(item: FavoritoItem): boolean {
-    const userId = this.getCurrentUserId();
-    if (!userId) return false;
+  // Cache en memoria para isFavorito sincrónico
+  private _cacheFavoritos = new Set<string>();
 
-    const allFavoritos = this.readStorage();
-    const favoritosUsuario = allFavoritos[userId] || [];
-
-    const yaExiste = favoritosUsuario.some(
-      fav => String(fav.id) === String(item.id)
-    );
-
-    if (yaExiste) return false;
-
-    allFavoritos[userId] = [...favoritosUsuario, item];
-    this.saveStorage(allFavoritos);
-
-    return true;
-  }
-
-  removeFavorito(lugarId: string): void {
+  cargarCacheDesdeBackend(): void {
     const userId = this.getCurrentUserId();
     if (!userId) return;
 
-    const allFavoritos = this.readStorage();
-    const favoritosUsuario = allFavoritos[userId] || [];
-
-    allFavoritos[userId] = favoritosUsuario.filter(
-      fav => String(fav.id) !== String(lugarId)
-    );
-
-    this.saveStorage(allFavoritos);
+    this.http.get<any[]>(`${this.baseUrl}/favoritos/${userId}`).pipe(
+      catchError(() => of([]))
+    ).subscribe(data => {
+      this._cacheFavoritos.clear();
+      data.forEach(f => this._cacheFavoritos.add(String(f.id_establecimiento)));
+    });
   }
 
-  toggleFavorito(item: FavoritoItem): boolean {
-    const existe = this.isFavorito(item.id);
+  // ── Agregar favorito ──────────────────────────────────────────
+  addFavorito(item: FavoritoItem): Observable<boolean> {
+    const userId = this.getCurrentUserId();
+    if (!userId) return of(false);
 
-    if (existe) {
-      this.removeFavorito(item.id);
-      return false;
+    return this.http.post(`${this.baseUrl}/favoritos`, {
+      id_usuario         : Number(userId),
+      id_establecimiento : Number(item.id)
+    }).pipe(
+      map(() => {
+        this._cacheFavoritos.add(String(item.id));
+        return true;
+      }),
+      catchError(() => of(false))
+    );
+  }
+
+  // ── Eliminar favorito ─────────────────────────────────────────
+  removeFavorito(lugarId: string): Observable<boolean> {
+    const userId = this.getCurrentUserId();
+    if (!userId) return of(false);
+
+    return this.http.delete(`${this.baseUrl}/favoritos/${userId}/${lugarId}`).pipe(
+      map(() => {
+        this._cacheFavoritos.delete(String(lugarId));
+        return true;
+      }),
+      catchError(() => of(false))
+    );
+  }
+
+  // ── Toggle favorito ───────────────────────────────────────────
+  toggleFavorito(item: FavoritoItem): Observable<boolean> {
+    if (this.isFavorito(item.id)) {
+      return this.removeFavorito(item.id).pipe(map(() => false));
     }
-
-    this.addFavorito(item);
-    return true;
-  }
-
-  clearFavoritos(): void {
-    const userId = this.getCurrentUserId();
-    if (!userId) return;
-
-    const allFavoritos = this.readStorage();
-    delete allFavoritos[userId];
-    this.saveStorage(allFavoritos);
+    return this.addFavorito(item).pipe(map(() => true));
   }
 }
