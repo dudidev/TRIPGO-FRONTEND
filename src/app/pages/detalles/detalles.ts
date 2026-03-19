@@ -68,28 +68,7 @@ private buildMenu(): void {
 menuAgrupado: { cat: string; items: ItemMenu[] }[] = [];
 
   get totalUSD(): string { return copToUsd(this.totalCOP); }
-  get itemsSeleccionados(): number {
-  return this.menuItems.reduce((acc, i) => acc + (i.cantidad ?? 0), 0);
-  }
-  incrementItem(item: ItemMenu): void {
-  const index = this.menuItems.indexOf(item);
-  if (index > -1) {
-    this.menuItems[index] = { ...item, cantidad: (item.cantidad ?? 0) + 1 };
-  }
-  this.calcularTotal();
-  this.buildMenu();
-}
-
-decrementItem(item: ItemMenu): void {
-  const index = this.menuItems.indexOf(item);
-  if (index > -1 && (item.cantidad ?? 0) > 0) {
-    this.menuItems[index] = { ...item, cantidad: (item.cantidad ?? 0) - 1 };
-  }
-  this.calcularTotal();
-  this.buildMenu();
-}
-
-
+  get itemsSeleccionados(): number { return this.menuItems.filter(i => i.selected).length; }
 
   constructor(
     private route           : ActivatedRoute,
@@ -166,9 +145,7 @@ decrementItem(item: ItemMenu): void {
       categoria: String(p.categoria ?? '📋 Servicios'),
       nombre   : String(p.nombre ?? p.name ?? 'Servicio'),
       precio   : Number(p.precio ?? p.price ?? 0),
-      selected : false,
-      cantidad : 0,
-
+      selected : false
     }));
   } else {
     this.menuItems = getMenuByTipo(this.idTipo);
@@ -187,9 +164,11 @@ toggleItem(item: ItemMenu): void {
   this.buildMenu();
 }
 
- private calcularTotal(): void {
+  private calcularTotal(): void {
   this.totalCOP = this.menuItems
-    .reduce((acc, i) => acc + i.precio * (i.cantidad ?? 0), 0);
+    .filter(i => i.selected)
+    .reduce((acc, i) => acc + i.precio, 0);
+  console.log('Total:', this.totalCOP, 'Items:', this.menuItems.filter(i=>i.selected).length);
 }
 
   // ── Favoritos ─────────────────────────────────────────────────
@@ -209,23 +188,11 @@ toggleItem(item: ItemMenu): void {
   // ── Itinerario ────────────────────────────────────────────────
   agregarItinerario(): void {
     if (!this.lugar) return;
-
-    // ← NUEVO: captura solo los ítems seleccionados
-  const productosSeleccionados = this.menuItems
-    .filter(i => i.cantidad > 0)
-    .map(i => ({
-      nombre   : i.nombre,
-      precio   : i.precio,
-      categoria: i.categoria,
-      cantidad : i.cantidad, 
-    }));
-
     this.itinerario.add({
       id       : this.lugar.slug,
       nombre   : this.lugar.nombre,
       direccion: this.lugar.direccion,
-      imagenUrl: this.lugar.imagenes?.[0] || undefined,
-      productos: productosSeleccionados.length ? productosSeleccionados : undefined, // ← solo agrega si hay productos
+      imagenUrl: this.lugar.imagenes?.[0] || undefined
     });
     this.itMsg = '✓';
     setTimeout(() => (this.itMsg = ''), 1500);
@@ -239,8 +206,6 @@ toggleItem(item: ItemMenu): void {
 
   private mapToLugarDetalle(rows: any[], idParam: string): LugarDetalle {
     const base = rows[0] ?? {};
-
-     console.log('🖼️ CAMPOS DEL ROW:', JSON.stringify(base, null, 2))
 
     const nombre      = String(base?.nombre_establecimiento ?? base?.nombre ?? 'Sin nombre');
     const direccion   = String(base?.direccion ?? 'Dirección no disponible');
