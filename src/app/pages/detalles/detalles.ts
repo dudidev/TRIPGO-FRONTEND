@@ -1,3 +1,5 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -10,12 +12,14 @@ import { ItinerarioService } from '../../service/itinerario.service';
 import { FavoritosService, FavoritoItem } from '../../service/favoritos.service';
 import { getMenuByTipo, ItemMenu, TASA_COP_USD, copToUsd } from '../../data/menuPresupuesto.data';
 import { getServiciosByTipo } from '../../data/servicios-establecimiento.data';
+import { environment } from '../../../environments/environment';
 
 type Opinion = { usuario: string; comentario: string; rating: number; };
 
 type LugarDetalle = {
   slug           : string;
   nombre         : string;
+  id_establecimiento?: number;
   direccion      : string;
   descripcion    : string;
   promociones?   : string;
@@ -33,7 +37,7 @@ type LugarDetalle = {
 @Component({
   selector   : 'app-detalles',
   standalone : true,
-  imports    : [Nav, CommonModule, Footer, RouterModule, MapaComponent],
+  imports    : [Nav, CommonModule, Footer, RouterModule, MapaComponent, FormsModule],
   templateUrl: './detalles.html',
   styleUrl   : './detalles.css',
 })
@@ -49,6 +53,24 @@ export class Detalles implements OnInit {
   itMsg    = '';
   favMsg   = '';
   esFavorito = false;
+
+  // ── Reseñas ───────────────────────────────────────────────────
+resenas        : any[]  = [];
+estadisticas   : any    = null;
+resenaLoading  = false;
+resenaError    = ''
+miResena       : any    = null;  // si el usuario ya tiene una reseña
+
+// Formulario nueva reseña
+mostrarFormulario = false;
+nuevaCalificacion = 0;
+nuevoComentario   = '';
+resenaMsg         = '';
+
+// Formulario edición
+editando          = false;
+editCalificacion  = 0;
+editComentario    = '';
 
   // ── Calculadora ──────────────────────────────────────────────
   menuItems      : ItemMenu[] = [];
@@ -74,7 +96,8 @@ menuAgrupado: { cat: string; items: ItemMenu[] }[] = [];
     private route           : ActivatedRoute,
     private api             : Api,
     private itinerario      : ItinerarioService,
-    private favoritosService: FavoritosService
+    private favoritosService: FavoritosService,
+    private http            : HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -134,6 +157,7 @@ menuAgrupado: { cat: string; items: ItemMenu[] }[] = [];
 
     this.initMenu(rows[0]);
     this.loading   = false;
+    this.cargarResenas()
   }
 
   // ── Calculadora ───────────────────────────────────────────────
@@ -240,7 +264,9 @@ toggleItem(item: ItemMenu): void {
                 base?.longitude != null ? Number(base.longitude) : undefined;
 
     return {
-      slug: String(idParam), nombre, direccion, descripcion,
+      slug: String(idParam),
+      id_establecimiento: base?.id_establecimiento ? Number(base.id_establecimiento) : Number(idParam), 
+      nombre, direccion, descripcion,
       promociones   : base?.promociones ? String(base.promociones) : undefined,
       horarios, imagenes, opiniones: [],
       datosGenerales: datosGenerales.length ? datosGenerales : undefined,
@@ -250,4 +276,114 @@ toggleItem(item: ItemMenu): void {
       categoryKey: base?.categoryKey ? String(base.categoryKey) : undefined,
     };
   }
+
+
+  // ── Reseñas ───────────────────────────────────────────────────
+private getAuthHeaders(): HttpHeaders {
+  const token = localStorage.getItem('token');
+   console.log('TOKEN:', token);
+  return new HttpHeaders({ Authorization: `Bearer ${token}` });
+}
+
+private get apiUrl(): string {
+  return environment.apiBaseUrl;
+}
+
+cargarResenas(): void {
+  const id = this.lugar?.id_establecimiento;
+  if (!id) return;
+
+  this.resenaLoading = true;
+  this.resenaError   = '';
+
+  this.http.get<any>(`${this.apiUrl}/resenas/establecimiento/${id}`, {
+    headers: this.getAuthHeaders()
+  }).subscribe({
+    next: (data) => {
+      this.estadisticas = data.estadisticas;
+      this.resenas      = data.resenas;
+      this.miResena     = data.resenas.find((r: any) => r.es_mia) ?? null;
+      this.resenaLoading = false;
+    },
+    error: () => {
+      this.resenaError   = 'No se pudieron cargar las reseñas.';
+      this.resenaLoading = false;
+    }
+  });
+}
+
+crearResena(): void {
+  const id = this.lugar?.id_establecimiento;
+  if (!id || !this.nuevaCalificacion || !this.nuevoComentario.trim()) return;
+
+  this.http.post<any>(`${this.apiUrl}/resenas`, {
+    id_establecimiento: id,
+    calificacion      : this.nuevaCalificacion,
+    comentario        : this.nuevoComentario.trim()
+  }, { headers: this.getAuthHeaders() }).subscribe({
+    next: () => {
+      this.resenaMsg        = '¡Reseña publicada!';
+      this.mostrarFormulario = false;
+      this.nuevaCalificacion = 0;
+      this.nuevoComentario   = '';
+      this.cargarResenas();
+      setTimeout(() => (this.resenaMsg = ''), 2000);
+    },
+    error: (err) => {
+      this.resenaMsg = err.error?.message || 'Error al publicar la reseña.';
+    }
+  });
+}
+
+guardarEdicion(): void {
+  if (!this.miResena) return;
+
+  this.http.put<any>(`${this.apiUrl}/resenas/${this.miResena.id_resena}`, {
+    calificacion: this.editCalificacion,
+    comentario  : this.editComentario.trim()
+  }, { headers: this.getAuthHeaders() }).subscribe({
+    next: () => {
+      this.editando  = false;
+      this.resenaMsg = 'Reseña actualizada.';
+      this.cargarResenas();
+      setTimeout(() => (this.resenaMsg = ''), 2000);
+    },
+    error: (err) => {
+      this.resenaMsg = err.error?.message || 'Error al actualizar.';
+    }
+  });
+}
+
+eliminarResena(): void {
+  if (!this.miResena) return;
+
+  this.http.delete(`${this.apiUrl}/resenas/${this.miResena.id_resena}`, {
+    headers: this.getAuthHeaders()
+  }).subscribe({
+    next: () => {
+      this.miResena  = null;
+      this.resenaMsg = 'Reseña eliminada.';
+      this.cargarResenas();
+      setTimeout(() => (this.resenaMsg = ''), 2000);
+    },
+    error: (err) => {
+      this.resenaMsg = err.error?.message || 'Error al eliminar.';
+    }
+  });
+}
+
+iniciarEdicion(): void {
+  if (!this.miResena) return;
+  this.editando        = true;
+  this.editCalificacion = this.miResena.calificacion;
+  this.editComentario   = this.miResena.comentario;
+}
+
+setCalificacion(valor: number): void {
+  this.nuevaCalificacion = valor;
+}
+
+setEditCalificacion(valor: number): void {
+  this.editCalificacion = valor;
+}
 }
