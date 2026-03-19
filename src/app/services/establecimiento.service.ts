@@ -9,30 +9,38 @@ export class EstablecimientoService {
 
   constructor(private http: HttpClient) {}
 
-  // ✅ traer MI establecimiento (uno solo)
   getMio(): Observable<any> {
     return this.http.get(`${this.baseUrl}/establecimientos/mio`);
   }
 
-  // ✅ actualizar MI establecimiento (uno solo)
   updateMio(payload: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/establecimientos/mio`, payload);
   }
 
-  // ✅ NUEVO: traer TODOS mis establecimientos
   getMios(): Observable<any> {
     return this.http.get(`${this.baseUrl}/establecimientos/mios`);
   }
 
-  // ✅ NUEVO: actualizar un establecimiento mío por ID
   updateMioById(id: number, payload: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/establecimientos/mios/${id}`, payload);
   }
-    getImagenesLugar(id: number) {
-    return this.http.get(`${this.baseUrl}/lugares/${id}/imagenes`);
+
+  getImagenesLugar(id: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/imagenes/lugares/${id}/imagenes`);
   }
 
-  // ✅ crear establecimiento
+  // ✅ NUEVO: subir imagen
+  subirImagenLugar(id: number, archivo: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('imagen', archivo);
+    return this.http.post(`${this.baseUrl}/imagenes/lugares/${id}/imagenes`, formData);
+  }
+
+  // ✅ NUEVO: eliminar imagen
+  eliminarImagenLugar(idImagen: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/imagenes/${idImagen}`);
+  }
+
   crear(payload: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/establecimientos`, payload);
   }
