@@ -6,7 +6,6 @@ export type ItinerarioItem = {
   nombre: string;
   direccion?: string;
   imagenUrl?: string;
-  productos?: { nombre: string; precio: number; categoria: string; cantidad?: number }[]; 
 };
 
 const STORAGE_KEY = 'tripgo_itinerario_v1';
