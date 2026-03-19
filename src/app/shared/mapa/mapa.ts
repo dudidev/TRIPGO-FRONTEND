@@ -2,13 +2,6 @@ import { Component, AfterViewInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as L from 'leaflet';
 
-// ✅ Fix del marker SIN assets (usa CDN)
-const iconRetinaUrl = 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png';
-const iconUrl = 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png';
-const shadowUrl = 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png';
-
-L.Icon.Default.mergeOptions({ iconRetinaUrl, iconUrl, shadowUrl });
-
 @Component({
   selector: 'app-mapa',
   standalone: true,
@@ -16,15 +9,13 @@ L.Icon.Default.mergeOptions({ iconRetinaUrl, iconUrl, shadowUrl });
   template: `
     <div class="mapWrap" (click)="openGoogleMaps()">
       <div id="map" class="map"></div>
-
-      <!-- overlay suave para "Ver en Google Maps" -->
       <div class="mapHint" *ngIf="openOnClick">
         Ver en Google Maps ↗
       </div>
     </div>
   `,
   styles: [`
-    .mapWrap{
+    .mapWrap {
       position: relative;
       width: 100%;
       height: 320px;
@@ -32,11 +23,11 @@ L.Icon.Default.mergeOptions({ iconRetinaUrl, iconUrl, shadowUrl });
       overflow: hidden;
       cursor: pointer;
     }
-    .map{
+    .map {
       width: 100%;
       height: 100%;
     }
-    .mapHint{
+    .mapHint {
       position: absolute;
       right: 12px;
       bottom: 12px;
@@ -56,10 +47,7 @@ export class MapaComponent implements AfterViewInit {
   @Input() lat = 4.636;
   @Input() lng = -75.570;
   @Input() zoom = 14;
-
-  // opcional: para tooltip/popup
   @Input() label = 'Ubicación';
-
   @Input() openOnClick = true;
 
   private map!: L.Map;
@@ -67,23 +55,60 @@ export class MapaComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     if (this.map) return;
 
-        this.map = L.map('map', {
+    this.map = L.map('map', {
       zoomControl: false,
       attributionControl: false,
-      scrollWheelZoom: false,   // 🚫 quita zoom con rueda
-      doubleClickZoom: true,   // 🚫 quita zoom con doble click
-      dragging: true,          // 🚫 no se mueve el mapa
+      scrollWheelZoom: false,
+      doubleClickZoom: true,
+      dragging: true,
       boxZoom: false,
       keyboard: false,
     }).setView([this.lat, this.lng], this.zoom);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.map);
 
-    L.marker([this.lat, this.lng])
+    // 👇 Icono personalizado con el logo de TripGo
+    const tripgoIcon = L.divIcon({
+      className: '',
+      html: `
+        <div style="
+          width: 37px;
+          height: 37px;
+          border-radius: 50%;
+          background: #0E6973;
+          border: 2px solid #fff;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+        ">
+          <img
+            src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764678577/ChatGPT_Image_12_nov_2025_17_33_14_1_hj26hs.png"
+            style="margin-top: 4px; width: 30px; height: 30px; border-radius: 50%; object-fit: cover;"
+          />
+          <div style="
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-top: 9px solid #0E6973;
+          "></div>
+        </div>
+      `,
+      iconSize: [46, 54],
+      iconAnchor: [23, 54],
+      tooltipAnchor: [0, -54],
+    });
+
+    L.marker([this.lat, this.lng], { icon: tripgoIcon })
       .addTo(this.map)
       .bindTooltip(this.label, { direction: 'top', offset: [0, -10] });
 
-    // ✅ click en el mapa (no solo en el wrapper)
     if (this.openOnClick) {
       this.map.on('click', () => this.openGoogleMaps());
     }
