@@ -112,11 +112,11 @@
         </ng-template>
       </section>
 
-      <section class="det__section">
+     <section class="det__section">
   <h2 class="det__sectionTitle"><span class="det__sectionIcon">⭐</span>Opiniones</h2>
 
   <!-- Mensaje de feedback -->
-  <p class="det__favMsg" *ngIf="resenaMsg">{{ resenaMsg }}</p>
+ <p class="det__resenaMsg" *ngIf="resenaMsg">{{ resenaMsg }}</p>
 
   <!-- Loading -->
   <div class="det__loading" *ngIf="resenaLoading">
@@ -184,8 +184,11 @@
       placeholder="Actualiza tu comentario (mín. 10 caracteres)">
     </textarea>
     <div class="det__resenaFormBtns">
-      <button class="det__resenaSendBtn" (click)="guardarEdicion()">Guardar cambios</button>
-      <button class="det__resenaCancelBtn" (click)="editando = false">Cancelar</button>
+<button class="det__resenaSendBtn"
+  (click)="guardarEdicion()"
+  [disabled]="!editCalificacion || editComentario.trim().length < 10">
+  Guardar cambios
+</button>      <button class="det__resenaCancelBtn" (click)="editando = false">Cancelar</button>
     </div>
   </div>
 
@@ -204,14 +207,26 @@
         (click)="setCalificacion(s)"
         [class.active]="s <= nuevaCalificacion">★</span>
     </div>
+
+    <small class="det__resenaHint" *ngIf="!nuevaCalificacion">
+      Selecciona una calificación para continuar
+    </small>
+
+    <!-- <small class="det__resenaHint" *ngIf="!editCalificacion">
+     Selecciona una calificación para continuar
+    </small> -->
+
     <textarea
       [(ngModel)]="nuevoComentario"
       rows="3"
       placeholder="Cuéntanos tu experiencia (mín. 10 caracteres)">
     </textarea>
     <div class="det__resenaFormBtns">
-      <button class="det__resenaSendBtn" (click)="crearResena()">Publicar reseña</button>
-      <button class="det__resenaCancelBtn" (click)="mostrarFormulario = false">Cancelar</button>
+<button class="det__resenaSendBtn"
+  (click)="crearResena()"
+  [disabled]="!nuevaCalificacion || nuevoComentario.trim().length < 10">
+  Publicar reseña
+</button>      <button class="det__resenaCancelBtn" (click)="mostrarFormulario = false">Cancelar</button>
     </div>
   </div>
 
@@ -276,7 +291,7 @@
         </div>
       </div>
 
-      <div class="det__card det__card--menu">
+     <div class="det__card det__card--menu">
         <div class="det__menuHeader">
           <div>
             <h3 class="det__cardTitle" style="margin-bottom:2px">💰 Saquemos cuentas</h3>
@@ -294,14 +309,25 @@
             <div
               class="det__menuItem"
               *ngFor="let item of grupo.items"
-              [class.det__menuItem--on]="item.selected"
-              (click)="toggleItem(item)"
-            >
-              <div class="det__menuCheck">
-                <div class="det__menuCheck">
-  <span *ngIf="item.selected" style="color:#fff;font-size:11px;font-weight:900;line-height:1">✓</span>
-</div>
-              </div>
+              [class.det__menuItem--on]="item.cantidad > 0">
+            
+
+
+             
+      <div class="det__menuCounter">
+        <button class="det__menuCountBtn det__menuCountMinus"
+                type="button"
+                (click)="decrementItem(item); $event.stopPropagation()"
+                [disabled]="item.cantidad === 0">−</button>
+        <span class="det__menuCountNum"
+              [class.det__menuCountNum--on]="item.cantidad > 0">
+          {{ item.cantidad }}
+        </span>
+        <button class="det__menuCountBtn det__menuCountPlus"
+                type="button"
+                (click)="incrementItem(item); $event.stopPropagation()">+</button>
+      </div>
+              
               <span class="det__menuName">{{ item.nombre }}</span>
               <div class="det__menuPrices">
                 <span class="det__menuCOP">${{ item.precio | number:'1.0-0' }}</span>
@@ -318,7 +344,7 @@
               {{ itemsSeleccionados }} ítem{{ itemsSeleccionados !== 1 ? 's' : '' }}
             </span>
             <span class="det__menuTotalCount" *ngIf="itemsSeleccionados === 0">
-              Selecciona ítems
+              Selecciona productos para ver el total
             </span>
           </div>
           <div class="det__menuTotalRight">
@@ -326,6 +352,7 @@
             <span class="det__menuTotalUSD">≈ ${{ totalCOP / tasaCopUsd | number:'1.2-2' }} USD</span>
           </div>
         </div>
+
       </div>
 
       <button class="det__ctaMain" type="button" (click)="agregarItinerario()">
@@ -344,3 +371,4 @@
 </div>
 
 <app-footer></app-footer>
+  

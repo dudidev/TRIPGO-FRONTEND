@@ -43,15 +43,15 @@ type LugarDetalle = {
 })
 export class Detalles implements OnInit {
 
-  townSlug   = '';
-  idTipo     = 0;
-  slug       = '';
+  townSlug = '';
+  idTipo   = 0;
+  slug     = '';
 
-  lugar      : LugarDetalle | null = null;
-  loading    = false;
-  errorMsg   = '';
-  itMsg      = '';
-  favMsg     = '';
+  lugar    : LugarDetalle | null = null;
+  loading  = false;
+  errorMsg = '';
+  itMsg    = '';
+  favMsg   = '';
   esFavorito = false;
 
   // ── Reseñas ───────────────────────────────────────────────────
@@ -90,7 +90,30 @@ private buildMenu(): void {
 menuAgrupado: { cat: string; items: ItemMenu[] }[] = [];
 
   get totalUSD(): string { return copToUsd(this.totalCOP); }
-  get itemsSeleccionados(): number { return this.menuItems.filter(i => i.selected).length; }
+  get itemsSeleccionados(): number {
+  return this.menuItems.reduce((acc, i) => acc + (i.cantidad ?? 0), 0);
+  }
+
+  
+  incrementItem(item: ItemMenu): void {
+  const index = this.menuItems.indexOf(item);
+  if (index > -1) {
+    this.menuItems[index] = { ...item, cantidad: (item.cantidad ?? 0) + 1 };
+  }
+  this.calcularTotal();
+  this.buildMenu();
+}
+
+decrementItem(item: ItemMenu): void {
+  const index = this.menuItems.indexOf(item);
+  if (index > -1 && (item.cantidad ?? 0) > 0) {
+    this.menuItems[index] = { ...item, cantidad: (item.cantidad ?? 0) - 1 };
+  }
+  this.calcularTotal();
+  this.buildMenu();
+}
+
+
 
   constructor(
     private route           : ActivatedRoute,
@@ -101,26 +124,25 @@ menuAgrupado: { cat: string; items: ItemMenu[] }[] = [];
   ) {}
 
   ngOnInit(): void {
-    this.favoritosService.cargarCacheDesdeBackend();
-
     this.route.queryParamMap.subscribe(q => {
       this.townSlug = q.get('townSlug') || '';
       this.idTipo   = Number(q.get('idTipo') || 0);
     });
 
+    // ← Ahora sí carga el detalle, ya con idTipo listo
     this.route.paramMap.pipe(take(1)).subscribe(params => {
       this.slug = params.get('slug') || '';
       if (!this.slug) return;
       this.cargarDetalle(this.slug);
     });
+
   }
 
   getImagen(index: number): string {
-    return this.lugar?.imagenes?.[index] ?? '';
-  }
+  return this.lugar?.imagenes?.[index] ?? '';
+}
 
   // ── Carga detalle ─────────────────────────────────────────────
-
   private cargarDetalle(idParam: string): void {
     this.loading  = true;
     this.errorMsg = '';
@@ -148,88 +170,95 @@ menuAgrupado: { cat: string; items: ItemMenu[] }[] = [];
   }
 
   private setLugar(rows: any[], idParam: string): void {
-    this.lugar      = this.mapToLugarDetalle(rows, idParam);
-    this.esFavorito = this.favoritosService.isFavorito(this.lugar.slug);
+    this.lugar     = this.mapToLugarDetalle(rows, idParam);
+    this.esFavorito= this.favoritosService.isFavorito(this.lugar.slug);
 
-    if (!this.lugar.servicios?.length) {
-      this.lugar.servicios = getServiciosByTipo(this.idTipo);
-    }
+     // Si el backend no trae servicios, usa los quemados por tipo
+  if (!this.lugar.servicios?.length) {
+    this.lugar.servicios = getServiciosByTipo(this.idTipo);
+  }
 
     this.initMenu(rows[0]);
-    this.loading   = false;
     this.cargarResenas()
+    this.loading   = false;
   }
 
   // ── Calculadora ───────────────────────────────────────────────
-
   private initMenu(raw: any): void {
-    const backendProductos = raw?.productos ?? raw?.menu ?? null;
-    if (Array.isArray(backendProductos) && backendProductos.length) {
-      this.menuItems = backendProductos.map((p: any) => ({
-        categoria: String(p.categoria ?? '📋 Servicios'),
-        nombre   : String(p.nombre ?? p.name ?? 'Servicio'),
-        precio   : Number(p.precio ?? p.price ?? 0),
-        selected : false
-      }));
-    } else {
-      this.menuItems = getMenuByTipo(this.idTipo);
-    }
-    this.calcularTotal();
-    this.buildMenu();
-  }
+  console.log('>>> idTipo:', this.idTipo); // ← agrega esto
+  const backendProductos = raw?.productos ?? raw?.menu ?? null;
+  if (Array.isArray(backendProductos) && backendProductos.length) {
+    this.menuItems = backendProductos.map((p: any) => ({
+      categoria: String(p.categoria ?? '📋 Servicios'),
+      nombre   : String(p.nombre ?? p.name ?? 'Servicio'),
+      precio   : Number(p.precio ?? p.price ?? 0),
+      selected : false,
+      cantidad : 0,
 
- 
-
-  toggleItem(item: ItemMenu): void {
-    const index = this.menuItems.indexOf(item);
-    if (index > -1) {
-      this.menuItems[index] = { ...item, selected: !item.selected };
-    }
-    this.calcularTotal();
-    this.buildMenu();
+    }));
+  } else {
+    this.menuItems = getMenuByTipo(this.idTipo);
   }
+  this.calcularTotal();
+  this.buildMenu();
+}
 
-  private calcularTotal(): void {
-    this.totalCOP = this.menuItems
-      .filter(i => i.selected)
-      .reduce((acc, i) => acc + i.precio, 0);
+  // ✅ después — reemplaza el objeto, Angular detecta el cambio
+toggleItem(item: ItemMenu): void {
+  const index = this.menuItems.indexOf(item);
+  if (index > -1) {
+    this.menuItems[index] = { ...item, selected: !item.selected };
   }
+  this.calcularTotal();
+  this.buildMenu();
+}
+
+ private calcularTotal(): void {
+  this.totalCOP = this.menuItems
+    .reduce((acc, i) => acc + i.precio * (i.cantidad ?? 0), 0);
+}
 
   // ── Favoritos ─────────────────────────────────────────────────
-
   toggleFavorito(): void {
     if (!this.lugar) return;
-
     const item: FavoritoItem = {
       id       : this.lugar.slug,
       nombre   : this.lugar.nombre,
       direccion: this.lugar.direccion,
       imagenUrl: this.lugar.imagenes?.[0] || undefined
     };
-
     this.favoritosService.toggleFavorito(item).subscribe(esAhoraFavorito => {
       this.esFavorito = esAhoraFavorito;
       this.favMsg     = esAhoraFavorito ? 'Agregado a favoritos ❤️' : 'Eliminado de favoritos 🤍';
       setTimeout(() => (this.favMsg = ''), 1500);
     });
-  } // 👈 llave de cierre que faltaba
-
-  // ── Itinerario ────────────────────────────────────────────────
-
-  agregarItinerario(): void {
-    if (!this.lugar) return;
-    this.itinerario.add({
-      id       : this.lugar.slug,
-      nombre   : this.lugar.nombre,
-      direccion: this.lugar.direccion,
-      imagenUrl: this.lugar.imagenes?.[0] || undefined
-    });
-    this.itMsg = '✓';
-    setTimeout(() => (this.itMsg = ''), 1500);
   }
 
-  // ── Helpers ───────────────────────────────────────────────────
+  // ── Itinerario ────────────────────────────────────────────────
+  agregarItinerario(): void {
+  if (!this.lugar) return;
 
+  const productosSeleccionados = this.menuItems
+    .filter(i => (i.cantidad ?? 0) > 0)
+    .map(i => ({
+      nombre   : i.nombre,
+      precio   : i.precio,
+      categoria: i.categoria,
+      cantidad : i.cantidad ?? 1,
+    }));
+
+  this.itinerario.add({
+    id       : this.lugar.slug,
+    nombre   : this.lugar.nombre,
+    direccion: this.lugar.direccion,
+    imagenUrl: this.lugar.imagenes?.[0] || undefined,
+    productos: productosSeleccionados.length ? productosSeleccionados : undefined,
+  });
+
+  this.itMsg = '✓';
+  setTimeout(() => (this.itMsg = ''), 1500);
+}
+  // ── Helpers ───────────────────────────────────────────────────
   private findAllById(lista: any[], idParam: string): any[] {
     const id = String(idParam);
     return (lista ?? []).filter(e => String(e?.id_establecimiento ?? e?.id ?? '') === id);
@@ -237,6 +266,8 @@ menuAgrupado: { cat: string; items: ItemMenu[] }[] = [];
 
   private mapToLugarDetalle(rows: any[], idParam: string): LugarDetalle {
     const base = rows[0] ?? {};
+
+     
 
     const nombre      = String(base?.nombre_establecimiento ?? base?.nombre ?? 'Sin nombre');
     const direccion   = String(base?.direccion ?? 'Dirección no disponible');
@@ -271,25 +302,25 @@ menuAgrupado: { cat: string; items: ItemMenu[] }[] = [];
                 base?.longitude != null ? Number(base.longitude) : undefined;
 
     return {
-      slug: String(idParam),
-      id_establecimiento: base?.id_establecimiento ? Number(base.id_establecimiento) : Number(idParam), 
-      nombre, direccion, descripcion,
-      promociones   : base?.promociones ? String(base.promociones) : undefined,
-      horarios, imagenes, opiniones: [],
-      datosGenerales: datosGenerales.length ? datosGenerales : undefined,
-      servicios     : servicios.length ? servicios : undefined,
-      lat, lng,
-      townSlug  : base?.townSlug    ? String(base.townSlug)    : undefined,
-      categoryKey: base?.categoryKey ? String(base.categoryKey) : undefined,
-    };
+  slug: String(idParam), nombre, direccion, descripcion,
+  id_establecimiento: Number(base?.id_establecimiento ?? idParam), // ← AGREGAR
+  promociones   : base?.promociones ? String(base.promociones) : undefined,
+  horarios, imagenes, opiniones: [],
+  datosGenerales: datosGenerales.length ? datosGenerales : undefined,
+  servicios     : servicios.length ? servicios : undefined,
+  lat, lng,
+  townSlug  : base?.townSlug    ? String(base.townSlug)    : undefined,
+  categoryKey: base?.categoryKey ? String(base.categoryKey) : undefined,
+};
   }
 
-
-  // ── Reseñas ───────────────────────────────────────────────────
-private getAuthHeaders(): HttpHeaders {
+ private getAuthHeaders(): HttpHeaders {
   const token = localStorage.getItem('token');
-   console.log('TOKEN:', token);
-  return new HttpHeaders({ Authorization: `Bearer ${token}` });
+  console.log('TOKEN:', token ? token.substring(0, 20) + '...' : 'NULL');
+  return new HttpHeaders({
+    'Authorization': `Bearer ${token}`,
+    'Content-Type' : 'application/json'
+  });
 }
 
 private get apiUrl(): string {
@@ -303,14 +334,33 @@ cargarResenas(): void {
   this.resenaLoading = true;
   this.resenaError   = '';
 
-  this.http.get<any>(`${this.apiUrl}/resenas/establecimiento/${id}`, {
-    headers: this.getAuthHeaders()
-  }).subscribe({
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders(
+    token ? { 'Authorization': `Bearer ${token}` } : {}
+  );
+
+  // ← toma el id del usuario logueado
+  const usuarioGuardado = JSON.parse(localStorage.getItem('user') || '{}');
+  const miId = usuarioGuardado?.id ?? null;
+
+  this.http.get<any>(
+    `${this.apiUrl}/establecimientos/${id}/resenas`,
+    { headers }
+  ).subscribe({
     next: (data) => {
-      this.estadisticas = data.estadisticas;
-      this.resenas      = data.resenas;
-      this.miResena     = data.resenas.find((r: any) => r.es_mia) ?? null;
-      this.resenaLoading = false;
+      this.estadisticas  = data.estadisticas;
+       // ← compara por id del usuario
+  this.miResena = miId
+    ? (data.resenas?.find((r: any) => r.usuario?.id === miId) ?? null)
+    : null;
+
+  // ← filtra tu reseña de la lista para no duplicarla ← NUEVO
+  this.resenas = miId
+    ? (data.resenas?.filter((r: any) => r.usuario?.id !== miId) ?? [])
+    : (data.resenas ?? []);
+
+  console.log('miResena:', this.miResena);
+  this.resenaLoading = false;
     },
     error: () => {
       this.resenaError   = 'No se pudieron cargar las reseñas.';
@@ -323,13 +373,24 @@ crearResena(): void {
   const id = this.lugar?.id_establecimiento;
   if (!id || !this.nuevaCalificacion || !this.nuevoComentario.trim()) return;
 
-  this.http.post<any>(`${this.apiUrl}/resenas`, {
-    id_establecimiento: id,
-    calificacion      : this.nuevaCalificacion,
-    comentario        : this.nuevoComentario.trim()
-  }, { headers: this.getAuthHeaders() }).subscribe({
+  const token = localStorage.getItem('token');  // ← toma el token directo
+  
+  this.http.post<any>(
+    `${this.apiUrl}/resenas`,                   // ← verifica que apiUrl tenga http://localhost:8080
+    {
+      id_establecimiento: id,
+      calificacion      : this.nuevaCalificacion,
+      comentario        : this.nuevoComentario.trim()
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type' : 'application/json'
+      }
+    }
+  ).subscribe({
     next: () => {
-      this.resenaMsg        = '¡Reseña publicada!';
+      this.resenaMsg         = '¡Reseña publicada!';
       this.mostrarFormulario = false;
       this.nuevaCalificacion = 0;
       this.nuevoComentario   = '';
@@ -337,26 +398,8 @@ crearResena(): void {
       setTimeout(() => (this.resenaMsg = ''), 2000);
     },
     error: (err) => {
+      console.error('Error reseña:', err); // ← agrega esto para ver el error real
       this.resenaMsg = err.error?.message || 'Error al publicar la reseña.';
-    }
-  });
-}
-
-guardarEdicion(): void {
-  if (!this.miResena) return;
-
-  this.http.put<any>(`${this.apiUrl}/resenas/${this.miResena.id_resena}`, {
-    calificacion: this.editCalificacion,
-    comentario  : this.editComentario.trim()
-  }, { headers: this.getAuthHeaders() }).subscribe({
-    next: () => {
-      this.editando  = false;
-      this.resenaMsg = 'Reseña actualizada.';
-      this.cargarResenas();
-      setTimeout(() => (this.resenaMsg = ''), 2000);
-    },
-    error: (err) => {
-      this.resenaMsg = err.error?.message || 'Error al actualizar.';
     }
   });
 }
@@ -364,8 +407,15 @@ guardarEdicion(): void {
 eliminarResena(): void {
   if (!this.miResena) return;
 
+  const confirmar = window.confirm('¿Estás seguro de que deseas eliminar tu reseña? Esta acción no se puede deshacer.');
+  if (!confirmar) return;
+
+  const token = localStorage.getItem('token');
+
   this.http.delete(`${this.apiUrl}/resenas/${this.miResena.id_resena}`, {
-    headers: this.getAuthHeaders()
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
   }).subscribe({
     next: () => {
       this.miResena  = null;
@@ -374,11 +424,42 @@ eliminarResena(): void {
       setTimeout(() => (this.resenaMsg = ''), 2000);
     },
     error: (err) => {
+      console.error('Error eliminar:', err);
       this.resenaMsg = err.error?.message || 'Error al eliminar.';
     }
   });
 }
 
+guardarEdicion(): void {
+  if (!this.miResena) return;
+
+  const token = localStorage.getItem('token');
+
+  this.http.put<any>(
+    `${this.apiUrl}/resenas/${this.miResena.id_resena}`,
+    {
+      calificacion: this.editCalificacion,
+      comentario  : this.editComentario.trim()
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type' : 'application/json'
+      }
+    }
+  ).subscribe({
+    next: () => {
+      this.editando  = false;
+      this.resenaMsg = 'Reseña actualizada.';
+      this.cargarResenas();
+      setTimeout(() => (this.resenaMsg = ''), 2000);
+    },
+    error: (err) => {
+      console.error('Error editar:', err);
+      this.resenaMsg = err.error?.message || 'Error al actualizar.';
+    }
+  });
+}
 iniciarEdicion(): void {
   if (!this.miResena) return;
   this.editando        = true;
@@ -393,4 +474,8 @@ setCalificacion(valor: number): void {
 setEditCalificacion(valor: number): void {
   this.editCalificacion = valor;
 }
+
+
+
+
 }

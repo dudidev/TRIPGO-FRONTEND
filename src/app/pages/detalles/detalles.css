@@ -288,6 +288,67 @@
 .det__menuTotalUSD { font-size: 13px; font-weight: 600; color: #aaa; text-align: right; display: block; }
 .det__menuTotal--active .det__menuTotalUSD { color: rgba(255,255,255,0.6) !important; }
 
+/* ─── CONTADOR DE PRODUCTOS ─── */
+.det__menuCounter {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: #f5f3ef;
+  border: 1px solid #e8e5df;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.det__menuCountBtn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: #666;
+  font-size: 16px;
+  font-weight: 400;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, color 0.12s;
+  line-height: 1;
+}
+
+.det__menuCountBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.det__menuCountMinus:hover:not(:disabled) {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+.det__menuCountPlus:hover:not(:disabled) {
+  background: #0e6973;
+  color: #fff;
+}
+
+.det__menuCountNum {
+  font-size: 13px;
+  font-weight: 600;
+  color: #aaa;
+  min-width: 24px;
+  text-align: center;
+  transition: color 0.15s;
+}
+
+.det__menuCountNum--on {
+  color: #0e6973;
+}
+
+/* Ajuste: el item ahora no necesita el det__menuCheck viejo */
+.det__menuCheck { display: none; }
+
+
+
 /* ─── CTA PRINCIPAL VERDE ─── */
 .det__ctaMain {
   width: 100%; display: flex; align-items: center; gap: 14px;
@@ -426,6 +487,34 @@
   margin-left: auto;
   font-size: 0.78rem;
   color: #aaa;
+}
+
+/* ─── MENSAJES DE RESEÑA ─── */
+.det__resenaMsg {
+  font-size: 13px;
+  font-weight: 600;
+  color: #E27921;
+  padding: 8px 12px;
+  background: rgba(226, 121, 33, 0.08);
+  border: 1px solid rgba(226, 121, 33, 0.2);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  animation: fadeUp 0.3s ease both;
+}
+
+/* Hint de validación */
+.det__resenaHint {
+  font-size: 11px;
+  color: #E27921;
+  margin-top: 4px;
+  display: block;
+}
+
+/* Botón deshabilitado */
+.det__resenaSendBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.3);
 }
 
 /* ─── RESPONSIVE ─── */
