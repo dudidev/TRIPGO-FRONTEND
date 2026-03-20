@@ -169,6 +169,20 @@ decrementItem(item: ItemMenu): void {
     });
   }
 
+
+  private registrarVisualizacion(idEstablecimiento: number): void {
+  const token = localStorage.getItem('token');
+  if (!token) return;
+  this.http.post(
+    `${this.apiUrl}/recomendaciones/registrar-visualizacion`,
+    { id_establecimiento: idEstablecimiento, tiempo_visualizacion: 0 },
+    { headers: { Authorization: `Bearer ${token}` } }
+  ).subscribe();
+}
+
+
+
+
   private setLugar(rows: any[], idParam: string): void {
     this.lugar     = this.mapToLugarDetalle(rows, idParam);
     this.esFavorito= this.favoritosService.isFavorito(this.lugar.slug);
@@ -179,7 +193,8 @@ decrementItem(item: ItemMenu): void {
   }
 
     this.initMenu(rows[0]);
-    this.cargarResenas()
+    this.cargarResenas(),
+    this.registrarVisualizacion(Number(idParam));
     this.loading   = false;
   }
 
