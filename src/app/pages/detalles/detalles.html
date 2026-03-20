@@ -112,26 +112,148 @@
         </ng-template>
       </section>
 
-      <section class="det__section">
-        <h2 class="det__sectionTitle"><span class="det__sectionIcon">⭐</span>Opiniones</h2>
-        <ng-container *ngIf="l.opiniones?.length; else noOpinions">
-          <div class="det__opinion" *ngFor="let op of l.opiniones">
-            <div class="det__opinionHeader">
-              <div class="det__opinionAvatar">{{ op.usuario?.charAt(0) || '?' }}</div>
-              <div>
-                <strong>{{ op.usuario }}</strong>
-                <div class="det__stars">
-                  <span *ngFor="let s of [1,2,3,4,5]">{{ s <= op.rating ? '★' : '☆' }}</span>
-                </div>
-              </div>
-            </div>
-            <p class="det__opinionText">{{ op.comentario }}</p>
+     <section class="det__section">
+  <h2 class="det__sectionTitle"><span class="det__sectionIcon">⭐</span>Opiniones</h2>
+
+  <!-- Mensaje de feedback -->
+ <p class="det__resenaMsg" *ngIf="resenaMsg">{{ resenaMsg }}</p>
+
+  <!-- Loading -->
+  <div class="det__loading" *ngIf="resenaLoading">
+    <div class="det__spinner"></div>
+  </div>
+
+  <!-- Error -->
+  <p class="det__emptyText" *ngIf="resenaError">{{ resenaError }}</p>
+
+  <!-- Estadísticas -->
+  <div class="det__resenaStats" *ngIf="estadisticas && !resenaLoading">
+    <div class="det__resenaStatMain">
+      <span class="det__resenaPromedio">{{ estadisticas.promedio | number:'1.1-1' }}</span>
+      <div>
+        <div class="det__stars">
+          <span *ngFor="let s of [1,2,3,4,5]">
+            {{ s <= estadisticas.promedio ? '★' : '☆' }}
+          </span>
+        </div>
+        <span class="det__resenaTotalLabel">{{ estadisticas.total }} opiniones</span>
+      </div>
+    </div>
+    <div class="det__resenaDistrib">
+      <div class="det__resenaDistribRow" *ngFor="let s of [5,4,3,2,1]">
+        <span class="det__resenaDistribNum">{{ s }}★</span>
+        <div class="det__resenaBar">
+          <div class="det__resenaBarFill"
+            [style.width.%]="estadisticas.total > 0 ? (estadisticas.distribucion[s] || 0) * 100 / estadisticas.total : 0">
           </div>
-        </ng-container>
-        <ng-template #noOpinions>
-          <p class="det__emptyText">Aún no hay opiniones para este lugar.</p>
-        </ng-template>
-      </section>
+        </div>
+        <span class="det__resenaDistribCount">{{ estadisticas.distribucion[s] || 0 }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mi reseña (ya existe) -->
+  <div class="det__miResena" *ngIf="miResena && !editando">
+    <div class="det__opinionHeader">
+      <div class="det__opinionAvatar">Yo</div>
+      <div>
+        <strong>Mi reseña</strong>
+        <div class="det__stars">
+          <span *ngFor="let s of [1,2,3,4,5]">{{ s <= miResena.calificacion ? '★' : '☆' }}</span>
+        </div>
+      </div>
+      <div class="det__miResenaBtns">
+        <button class="det__resenaEditBtn" (click)="iniciarEdicion()">✏️ Editar</button>
+        <button class="det__resenaDelBtn"  (click)="eliminarResena()">🗑️ Eliminar</button>
+      </div>
+    </div>
+    <p class="det__opinionText">{{ miResena.comentario }}</p>
+  </div>
+
+  <!-- Formulario edición -->
+  <div class="det__resenaForm" *ngIf="editando">
+    <h4>Editar mi reseña</h4>
+    <div class="det__starPicker">
+      <span *ngFor="let s of [1,2,3,4,5]"
+        (click)="setEditCalificacion(s)"
+        [class.active]="s <= editCalificacion">★</span>
+    </div>
+    <textarea
+      [(ngModel)]="editComentario"
+      rows="3"
+      placeholder="Actualiza tu comentario (mín. 10 caracteres)">
+    </textarea>
+    <div class="det__resenaFormBtns">
+<button class="det__resenaSendBtn"
+  (click)="guardarEdicion()"
+  [disabled]="!editCalificacion || editComentario.trim().length < 10">
+  Guardar cambios
+</button>      <button class="det__resenaCancelBtn" (click)="editando = false">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- Botón abrir formulario nueva reseña -->
+  <button class="det__resenaNewBtn"
+    *ngIf="!miResena && !mostrarFormulario"
+    (click)="mostrarFormulario = true">
+    ✍️ Escribir una reseña
+  </button>
+
+  <!-- Formulario nueva reseña -->
+  <div class="det__resenaForm" *ngIf="mostrarFormulario && !miResena">
+    <h4>Tu opinión</h4>
+    <div class="det__starPicker">
+      <span *ngFor="let s of [1,2,3,4,5]"
+        (click)="setCalificacion(s)"
+        [class.active]="s <= nuevaCalificacion">★</span>
+    </div>
+
+    <small class="det__resenaHint" *ngIf="!nuevaCalificacion">
+      Selecciona una calificación para continuar
+    </small>
+
+    <!-- <small class="det__resenaHint" *ngIf="!editCalificacion">
+     Selecciona una calificación para continuar
+    </small> -->
+
+    <textarea
+      [(ngModel)]="nuevoComentario"
+      rows="3"
+      placeholder="Cuéntanos tu experiencia (mín. 10 caracteres)">
+    </textarea>
+    <div class="det__resenaFormBtns">
+<button class="det__resenaSendBtn"
+  (click)="crearResena()"
+  [disabled]="!nuevaCalificacion || nuevoComentario.trim().length < 10">
+  Publicar reseña
+</button>      <button class="det__resenaCancelBtn" (click)="mostrarFormulario = false">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- Lista de reseñas -->
+  <ng-container *ngIf="!resenaLoading">
+    <div class="det__opinion" *ngFor="let r of resenas">
+      <div class="det__opinionHeader">
+        <div class="det__opinionAvatar">
+          <span *ngIf="!r.usuario.foto_perfil">{{ r.usuario.nombre_usuario?.charAt(0) }}</span>
+        </div>
+        <div>
+          <strong>{{ r.usuario.nombre_usuario }}</strong>
+          <div class="det__stars">
+            <span *ngFor="let s of [1,2,3,4,5]">{{ s <= r.calificacion ? '★' : '☆' }}</span>
+          </div>
+        </div>
+        <span class="det__resenaFecha">{{ r.fecha_creacion | date:'mediumDate' }}</span>
+      </div>
+      <p class="det__opinionText">{{ r.comentario }}</p>
+    </div>
+
+    <p class="det__emptyText" *ngIf="resenas.length === 0 && !resenaError">
+      Aún no hay opiniones para este lugar.
+    </p>
+  </ng-container>
+
+</section>
 
     </main>
 
@@ -168,7 +290,7 @@
         </div>
       </div>
 
-      <div class="det__card det__card--menu">
+     <div class="det__card det__card--menu">
         <div class="det__menuHeader">
           <div>
             <h3 class="det__cardTitle" style="margin-bottom:2px">💰 Saquemos cuentas</h3>
@@ -248,3 +370,4 @@
 </div>
 
 <app-footer></app-footer>
+  

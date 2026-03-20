@@ -205,7 +205,6 @@ export class Nav implements AfterViewInit {
     setTimeout(() => this.setNavOffset(), 0);
   }
 
-  // ── Auth ──────────────────────────────────────────────────────
   logout(): void {
     this.userService.logout();
     this.closeMenu();

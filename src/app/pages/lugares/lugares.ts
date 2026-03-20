@@ -55,26 +55,28 @@ export class LugaresComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   ngOnInit(): void {
     this.api.establecimientos$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (data: any[]) => {
-          this.items = (data ?? []).map((e: any) => ({
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (data: any[]) => {
+        this.items = (data ?? [])
+          .filter((e: any) => (e.estado ?? 'activo') === 'activo') // 👈 solo activos
+          .map((e: any) => ({
             slug  : String(e.id_establecimiento ?? e.id ?? 'sin-id'),
             titulo: e.nombre_establecimiento ?? e.nombre ?? e.direccion ?? 'Sin nombre',
             img   : e.imagen ?? null
           }));
-          this.filtered = this.applySearch(this.query);
-          this.loading  = false;
-          this.errorMsg = !this.items.length
-            ? 'No hay establecimientos registrados para este tipo en este pueblo.'
-            : '';
-        },
-        error: () => {
-          this.items = []; this.filtered = [];
-          this.loading = false;
-          this.errorMsg = 'Error cargando establecimientos';
-        }
-      });
+        this.filtered = this.applySearch(this.query);
+        this.loading  = false;
+        this.errorMsg = !this.items.length
+          ? 'No hay establecimientos registrados para este tipo en este pueblo.'
+          : '';
+      },
+      error: () => {
+        this.items = []; this.filtered = [];
+        this.loading = false;
+        this.errorMsg = 'Error cargando establecimientos';
+      }
+  });
 
     this.route.paramMap
       .pipe(takeUntil(this.destroy$))

@@ -5,13 +5,13 @@
       <img
         src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764678577/ChatGPT_Image_12_nov_2025_17_33_14_1_hj26hs.png"
         alt="TripGo" />
-      <a [routerLink]="isLoggedIn ? (isEmpresaPage ? '/empresa' : '/principal') : '/'">TRIPGO</a>
+      <a [routerLink]="isLoggedIn ? '/principal' : '/'">TRIPGO</a>
     </div>
 
     <div class="rightActions">
 
       @if (isEmpresaPage) {
-      <div class="OpLaterales empresa-salir">
+      <div class="OpLaterales">
         <a href="#" (click)="confirmLogout(); $event.preventDefault()">Salir</a>
       </div>
       } @else {
@@ -93,8 +93,9 @@
                     <div class="itPop__productos" *ngIf="it.productos?.length">
                       <div class="itPop__prodItem" *ngFor="let p of it.productos">
                         <span class="itPop__prodDot"></span>
-                        <span class="itPop__prodNombre">{{ p.nombre }}</span>
-                        <span class="itPop__prodPrecio">${{ p.precio | number:'1.0-0' }}</span>
+                       <span class="itPop__prodNombre">{{ p.nombre }}</span>
+                        <span class="itPop__prodCant" *ngIf="p.cantidad && p.cantidad > 1">×{{ p.cantidad }}</span>
+                        <span class="itPop__prodPrecio">${{ p.precio * (p.cantidad ?? 1) | number:'1.0-0' }}</span>
                       </div>
                     </div>
 
@@ -201,7 +202,7 @@
     <a routerLink="/contact">Contacto</a>
     } @else {
     <a routerLink="/principal">Inicio</a>
-    <a routerLink="/principal">Recomendaciones</a>
+    <a routerLink="/recomendaciones">Recomendaciones</a>
     <a routerLink="/soporte">Soporte</a>
     }
   </div>

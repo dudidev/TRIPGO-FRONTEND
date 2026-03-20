@@ -383,11 +383,6 @@
   .home__cats  { padding: 2rem 1rem 1.6rem; }
 }
 
-/* ══════════════════════════════════════════════════
-   PWA MOBILE VIEW — TRIPGO
-   Pegar al final de principal.component.css
-   ══════════════════════════════════════════════════ */
-
 /* Base visual más limpia en móvil */
 @media (max-width: 767px) {
   .home {
