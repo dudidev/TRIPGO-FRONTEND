@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { environment } from '../environments/environment';
 
@@ -82,6 +82,46 @@ getTipoNombreById(idTipo: number): Observable<string> {
     })
   );
 }
+
+// ── Recomendaciones ───────────────────────────────────
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({ Authorization: `Bearer ${token}` });
+  }
+
+  getRecomendaciones(limite = 20): Observable<any> {
+    return this.http.get(
+      `${this.baseUrl}/recomendaciones/personalizadas?limite=${limite}`,
+      { headers: this.getAuthHeaders() }
+    );
+  }
+
+  getMiPerfil(): Observable<any> {
+    return this.http.get(
+      `${this.baseUrl}/recomendaciones/mi-perfil`,
+      { headers: this.getAuthHeaders() }
+    );
+  }
+
+  refrescarPerfil(): Observable<any> {
+    return this.http.post(
+      `${this.baseUrl}/recomendaciones/refrescar-perfil`,
+      {},
+      { headers: this.getAuthHeaders() }
+    );
+  }
+
+  registrarVisualizacion(idEstablecimiento: number, tiempoSegundos = 0): void {
+    const token = localStorage.getItem('token');
+    if (!token) return; // solo si está logueado
+    this.http.post(
+      `${this.baseUrl}/recomendaciones/registrar-visualizacion`,
+      { id_establecimiento: idEstablecimiento, tiempo_visualizacion: tiempoSegundos },
+      { headers: this.getAuthHeaders() }
+    ).subscribe(); // fire and forget
+  }
+
+
 
 
 }
