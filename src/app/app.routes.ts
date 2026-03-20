@@ -12,6 +12,7 @@ import { EditarCuentaComponent } from './pages/editar-cuenta/editar-cuenta';
 import { About } from './pages/about/about'; 
 import { Prices } from './pages/prices/prices';
 import { Soporte } from './pages/soporte/soporte';
+import { Recomendaciones } from './pages/recomendaciones/recomendaciones';
 
 
 
@@ -44,6 +45,7 @@ export const routes: Routes = [
   {path: 'about', component: About},
   {path: 'prices', component: Prices},
   {path: 'soporte', component: Soporte},
+  {path: 'recomendaciones', component: Recomendaciones},
 
  
 
