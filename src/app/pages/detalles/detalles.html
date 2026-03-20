@@ -235,7 +235,6 @@
     <div class="det__opinion" *ngFor="let r of resenas">
       <div class="det__opinionHeader">
         <div class="det__opinionAvatar">
-          <img *ngIf="r.usuario.foto_perfil" [src]="r.usuario.foto_perfil" [alt]="r.usuario.nombre_usuario"/>
           <span *ngIf="!r.usuario.foto_perfil">{{ r.usuario.nombre_usuario?.charAt(0) }}</span>
         </div>
         <div>
