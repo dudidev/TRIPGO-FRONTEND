@@ -9,7 +9,7 @@ import { Categorias } from './pages/categorias/categorias';
 import { LugaresComponent } from './pages/lugares/lugares';
 import { Detalles } from './pages/detalles/detalles';
 import { EditarCuentaComponent } from './pages/editar-cuenta/editar-cuenta';
-import { About } from './pages/about/about'; 
+import { About } from './pages/about/about';
 import { Prices } from './pages/prices/prices';
 import { Soporte } from './pages/soporte/soporte';
 
@@ -41,11 +41,12 @@ export const routes: Routes = [
 
   // ✅ Ruta exclusiva empresa
   { path: 'empresa', component: EmpresaComponent, canActivate: [empresaGuard] },
-  {path: 'about', component: About},
-  {path: 'prices', component: Prices},
-  {path: 'soporte', component: Soporte},
+  { path: 'about', component: About },
+  { path: 'prices', component: Prices },
+  { path: 'soporte', component: Soporte },
 
- 
+  {path: 'forgot-password', loadComponent: () => import('./pages/forgot-password/forgot-password')},
+  {path: 'reset-password', loadComponent: () => import('./pages/reset-password/reset-password')},
 
   { path: '**', redirectTo: '' },
 ];
