@@ -13,6 +13,7 @@ import { FavoritosService, FavoritoItem } from '../../service/favoritos.service'
 import { getMenuByTipo, ItemMenu, TASA_COP_USD, copToUsd } from '../../data/menuPresupuesto.data';
 import { getServiciosByTipo } from '../../data/servicios-establecimiento.data';
 import { environment } from '../../../environments/environment';
+import { EstablecimientoService } from '../../services/establecimiento.service';
 
 type Opinion = { usuario: string; comentario: string; rating: number; };
 
@@ -53,7 +54,10 @@ export class Detalles implements OnInit {
   itMsg    = '';
   favMsg   = '';
   esFavorito = false;
-
+  imagenesLugar: any[] = [];
+  loadingImagenesLugar = false;
+  imagenActiva= 0;
+  private sliderTimer: any;
   // ── Reseñas ───────────────────────────────────────────────────
 resenas        : any[]  = [];
 estadisticas   : any    = null;
@@ -86,6 +90,7 @@ private buildMenu(): void {
   }
   this.menuAgrupado = Array.from(map.entries()).map(([cat, items]) => ({ cat, items }));
 }
+
 
 menuAgrupado: { cat: string; items: ItemMenu[] }[] = [];
 
@@ -120,7 +125,8 @@ decrementItem(item: ItemMenu): void {
     private api             : Api,
     private itinerario      : ItinerarioService,
     private favoritosService: FavoritosService,
-    private http            : HttpClient
+    private http            : HttpClient, 
+    private establecimientoService: EstablecimientoService
   ) {}
 
   ngOnInit(): void {
@@ -138,8 +144,27 @@ decrementItem(item: ItemMenu): void {
 
   }
 
-  getImagen(index: number): string {
-  return this.lugar?.imagenes?.[index] ?? '';
+ getImagen(index: number): string {
+  if (!this.lugar?.imagenes?.length) return '';
+
+  // La principal rota automáticamente
+  if (index === 0) {
+    return this.lugar.imagenes[this.imagenActiva] ?? '';
+  }
+
+  // Las demás se acomodan dinámicamente
+  const restantes = this.lugar.imagenes.filter((_, i) => i !== this.imagenActiva);
+  return restantes[index - 1] ?? '';
+}
+private iniciarSlider(): void {
+  clearInterval(this.sliderTimer);
+
+  this.sliderTimer = setInterval(() => {
+    if (!this.lugar?.imagenes?.length) return;
+
+    this.imagenActiva =
+      (this.imagenActiva + 1) % this.lugar.imagenes.length;
+  }, 3000); // ← 3 segundos
 }
 
   // ── Carga detalle ─────────────────────────────────────────────
@@ -183,20 +208,61 @@ decrementItem(item: ItemMenu): void {
 
 
 
-  private setLugar(rows: any[], idParam: string): void {
-    this.lugar     = this.mapToLugarDetalle(rows, idParam);
-    this.esFavorito= this.favoritosService.isFavorito(this.lugar.slug);
+ private setLugar(rows: any[], idParam: string): void {
+  const lugarMapeado = this.mapToLugarDetalle(rows, idParam);
 
-     // Si el backend no trae servicios, usa los quemados por tipo
+  this.lugar = lugarMapeado;
+  this.esFavorito = this.favoritosService.isFavorito(lugarMapeado.slug);
+
   if (!this.lugar.servicios?.length) {
     this.lugar.servicios = getServiciosByTipo(this.idTipo);
   }
 
-    this.initMenu(rows[0]);
-    this.cargarResenas(),
-    this.registrarVisualizacion(Number(idParam));
-    this.loading   = false;
+  this.initMenu(rows[0]);
+  this.cargarResenas();
+  this.registrarVisualizacion(Number(idParam));
+
+  const idLugar = lugarMapeado.id_establecimiento ?? Number(idParam);
+  this.cargarImagenesLugar(idLugar);
+
+  this.loading = false;
+}
+
+ private cargarImagenesLugar(id: number): void {
+  if (!id) {
+    this.imagenesLugar = [];
+    return;
   }
+
+  this.loadingImagenesLugar = true;
+
+  this.establecimientoService.getImagenesLugar(id).subscribe({
+    next: (resp: any) => {
+      this.imagenesLugar = resp?.imagenes ?? [];
+      this.loadingImagenesLugar = false;
+
+      const urls = this.imagenesLugar
+        .map((img: any) => img?.url)
+        .filter((url: any) => !!url)
+        .map((url: any) => String(url));
+
+      if (this.lugar && urls.length > 0) {
+        this.lugar = {
+          ...this.lugar,
+          imagenes: [...new Set(urls)]
+        };
+      }
+
+      console.log('IMAGENES DETALLE BACKEND:', this.imagenesLugar);
+      console.log('IMAGENES DETALLE FINALES:', this.lugar?.imagenes);
+    },
+    error: (err: any) => {
+      console.error('getImagenesLugar detalle error:', err);
+      this.imagenesLugar = [];
+      this.loadingImagenesLugar = false;
+    }
+  });
+}
 
   // ── Calculadora ───────────────────────────────────────────────
   private initMenu(raw: any): void {
@@ -489,6 +555,7 @@ setCalificacion(valor: number): void {
 setEditCalificacion(valor: number): void {
   this.editCalificacion = valor;
 }
+
 
 
 

@@ -516,6 +516,95 @@
   cursor: not-allowed;
   filter: grayscale(0.3);
 }
+.det__thumbs {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.det__thumbs::-webkit-scrollbar {
+  height: 6px;
+}
+
+.det__thumbs::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.35);
+  border-radius: 999px;
+}
+
+.det__thumb {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  flex: 0 0 auto;
+  border-radius: 14px;
+  overflow: hidden;
+  opacity: 0.75;
+  transition: transform .2s ease, opacity .2s ease, box-shadow .2s ease;
+}
+
+.det__thumb img {
+  width: 92px;
+  height: 72px;
+  object-fit: cover;
+  display: block;
+}
+
+.det__thumb:hover {
+  transform: translateY(-2px);
+  opacity: 1;
+}
+
+.det__thumb--active {
+  opacity: 1;
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px rgba(255,255,255,0.18);
+}
+/* ===== Slider suave en hero ===== */
+.det__heroSingle img,
+.det__heroTwo img,
+.det__heroGrid img,
+.det__heroMain,
+.det__heroSide img,
+.det__heroMoreWrap img {
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  will-change: opacity, transform;
+}
+
+/* Efecto visual sutil */
+.det__heroSingle img:hover,
+.det__heroTwo img:hover,
+.det__heroGrid img:hover,
+.det__heroMain:hover,
+.det__heroSide img:hover,
+.det__heroMoreWrap img:hover {
+  transform: scale(1.01);
+}
+
+/* Asegura que las imágenes llenen bien su espacio */
+.det__heroSingle img,
+.det__heroTwo img,
+.det__heroGrid img,
+.det__heroMain,
+.det__heroSide img,
+.det__heroMoreWrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Por si alguna imagen tarda en cargar */
+.det__heroSingle,
+.det__heroTwo,
+.det__heroGrid,
+.det__heroMain,
+.det__heroSide img,
+.det__heroMoreWrap img {
+  background: #e9eef3;
+}
+
 
 /* ─── RESPONSIVE ─── */
 @media (max-width: 1020px) {
@@ -536,5 +625,8 @@
   .det__body { padding: 0 .8rem; }
   .det__hoursGrid { grid-template-columns: 1fr; }
   .det__ctaRow { grid-template-columns: 1fr; }
-  .det__section { padding: 1.2rem; }
+  .det__section { padding: 1.2rem; }.det__thumb img {
+    width: 78px;
+    height: 62px;
+  }
 }
