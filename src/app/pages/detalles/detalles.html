@@ -1,7 +1,5 @@
 <app-nav></app-nav>
 
-
-
 <div class="det__loading" *ngIf="loading">
   <div class="det__spinner"></div>
   <p>Cargando lugar...</p>
@@ -9,7 +7,7 @@
 
 <ng-template #notFound>
   <div class="det__empty">
-    <span>🗺️</span>
+    <span><i class="fa-solid fa-map-location-dot"></i></span>
     <h2>No encontramos este lugar</h2>
     <p>{{ errorMsg || 'Puede que el enlace esté mal o aún no exista información.' }}</p>
     <a routerLink="/" class="det__emptyBtn">Volver al inicio</a>
@@ -18,62 +16,52 @@
 
 <div *ngIf="!loading && lugar as l; else notFound">
 
-  <!-- ═══════════ HERO GALERÍA ═══════════ -->
   <section class="det__hero">
 
-    <ng-container *ngIf="l.imagenes?.length === 1">
-      <div class="det__heroSingle">
-        <img [src]="getImagen(0)" [alt]="l.nombre" />
-      </div>
-    </ng-container>
-
-    <ng-container *ngIf="l.imagenes?.length === 2">
-      <div class="det__heroTwo">
-        <img [src]="getImagen(0)" [alt]="l.nombre" />
-        <img [src]="getImagen(1)" [alt]="l.nombre" />
-      </div>
-    </ng-container>
-
-
-    <ng-container *ngIf="l.imagenes?.length; else heroSinImagenes">
+  <ng-container *ngIf="l.imagenes?.length; else heroSinImagenes">
   <div class="det__heroSingle det__heroSlider">
-    <img [src]="getImagen(0)" [alt]="l.nombre" />
+    <img
+      *ngFor="let img of l.imagenes; let i = index"
+      [src]="img"
+      [alt]="l.nombre"
+      [class.det__slide--active]="i === imagenActiva"
+      class="det__slide"
+    />
   </div>
 </ng-container>
 
-<ng-template #heroSinImagenes>
-  <div class="det__heroEmpty">
-    <span>📷</span>
-    <p>Sin imágenes disponibles</p>
-  </div>
-</ng-template>
-
-    <div class="det__heroOverlay">
-      <div class="det__heroInfo">
-        <a class="back-btn" *ngIf="townSlug && idTipo" 
-     [routerLink]="['/lugares', townSlug, 'tipo', idTipo]">
-    ← Volver a Lugares
-    </a>
-        <div class="det__heroBadge">{{ townSlug | titlecase }} · Quindío</div>
-        <h1 class="det__heroTitle">{{ l.nombre }}</h1>
-        <p class="det__heroAddr">📍 {{ l.direccion }}</p>
-      </div>
-      <button class="det__heroFav" (click)="toggleFavorito()" [title]="esFavorito ? 'Quitar' : 'Favorito'">
-        {{ esFavorito ? '♥' : '♡' }}
-      </button>
+  <ng-template #heroSinImagenes>
+    <div class="det__heroEmpty">
+      <span>📷</span>
+      <p>Sin imágenes disponibles</p>
     </div>
-  </section>
-    <div class="det__thumbs" *ngIf="l.imagenes?.length > 3">
+  </ng-template>
+
+  <div class="det__heroOverlay">
+    <div class="det__heroInfo">
+      <a
+        class="back-btn"
+        *ngIf="townSlug && idTipo"
+        [routerLink]="['/lugares', townSlug, 'tipo', idTipo]"
+      >
+        ← Volver a Lugares
+      </a>
+
+      <div class="det__heroBadge">{{ townSlug | titlecase }} · Quindío</div>
+      <h1 class="det__heroTitle">{{ l.nombre }}</h1>
+      <p class="det__heroAddr">📍 {{ l.direccion }}</p>
+    </div>
+
     <button
-      type="button"
-      class="det__thumb"
-      *ngFor="let img of l.imagenes; let i = index"
-      (click)="imagenActiva = i"
-      [class.det__thumb--active]="imagenActiva === i"
+      class="det__heroFav"
+      (click)="toggleFavorito()"
+      [title]="esFavorito ? 'Quitar' : 'Favorito'"
     >
-      <img [src]="img" [alt]="l.nombre + ' imagen ' + (i + 1)" />
+      {{ esFavorito ? '♥' : '♡' }}
     </button>
   </div>
+
+  </section>
 
   <p class="det__favMsg" *ngIf="favMsg">{{ favMsg }}</p>
 
@@ -82,12 +70,12 @@
     <main class="det__main">
 
       <section class="det__section">
-        <h2 class="det__sectionTitle"><span class="det__sectionIcon">📖</span>Descripción general</h2>
+        <h2 class="det__sectionTitle"><span class="det__sectionIcon"><i class="fa-solid fa-book-open"></i></span>Descripción general</h2>
         <p class="det__desc">{{ l.descripcion }}</p>
       </section>
 
       <section class="det__section">
-        <h2 class="det__sectionTitle"><span class="det__sectionIcon">✨</span>Servicios y amenidades</h2>
+        <h2 class="det__sectionTitle"><span class="det__sectionIcon"><i class="fa-solid fa-star"></i></span>Servicios y amenidades</h2>
         <div class="det__amenities" *ngIf="l.servicios?.length; else noServicios">
           <div class="det__amenity" *ngFor="let s of l.servicios">
             <span class="det__amenityDot"></span>{{ s }}
@@ -99,7 +87,7 @@
       </section>
 
       <section class="det__section">
-        <h2 class="det__sectionTitle"><span class="det__sectionIcon">🕐</span>Horarios y ubicación</h2>
+        <h2 class="det__sectionTitle"><span class="det__sectionIcon"><li class="fa-solid fa-clock"></li></span>Horarios y ubicación</h2>
         <div class="det__hoursGrid" *ngIf="l.horarios?.length; else noHorarios">
           <div class="det__hourItem" *ngFor="let h of l.horarios">
             <span class="det__hourLabel">Horario</span>
@@ -109,178 +97,196 @@
         <ng-template #noHorarios>
           <p class="det__emptyText" style="margin-bottom:1rem">Horarios no disponibles.</p>
         </ng-template>
+
         <div class="det__mapWrap" *ngIf="l.lat != null && l.lng != null; else noMapa">
-          <app-mapa [lat]="l.lat" [lng]="l.lng" [zoom]="15" [label]="l.nombre" [openOnClick]="true"></app-mapa>
+          <app-mapa
+            [lat]="l.lat"
+            [lng]="l.lng"
+            [zoom]="15"
+            [label]="l.nombre"
+            [openOnClick]="true">
+          </app-mapa>
         </div>
+
         <ng-template #noMapa>
-          <div class="det__mapEmpty">📍 Ubicación no disponible por ahora.</div>
+          <div class="det__mapEmpty"><i class="fa-solid fa-map-marker-alt"></i> Ubicación no disponible por ahora.</div>
         </ng-template>
       </section>
 
-     <section class="det__section">
-  <h2 class="det__sectionTitle"><span class="det__sectionIcon">⭐</span>Opiniones</h2>
+      <section class="det__section">
+        <h2 class="det__sectionTitle"><span class="det__sectionIcon"><i class="fa-solid fa-star"></i></span>Opiniones</h2>
 
-  <!-- Mensaje de feedback -->
- <p class="det__resenaMsg" *ngIf="resenaMsg">{{ resenaMsg }}</p>
+        <p class="det__resenaMsg" *ngIf="resenaMsg">{{ resenaMsg }}</p>
 
-  <!-- Loading -->
-  <div class="det__loading" *ngIf="resenaLoading">
-    <div class="det__spinner"></div>
-  </div>
-
-  <!-- Error -->
-  <p class="det__emptyText" *ngIf="resenaError">{{ resenaError }}</p>
-
-  <!-- Estadísticas -->
-  <div class="det__resenaStats" *ngIf="estadisticas && !resenaLoading">
-    <div class="det__resenaStatMain">
-      <span class="det__resenaPromedio">{{ estadisticas.promedio | number:'1.1-1' }}</span>
-      <div>
-        <div class="det__stars">
-          <span *ngFor="let s of [1,2,3,4,5]">
-            {{ s <= estadisticas.promedio ? '★' : '☆' }}
-          </span>
+        <div class="det__loading" *ngIf="resenaLoading">
+          <div class="det__spinner"></div>
         </div>
-        <span class="det__resenaTotalLabel">{{ estadisticas.total }} opiniones</span>
-      </div>
-    </div>
-    <div class="det__resenaDistrib">
-      <div class="det__resenaDistribRow" *ngFor="let s of [5,4,3,2,1]">
-        <span class="det__resenaDistribNum">{{ s }}★</span>
-        <div class="det__resenaBar">
-          <div class="det__resenaBarFill"
-            [style.width.%]="estadisticas.total > 0 ? (estadisticas.distribucion[s] || 0) * 100 / estadisticas.total : 0">
+
+        <p class="det__emptyText" *ngIf="resenaError">{{ resenaError }}</p>
+
+        <div class="det__resenaStats" *ngIf="estadisticas && !resenaLoading">
+          <div class="det__resenaStatMain">
+            <span class="det__resenaPromedio">{{ estadisticas.promedio | number:'1.1-1' }}</span>
+            <div>
+              <div class="det__stars">
+                <span *ngFor="let s of [1,2,3,4,5]">
+                  {{ s <= estadisticas.promedio ? '★' : '☆' }}
+                </span>
+              </div>
+              <span class="det__resenaTotalLabel">{{ estadisticas.total }} opiniones</span>
+            </div>
+          </div>
+
+          <div class="det__resenaDistrib">
+            <div class="det__resenaDistribRow" *ngFor="let s of [5,4,3,2,1]">
+              <span class="det__resenaDistribNum">{{ s }}<i class="fa-solid fa-star"></i></span>
+              <div class="det__resenaBar">
+                <div
+                  class="det__resenaBarFill"
+                  [style.width.%]="estadisticas.total > 0 ? (estadisticas.distribucion[s] || 0) * 100 / estadisticas.total : 0">
+                </div>
+              </div>
+              <span class="det__resenaDistribCount">{{ estadisticas.distribucion[s] || 0 }}</span>
+            </div>
           </div>
         </div>
-        <span class="det__resenaDistribCount">{{ estadisticas.distribucion[s] || 0 }}</span>
-      </div>
-    </div>
-  </div>
 
-  <!-- Mi reseña (ya existe) -->
-  <div class="det__miResena" *ngIf="miResena && !editando">
-    <div class="det__opinionHeader">
-      <div class="det__opinionAvatar">Yo</div>
-      <div>
-        <strong>Mi reseña</strong>
-        <div class="det__stars">
-          <span *ngFor="let s of [1,2,3,4,5]">{{ s <= miResena.calificacion ? '★' : '☆' }}</span>
+        <div class="det__miResena" *ngIf="miResena && !editando">
+          <div class="det__opinionHeader">
+            <div class="det__opinionAvatar">Yo</div>
+            <div>
+              <strong>Mi reseña</strong>
+              <div class="det__stars">
+                <span *ngFor="let s of [1,2,3,4,5]">{{ s <= miResena.calificacion ? '★' : '☆' }}</span>
+              </div>
+            </div>
+            <div class="det__miResenaBtns">
+              <button class="det__resenaEditBtn" (click)="iniciarEdicion()"><i class="fa-solid fa-pen-to-square det__btnIcon fa-icon"></i> Editar</button>
+              <button class="det__resenaDelBtn" (click)="eliminarResena()"><i class="fa-solid fa-trash det__btnIcon fa-icon"></i> Eliminar</button>
+            </div>
+          </div>
+          <p class="det__opinionText">{{ miResena.comentario }}</p>
         </div>
-      </div>
-      <div class="det__miResenaBtns">
-        <button class="det__resenaEditBtn" (click)="iniciarEdicion()">✏️ Editar</button>
-        <button class="det__resenaDelBtn"  (click)="eliminarResena()">🗑️ Eliminar</button>
-      </div>
-    </div>
-    <p class="det__opinionText">{{ miResena.comentario }}</p>
-  </div>
 
-  <!-- Formulario edición -->
-  <div class="det__resenaForm" *ngIf="editando">
-    <h4>Editar mi reseña</h4>
-    <div class="det__starPicker">
-      <span *ngFor="let s of [1,2,3,4,5]"
-        (click)="setEditCalificacion(s)"
-        [class.active]="s <= editCalificacion">★</span>
-    </div>
-    <textarea
-      [(ngModel)]="editComentario"
-      rows="3"
-      placeholder="Actualiza tu comentario (mín. 10 caracteres)">
-    </textarea>
-    <div class="det__resenaFormBtns">
-<button class="det__resenaSendBtn"
-  (click)="guardarEdicion()"
-  [disabled]="!editCalificacion || editComentario.trim().length < 10">
-  Guardar cambios
-</button>      <button class="det__resenaCancelBtn" (click)="editando = false">Cancelar</button>
-    </div>
-  </div>
+        <div class="det__resenaForm" *ngIf="editando">
+          <h4>Editar mi reseña</h4>
+          <div class="det__starPicker">
+            <span
+              *ngFor="let s of [1,2,3,4,5]"
+              (click)="setEditCalificacion(s)"
+              [class.active]="s <= editCalificacion">★</span>
+          </div>
 
-  <!-- Botón abrir formulario nueva reseña -->
-  <button class="det__resenaNewBtn"
-    *ngIf="!miResena && !mostrarFormulario"
-    (click)="mostrarFormulario = true">
-    ✍️ Escribir una reseña
-  </button>
+          <textarea
+            [(ngModel)]="editComentario"
+            rows="3"
+            placeholder="Actualiza tu comentario (mín. 10 caracteres)">
+          </textarea>
 
-  <!-- Formulario nueva reseña -->
-  <div class="det__resenaForm" *ngIf="mostrarFormulario && !miResena">
-    <h4>Tu opinión</h4>
-    <div class="det__starPicker">
-      <span *ngFor="let s of [1,2,3,4,5]"
-        (click)="setCalificacion(s)"
-        [class.active]="s <= nuevaCalificacion">★</span>
-    </div>
-
-    <small class="det__resenaHint" *ngIf="!nuevaCalificacion">
-      Selecciona una calificación para continuar
-    </small>
-
-    <!-- <small class="det__resenaHint" *ngIf="!editCalificacion">
-     Selecciona una calificación para continuar
-    </small> -->
-
-    <textarea
-      [(ngModel)]="nuevoComentario"
-      rows="3"
-      placeholder="Cuéntanos tu experiencia (mín. 10 caracteres)">
-    </textarea>
-    <div class="det__resenaFormBtns">
-<button class="det__resenaSendBtn"
-  (click)="crearResena()"
-  [disabled]="!nuevaCalificacion || nuevoComentario.trim().length < 10">
-  Publicar reseña
-</button>      <button class="det__resenaCancelBtn" (click)="mostrarFormulario = false">Cancelar</button>
-    </div>
-  </div>
-
-  <!-- Lista de reseñas -->
-  <ng-container *ngIf="!resenaLoading">
-    <div class="det__opinion" *ngFor="let r of resenas">
-      <div class="det__opinionHeader">
-        <div class="det__opinionAvatar">
-          <span *ngIf="!r.usuario.foto_perfil">{{ r.usuario.nombre_usuario?.charAt(0) }}</span>
-        </div>
-        <div>
-          <strong>{{ r.usuario.nombre_usuario }}</strong>
-          <div class="det__stars">
-            <span *ngFor="let s of [1,2,3,4,5]">{{ s <= r.calificacion ? '★' : '☆' }}</span>
+          <div class="det__resenaFormBtns">
+            <button
+              class="det__resenaSendBtn"
+              (click)="guardarEdicion()"
+              [disabled]="!editCalificacion || editComentario.trim().length < 10">
+              Guardar cambios
+            </button>
+            <button class="det__resenaCancelBtn" (click)="editando = false">Cancelar</button>
           </div>
         </div>
-        <span class="det__resenaFecha">{{ r.fecha_creacion | date:'mediumDate' }}</span>
-      </div>
-      <p class="det__opinionText">{{ r.comentario }}</p>
-    </div>
 
-    <p class="det__emptyText" *ngIf="resenas.length === 0 && !resenaError">
-      Aún no hay opiniones para este lugar.
-    </p>
-  </ng-container>
+        <button
+          class="det__resenaNewBtn"
+          *ngIf="!miResena && !mostrarFormulario"
+          (click)="mostrarFormulario = true">
+          <i class="fa-solid fa-pen det__btnIcon fa-icon"></i>Escribir una reseña
+        </button>
 
-</section>
+        <div class="det__resenaForm" *ngIf="mostrarFormulario && !miResena">
+          <h4>Tu opinión</h4>
+          <div class="det__starPicker">
+            <span
+              *ngFor="let s of [1,2,3,4,5]"
+              (click)="setCalificacion(s)"
+              [class.active]="s <= nuevaCalificacion">★</span>
+          </div>
+
+          <small class="det__resenaHint" *ngIf="!nuevaCalificacion">
+            Selecciona una calificación para continuar
+          </small>
+
+          <textarea
+            [(ngModel)]="nuevoComentario"
+            rows="3"
+            placeholder="Cuéntanos tu experiencia (mín. 10 caracteres)">
+          </textarea>
+
+          <div class="det__resenaFormBtns">
+            <button
+              class="det__resenaSendBtn"
+              (click)="crearResena()"
+              [disabled]="!nuevaCalificacion || nuevoComentario.trim().length < 10">
+              Publicar reseña
+            </button>
+            <button class="det__resenaCancelBtn" (click)="mostrarFormulario = false">Cancelar</button>
+          </div>
+        </div>
+
+        <ng-container *ngIf="!resenaLoading">
+          <div class="det__opinion" *ngFor="let r of resenas">
+            <div class="det__opinionHeader">
+              <div class="det__opinionAvatar">
+                <span *ngIf="!r.usuario.foto_perfil">{{ r.usuario.nombre_usuario?.charAt(0) }}</span>
+              </div>
+              <div>
+                <strong>{{ r.usuario.nombre_usuario }}</strong>
+                <div class="det__stars">
+                  <span *ngFor="let s of [1,2,3,4,5]">{{ s <= r.calificacion ? '★' : '☆' }}</span>
+                </div>
+              </div>
+              <span class="det__resenaFecha">{{ r.fecha_creacion | date:'mediumDate' }}</span>
+            </div>
+            <p class="det__opinionText">{{ r.comentario }}</p>
+          </div>
+
+          <p class="det__emptyText" *ngIf="resenas.length === 0 && !resenaError">
+            Aún no hay opiniones para este lugar.
+          </p>
+        </ng-container>
+      </section>
 
     </main>
 
     <aside class="det__side">
 
       <div class="det__card">
-        <h3 class="det__cardTitle">📞 Información de contacto</h3>
+        <h3 class="det__cardTitle"><i class="fa-solid fa-phone"></i> Información de contacto</h3>
+
         <div class="det__infoList" *ngIf="l.datosGenerales?.length">
-          <div class="det__infoRow" *ngFor="let d of l.datosGenerales">
-            <span class="det__infoIcon">
-              {{ d.startsWith('Teléfono') ? '📱' : d.startsWith('Correo') ? '✉️' : '✅' }}
-            </span>
-            <div>
-              <div class="det__infoLabel">{{ d.split(':')[0] }}</div>
-              <div class="det__infoVal">{{ d.split(':').slice(1).join(':').trim() }}</div>
-            </div>
+        <div class="det__infoRow" *ngFor="let d of l.datosGenerales">
+          <span class="det__infoIcon">
+            <i
+              class="fa-icon"
+              [ngClass]="
+                d.startsWith('Teléfono')
+                  ? 'fa-solid fa-phone'
+                  : d.startsWith('Correo')
+                  ? 'fa-solid fa-envelope'
+                  : 'fa-solid fa-circle-check'
+              "
+            ></i>
+          </span>
+
+          <div>
+            <div class="det__infoLabel">{{ d.split(':')[0] }}</div>
+            <div class="det__infoVal">{{ d.split(':').slice(1).join(':').trim() }}</div>
           </div>
         </div>
+      </div>
+
         <p class="det__emptyText" *ngIf="!l.datosGenerales?.length">Sin información de contacto aún.</p>
 
         <div class="det__promo" *ngIf="l.promociones">
-          <span class="det__promoIcon">🎉</span>
+          <span class="det__promoIcon"><li class="fa-solid fa-gift" ></li></span>
           <div>
             <div class="det__promoLabel">Promoción activa</div>
             <div class="det__promoText">{{ l.promociones }}</div>
@@ -290,15 +296,15 @@
         <div class="det__ctaRow">
           <button class="det__ctaBtn det__ctaWa" type="button">💬 WhatsApp</button>
           <button class="det__ctaBtn det__ctaIt" type="button" (click)="agregarItinerario()">
-            📋 Itinerario <span *ngIf="itMsg">✓</span>
+            <i class="fa-solid fa-calendar-days"></i> Itinerario <span *ngIf="itMsg">✓</span>
           </button>
         </div>
       </div>
 
-     <div class="det__card det__card--menu">
+      <div class="det__card det__card--menu">
         <div class="det__menuHeader">
           <div>
-            <h3 class="det__cardTitle" style="margin-bottom:2px">💰 Saquemos cuentas</h3>
+            <h3 class="det__cardTitle" style="margin-bottom:2px"><i class="fa-solid fa-coins"></i> Saquemos cuentas</h3>
             <p class="det__menuSub">Selecciona lo que quieres disfrutar</p>
           </div>
           <div class="det__menuRate">
@@ -310,29 +316,33 @@
         <div class="det__menuBody">
           <ng-container *ngFor="let grupo of menuAgrupado">
             <div class="det__menuCatLabel">{{ grupo.cat }}</div>
+
             <div
               class="det__menuItem"
               *ngFor="let item of grupo.items"
               [class.det__menuItem--on]="item.cantidad > 0">
-            
 
+              <div class="det__menuCounter">
+                <button
+                  class="det__menuCountBtn det__menuCountMinus"
+                  type="button"
+                  (click)="decrementItem(item); $event.stopPropagation()"
+                  [disabled]="item.cantidad === 0">−</button>
 
-             
-      <div class="det__menuCounter">
-        <button class="det__menuCountBtn det__menuCountMinus"
-                type="button"
-                (click)="decrementItem(item); $event.stopPropagation()"
-                [disabled]="item.cantidad === 0">−</button>
-        <span class="det__menuCountNum"
-              [class.det__menuCountNum--on]="item.cantidad > 0">
-          {{ item.cantidad }}
-        </span>
-        <button class="det__menuCountBtn det__menuCountPlus"
-                type="button"
-                (click)="incrementItem(item); $event.stopPropagation()">+</button>
-      </div>
-              
+                <span
+                  class="det__menuCountNum"
+                  [class.det__menuCountNum--on]="item.cantidad > 0">
+                  {{ item.cantidad }}
+                </span>
+
+                <button
+                  class="det__menuCountBtn det__menuCountPlus"
+                  type="button"
+                  (click)="incrementItem(item); $event.stopPropagation()">+</button>
+              </div>
+
               <span class="det__menuName">{{ item.nombre }}</span>
+
               <div class="det__menuPrices">
                 <span class="det__menuCOP">${{ item.precio | number:'1.0-0' }}</span>
                 <span class="det__menuUSD">≈ ${{ item.precio / tasaCopUsd | number:'1.2-2' }} USD</span>
@@ -351,16 +361,16 @@
               Selecciona productos para ver el total
             </span>
           </div>
+
           <div class="det__menuTotalRight">
             <span class="det__menuTotalCOP">${{ totalCOP | number:'1.0-0' }}</span>
             <span class="det__menuTotalUSD">≈ ${{ totalCOP / tasaCopUsd | number:'1.2-2' }} USD</span>
           </div>
         </div>
-
       </div>
 
       <button class="det__ctaMain" type="button" (click)="agregarItinerario()">
-        <span>✅</span>
+        <span><i class="fa-solid fa-circle-check"></i></span>
         <div>
           <div class="det__ctaMainTitle">Agregar a mi itinerario</div>
           <div class="det__ctaMainSub">Guarda este lugar para tu viaje</div>
@@ -375,4 +385,3 @@
 </div>
 
 <app-footer></app-footer>
-  

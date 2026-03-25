@@ -123,10 +123,17 @@
   display: flex; align-items: center; gap: 10px;
   font-size: 16px; font-weight: 800; color: #0F3B3E; margin-bottom: 1.1rem;
 }
-.det__sectionIcon {
-  width: 30px; height: 30px; border-radius: 8px;
-  background: rgba(14,105,115,0.1); display: flex;
-  align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0;
+.det__infoIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(14,105,115,0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  font-size: 14px;
+  flex-shrink: 0;
 }
 .det__desc { font-size: 14px; color: #555; line-height: 1.75; white-space: pre-line; }
 .det__emptyText { font-size: 13px; color: #aaa; font-style: italic; }
@@ -173,7 +180,18 @@
 .det__infoList { display: flex; flex-direction: column; }
 .det__infoRow  { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 0.5px solid rgba(0,0,0,0.05); }
 .det__infoRow:last-child { border-bottom: none; }
-.det__infoIcon { width: 32px; height: 32px; border-radius: 8px; background: rgba(14,105,115,0.08); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.det__infoIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(14,105,115,0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  font-size: 14px;
+  flex-shrink: 0;
+}
 .det__infoLabel{ font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #aaa; }
 .det__infoVal  { font-size: 12px; font-weight: 700; color: #1a1a1a; margin-top: 1px; }
 
@@ -603,6 +621,28 @@
 .det__heroSide img,
 .det__heroMoreWrap img {
   background: #e9eef3;
+}
+/* ─── SLIDER HERO ─── */
+.det__heroSlider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.det__slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+  will-change: opacity;
+}
+
+.det__slide--active {
+  opacity: 1;
 }
 
 

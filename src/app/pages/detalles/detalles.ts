@@ -58,6 +58,7 @@ export class Detalles implements OnInit {
   loadingImagenesLugar = false;
   imagenActiva= 0;
   private sliderTimer: any;
+  heroFade = true;
   // ── Reseñas ───────────────────────────────────────────────────
 resenas        : any[]  = [];
 estadisticas   : any    = null;
@@ -159,12 +160,21 @@ decrementItem(item: ItemMenu): void {
 private iniciarSlider(): void {
   clearInterval(this.sliderTimer);
 
+  if (!this.lugar?.imagenes?.length || this.lugar.imagenes.length <= 1) return;
+
   this.sliderTimer = setInterval(() => {
     if (!this.lugar?.imagenes?.length) return;
 
-    this.imagenActiva =
-      (this.imagenActiva + 1) % this.lugar.imagenes.length;
-  }, 3000); // ← 3 segundos
+    this.heroFade = false;
+
+    setTimeout(() => {
+      this.imagenActiva = (this.imagenActiva + 1) % this.lugar!.imagenes.length;
+      this.heroFade = true;
+    }, 500);
+  }, 5000);
+}
+ngOnDestroy(): void {
+  clearInterval(this.sliderTimer);
 }
 
   // ── Carga detalle ─────────────────────────────────────────────
@@ -251,6 +261,14 @@ private iniciarSlider(): void {
           ...this.lugar,
           imagenes: [...new Set(urls)]
         };
+
+        // ✅ reinicia en la primera imagen
+        this.imagenActiva = 0;
+
+        // ✅ arranca el slider automático
+        if (this.lugar.imagenes.length > 1) {
+          this.iniciarSlider();
+        }
       }
 
       console.log('IMAGENES DETALLE BACKEND:', this.imagenesLugar);

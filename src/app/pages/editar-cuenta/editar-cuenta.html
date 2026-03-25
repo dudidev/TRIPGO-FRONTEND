@@ -21,7 +21,10 @@
           [class.btn-cancelar-top]="editMode"
           (click)="editMode ? cancelarEdicion() : activarEdicion()"
         >
-          {{ editMode ? '✕ Cancelar' : '✏️ Editar perfil' }}
+          <i
+            [class]="editMode ? 'fa-solid fa-xmark btn-icon' : 'fa-solid fa-pen btn-icon'"
+          ></i>
+          {{ editMode ? 'Cancelar' : 'Editar perfil' }}
         </button>
       </div>
 
@@ -54,7 +57,7 @@
         </div>
 
         <button class="btn-foto" type="button" (click)="fileInput.click()">
-          📷 Cambiar foto
+          <i class="fa-solid fa-camera"></i> Cambiar foto
         </button>
 
         <div class="divider">Cambiar contraseña</div>
@@ -78,7 +81,8 @@
         </div>
 
         <button type="submit" class="btn-guardar" [disabled]="saving">
-          {{ saving ? 'Guardando...' : '💾 Guardar cambios' }}
+          <i class="fa-solid fa-floppy-disk btn-icon" *ngIf="!saving"></i>
+          {{ saving ? 'Guardando...' : 'Guardar cambios' }}
         </button>
       </form>
 
@@ -89,7 +93,9 @@
   <section class="fav-card-outer">
 
     <div class="fav-header">
-      <div class="fav-header-icon">❤️</div>
+      <div class="fav-header-icon">
+        <i class="fa-solid fa-heart"></i>
+      </div>
       <span class="fav-header-title">Mis favoritos</span>
       <span class="fav-count" *ngIf="favoritos.length > 0">
         {{ favoritos.length }} lugar{{ favoritos.length !== 1 ? 'es' : '' }}
@@ -101,7 +107,7 @@
       <p *ngIf="loadingFavoritos" class="fav-loading">Cargando favoritos...</p>
 
       <div *ngIf="!loadingFavoritos && favoritos.length === 0" class="fav-empty">
-        <span class="fav-empty__icon">❤️</span>
+        <span class="fav-empty__icon"><i class="fa-solid fa-heart"></i></span>
         <p>Aún no tienes lugares favoritos.</p>
         <small>Explora y guarda los que más te gusten.</small>
       </div>
@@ -117,7 +123,7 @@
 
         <div class="fav-info" (click)="irADetalle(fav)">
           <div class="fav-name">{{ fav.nombre }}</div>
-          <div class="fav-dir">📍 {{ fav.direccion || '—' }}</div>
+          <div class="fav-dir"><i class="fa-solid fa-location-dot"></i> {{ fav.direccion || '—' }}</div>
         </div>
 
         <div class="fav-actions">
@@ -125,7 +131,7 @@
           <button class="btn-quitar" type="button" (click)="eliminarFavorito(fav)">✕ Quitar</button>
         </div>
 
-        <span class="fav-arrow">›</span>
+        <span class="fav-arrow"><i class="fa-solid fa-chevron-right"></i></span>
       </div>
 
     </div>

@@ -53,3 +53,56 @@ h1, h2{
 p{
     color: var(--text-color);
 }
+.app-icon {
+  font-size: 18px;
+  line-height: 1;
+  vertical-align: middle;
+  color: var(--text-color);
+}
+
+.icon-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+/* ─── ICONOS FONT AWESOME ─── */
+.fa-solid,
+.fa-regular,
+.fa-brands {
+  line-height: 1;
+}
+
+.det__inlineIcon {
+  margin-right: 6px;
+  font-size: 13px;
+}
+
+.det__btnIcon {
+  margin-right: 8px;
+  font-size: 13px;
+}
+
+.det__titleInlineIcon {
+  margin-right: 8px;
+  font-size: 14px;
+  color: var(--primary);
+}
+
+.det__emptyIcon,
+.det__heroEmptyIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.det__emptyIcon i,
+.det__heroEmptyIcon i {
+  font-size: 3rem;
+}
+
+.det__sectionIcon i,
+.det__infoIcon i,
+.det__promoIcon i,
+.det__ctaMainIcon i {
+  line-height: 1;
+}
