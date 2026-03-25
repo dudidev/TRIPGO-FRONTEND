@@ -1,63 +1,78 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Nav } from '../../shared/nav/nav';
 import { Footer } from '../../shared/footer/footer';
 import { environment } from '../../../environments/environment';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, forkJoin, of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { Api } from '../../api';
+import { EstablecimientoService } from '../../services/establecimiento.service';
 
 type Recomendacion = {
-  id_establecimiento : number;
+  id_establecimiento: number;
   nombre_establecimiento: string;
-  tipo               : number;
-  nombre_tipo        : string;
-  ubicacion          : string;
-  direccion?         : string;
+  tipo: number;
+  nombre_tipo: string;
+  ubicacion: string;
+  direccion?: string;
   calificacion_promedio: number;
-  total_resenas      : number;
-  descripcion?       : string;
-  imagen?            : string;
-  score_relevancia   : number;
-  razon              : string;
+  total_resenas: number;
+  descripcion?: string;
+  imagen?: string;
+  score_relevancia: number;
+  razon: string;
 };
 
 type TipoFavorito = {
-  id_tipo    : number;
+  id_tipo: number;
   nombre_tipo: string;
-  score      : number;
+  score: number;
 };
 
 type Perfil = {
-  tipos_favoritos              : TipoFavorito[];
-  ubicaciones_favoritas        : { ubicacion: string; visitas: number }[];
+  tipos_favoritos: TipoFavorito[];
+  ubicaciones_favoritas: { ubicacion: string; visitas: number }[];
   promedio_calificaciones_dadas: number;
-  total_interacciones          : number;
+  total_interacciones: number;
+};
+
+type HeroSlide = {
+  nombre: string;
+  ubicacion: string;
+  imagen?: string;
 };
 
 @Component({
-  selector   : 'app-recomendaciones',
-  standalone : true,
-  imports    : [CommonModule, RouterModule, Nav, Footer],
+  selector: 'app-recomendaciones',
+  standalone: true,
+  imports: [CommonModule, RouterModule, Nav, Footer],
   templateUrl: './recomendaciones.html',
-  styleUrl   : './recomendaciones.css',
+  styleUrl: './recomendaciones.css',
 })
 export class Recomendaciones implements OnInit, OnDestroy {
 
-  recomendaciones : Recomendacion[] = [];
-  perfil          : Perfil | null   = null;
-  loading         = true;
-  loadingPerfil   = true;
-  error           = '';
+  recomendaciones: Recomendacion[] = [];
+  perfil: Perfil | null = null;
+
+  loading = true;
+  loadingPerfil = true;
+  error = '';
+
+  heroSlides: HeroSlide[] = [];
+  slideActual = 0;
+  fadeTexto = false;
+  private sliderTimer: any = null;
 
   private destroy$ = new Subject<void>();
-  private apiUrl   = environment.apiBaseUrl;
+  private apiUrl = environment.apiBaseUrl;
 
   constructor(
-    private http  : HttpClient,
+    private http: HttpClient,
     private router: Router,
-    private api   : Api
+    private api: Api,
+    private establecimientoService: EstablecimientoService
   ) {}
 
   ngOnInit(): void {
@@ -65,16 +80,19 @@ export class Recomendaciones implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.pararSlider();
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  // ── Getters de conveniencia ───────────────────────────────────
+  // ── GETTERS ─────────────────────────
 
   get nombreUsuario(): string {
     try {
       return JSON.parse(localStorage.getItem('user') || '{}')?.nombre_usuario?.split(' ')[0] ?? 'Viajero';
-    } catch { return 'Viajero'; }
+    } catch {
+      return 'Viajero';
+    }
   }
 
   get destacado(): Recomendacion | null {
@@ -83,17 +101,17 @@ export class Recomendaciones implements OnInit, OnDestroy {
 
   get porBusquedas(): Recomendacion[] {
     return this.recomendaciones
-      .filter(r => r.razon?.toLowerCase().includes('buscast') || r.razon?.toLowerCase().includes('buscaste'))
+      .filter(r => r.razon?.toLowerCase().includes('busc'))
       .slice(0, 4);
   }
 
   get porVisitas(): Recomendacion[] {
     return this.recomendaciones
       .filter(r =>
-        r.razon?.toLowerCase().includes('visitaste') ||
-        r.razon?.toLowerCase().includes('visualiz') ||
-        r.razon?.toLowerCase().includes('min viendo') ||
-        r.razon?.toLowerCase().includes('calificaste')
+        r.razon?.toLowerCase().includes('visit') ||
+        r.razon?.toLowerCase().includes('visual') ||
+        r.razon?.toLowerCase().includes('viendo') ||
+        r.razon?.toLowerCase().includes('calific')
       )
       .slice(0, 4);
   }
@@ -104,7 +122,10 @@ export class Recomendaciones implements OnInit, OnDestroy {
       ...this.porBusquedas.map(r => r.id_establecimiento),
       ...this.porVisitas.map(r => r.id_establecimiento),
     ]);
-    return this.recomendaciones.filter(r => !usados.has(r.id_establecimiento)).slice(0, 6);
+
+    return this.recomendaciones
+      .filter(r => !usados.has(r.id_establecimiento))
+      .slice(0, 6);
   }
 
   get interesesPills(): TipoFavorito[] {
@@ -130,56 +151,152 @@ export class Recomendaciones implements OnInit, OnDestroy {
     return colors[index % colors.length];
   }
 
-  // ── Navegación ────────────────────────────────────────────────
+  // ── HERO ─────────────────────────
+
+  private construirHero(): void {
+    if (!this.recomendaciones.length) {
+      this.heroSlides = [{
+        nombre: 'Quindío',
+        ubicacion: 'Colombia',
+        imagen: ''
+      }];
+      return;
+    }
+
+    const conImagen = this.recomendaciones.filter(r => r.imagen);
+    const sinImagen = this.recomendaciones.filter(r => !r.imagen);
+
+    const base = [...conImagen, ...sinImagen].slice(0, 5);
+
+    this.heroSlides = base.map(r => ({
+      nombre: r.nombre_establecimiento,
+      ubicacion: r.ubicacion,
+      imagen: r.imagen || ''
+    }));
+  }
+
+  private iniciarSlider(): void {
+    this.pararSlider();
+
+    if (this.heroSlides.length <= 1) return;
+
+    this.sliderTimer = setInterval(() => {
+      this.avanzarSlide();
+    }, 4500);
+  }
+
+  private pararSlider(): void {
+    if (this.sliderTimer) {
+      clearInterval(this.sliderTimer);
+      this.sliderTimer = null;
+    }
+  }
+
+  pausarSlider(): void {
+    this.pararSlider();
+  }
+
+  reanudarSlider(): void {
+    this.iniciarSlider();
+  }
+
+  private avanzarSlide(): void {
+    const next = (this.slideActual + 1) % this.heroSlides.length;
+    this.cambiarSlide(next);
+  }
+
+  irASlide(index: number): void {
+    if (index === this.slideActual) return;
+
+    this.cambiarSlide(index);
+    this.pararSlider();
+    this.iniciarSlider();
+  }
+
+  private cambiarSlide(index: number): void {
+    this.fadeTexto = true;
+
+    setTimeout(() => {
+      this.slideActual = index;
+      this.fadeTexto = false;
+    }, 300);
+  }
+
+  // ── NAV ─────────────────────────
+
   irADetalle(rec: Recomendacion): void {
     this.router.navigate(['/detalles', rec.id_establecimiento]);
   }
 
-  // ── Carga de datos ────────────────────────────────────────────
-  private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
-    return new HttpHeaders({ Authorization: `Bearer ${token}` });
+  // ── DATA ─────────────────────────
+
+  private cargarTodo(): void {
+    this.loading = true;
+    this.loadingPerfil = true;
+    this.error = '';
+
+    this.api.getRecomendaciones(20)
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((data: any) => {
+          const base = data.recomendaciones ?? [];
+
+          if (!base.length) return of(base);
+
+          const requests = base.map((rec: Recomendacion) =>
+            this.establecimientoService.getImagenesLugar(rec.id_establecimiento).pipe(
+              map((resp: any) => {
+                const img = resp?.imagenes?.[0]?.url ?? '';
+                return { ...rec, imagen: img };
+              }),
+              catchError(() => of({ ...rec, imagen: '' }))
+            )
+          );
+
+          return forkJoin(requests);
+        })
+      )
+      .subscribe({
+        next: (recs) => {
+          this.recomendaciones = recs;
+
+          // 🔥 AQUÍ SE CONECTA EL HERO
+          this.construirHero();
+          this.iniciarSlider();
+
+          this.loading = false;
+        },
+        error: () => {
+          this.error = 'No pudimos cargar tus recomendaciones.';
+          this.loading = false;
+        }
+      });
+
+    this.api.getMiPerfil()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data: any) => {
+          this.perfil = data;
+          this.loadingPerfil = false;
+        },
+        error: () => {
+          this.loadingPerfil = false;
+        }
+      });
   }
 
- private cargarTodo(): void {
-  this.loading       = true;
-  this.loadingPerfil = true;
-  this.error         = '';
+  refrescarPerfil(): void {
+    this.api.refrescarPerfil()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => this.cargarTodo()
+      });
+  }
 
-  this.api.getRecomendaciones(20)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe({
-      next: (data: any) => {
-        this.recomendaciones = data.recomendaciones ?? [];
-        this.loading = false;
-      },
-      error: () => {
-        this.error   = 'No pudimos cargar tus recomendaciones.';
-        this.loading = false;
-      }
-    });
+  // ── HELPERS ─────────────────────────
 
-  this.api.getMiPerfil()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe({
-      next: (data: any) => {
-        this.perfil        = data;
-        this.loadingPerfil = false;
-      },
-      error: () => { this.loadingPerfil = false; }
-    });
-}
-
-refrescarPerfil(): void {
-  this.api.refrescarPerfil()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe({ next: () => this.cargarTodo() });
-}
-
-
-  // ── Helpers template ─────────────────────────────────────────
-  starsArray(n: number): number[] {
-    return Array.from({ length: 5 }, (_, i) => i + 1);
+  starsArray(): number[] {
+    return [1, 2, 3, 4, 5];
   }
 
   truncar(texto: string, max: number): string {
