@@ -43,6 +43,10 @@ export class Login {
       localStorage.setItem('token', res.token);
       localStorage.setItem('user', JSON.stringify(res.user));
 
+      // 👇 Para que el chatbot desaparezca inmediatamente
+      window.dispatchEvent(new Event('storage'));
+      window.dispatchEvent(new Event('storage'));
+
       this.showSuccess('Inicio de sesión exitoso');
 
       setTimeout(() => {
