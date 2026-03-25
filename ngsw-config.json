@@ -29,7 +29,9 @@
   "dataGroups": [
     {
       "name": "api-trips",
-      "urls": ["/api/lugares/**", "/api/categorias/**", "/api/pueblos/**"],
+      "urls": ["https://tripgo-backend-arehbhbubshxdpg7.chilecentral-01.azurewebsites.net/api/lugares/**",
+        "https://tripgo-backend-arehbhbubshxdpg7.chilecentral-01.azurewebsites.net/api/categorias/**",
+        "https://tripgo-backend-arehbhbubshxdpg7.chilecentral-01.azurewebsites.net/api/pueblos/**"],
       "cacheConfig": {
         "maxSize": 50,
         "maxAge": "1h",
