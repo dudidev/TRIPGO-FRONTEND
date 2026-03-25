@@ -1,34 +1,91 @@
-
 <app-nav></app-nav>
 
-<!-- ═══════════ HERO ═══════════ -->
-<section class="rec__hero">
-  <div class="rec__heroDeco1"></div>
-  <div class="rec__heroDeco2"></div>
-  <div class="rec__heroDeco3"></div>
+<!-- ═══════════════════════════════════════════
+     HERO — SLIDER AUTOMÁTICO
+════════════════════════════════════════════ -->
+<section
+  class="rec__hero"
+  (mouseenter)="pausarSlider()"
+  (mouseleave)="reanudarSlider()"
+>
+  <!-- Slides -->
+  <div class="rec__slides">
+    <div
+      class="rec__slide"
+      *ngFor="let slide of heroSlides; let i = index"
+      [class.rec__slide--active]="i === slideActual"
+    >
+      <img
+        *ngIf="slide.imagen; else slideFallback"
+        [src]="slide.imagen"
+        [alt]="slide.nombre"
+        class="rec__slideImg"
+      />
+      <ng-template #slideFallback>
+        <div class="rec__slideFallback"></div>
+      </ng-template>
+      <div class="rec__slideOverlay"></div>
+    </div>
+  </div>
 
+  <!-- Tag visitaste -->
+  <div class="rec__visitingTag" *ngIf="heroSlides.length > 0">
+    <div class="rec__visitingDot"></div>
+    <span class="rec__visitingLbl">Descubriste</span>
+    <span class="rec__visitingName" [class.rec__fadeText]="fadeTexto">
+      {{ heroSlides[slideActual]?.nombre }}
+    </span>
+  </div>
+
+  <!-- Contenido del hero -->
   <div class="rec__heroInner">
     <div class="rec__heroEyebrow">Personalizado para ti</div>
+
     <h1 class="rec__heroTitle">
       Hola, <em>{{ nombreUsuario }}</em> 👋<br>
       Tu próxima aventura
     </h1>
+
     <p class="rec__heroSub">
       Basado en tus búsquedas, visitas y reseñas encontramos
       estos destinos para ti en el Quindío.
     </p>
 
-    <!-- Pills de intereses -->
+    <!-- Pills de intereses del perfil -->
     <div class="rec__heroPills" *ngIf="perfil">
       <span
         class="rec__heroPill"
         *ngFor="let t of interesesPills; let i = index"
-        [class.rec__heroPill--on]="i < 2">
+        [class.rec__heroPill--on]="i < 2"
+      >
         {{ t.nombre_tipo }}
       </span>
     </div>
 
-    <!-- Stats -->
+    <!-- Lugar activo del slide -->
+    <div class="rec__heroLocation" *ngIf="heroSlides.length > 0">
+      <div class="rec__heroLocationTitle" [class.rec__fadeText]="fadeTexto">
+        <i class="fa-solid fa-location-dot"></i>
+        {{ heroSlides[slideActual]?.nombre }}
+      </div>
+      <div class="rec__heroLocationSub" [class.rec__fadeText]="fadeTexto">
+        {{ heroSlides[slideActual]?.ubicacion }}, Quindío
+      </div>
+    </div>
+
+    <!-- Dots de navegación -->
+    <div class="rec__heroDots" *ngIf="heroSlides.length > 1">
+      <button
+        type="button"
+        class="rec__heroDot"
+        *ngFor="let slide of heroSlides; let i = index"
+        [class.rec__heroDot--active]="i === slideActual"
+        (click)="irASlide(i)"
+        [attr.aria-label]="'Ir al slide ' + (i + 1)"
+      ></button>
+    </div>
+
+    <!-- Stats en el hero -->
     <div class="rec__heroStats">
       <div class="rec__heroStat">
         <span class="rec__heroStatVal">{{ recomendaciones.length }}</span>
@@ -37,7 +94,7 @@
       <div class="rec__heroStatDiv"></div>
       <div class="rec__heroStat">
         <span class="rec__heroStatVal">
-          {{ perfil?.promedio_calificaciones_dadas | number:'1.1-1' }}★
+          {{ (perfil?.promedio_calificaciones_dadas | number:'1.1-1') ?? '—' }}★
         </span>
         <span class="rec__heroStatLbl">Tu promedio</span>
       </div>
@@ -52,212 +109,362 @@
   </div>
 </section>
 
-<!-- ═══════════ BODY ═══════════ -->
 <div class="rec__body">
+  <div class="rec__bodyWrap">
 
-  <!-- LOADING -->
-  <div class="rec__loading" *ngIf="loading">
-    <div class="rec__spinner"></div>
-    <p>Calculando tus recomendaciones…</p>
-  </div>
+    <!-- ══ COLUMNA IZQUIERDA ══ -->
+    <div class="rec__bodyMain">
 
-  <!-- ERROR -->
-  <div class="rec__error" *ngIf="error && !loading">
-    <span>😕</span>
-    <p>{{ error }}</p>
-    <button (click)="refrescarPerfil()">Reintentar</button>
-  </div>
+      <!-- LOADING -->
+      <div class="rec__loading" *ngIf="loading">
+        <div class="rec__spinner"></div>
+        <p>Calculando tus recomendaciones…</p>
+      </div>
 
-  <ng-container *ngIf="!loading && !error">
+      <!-- ERROR -->
+      <div class="rec__error" *ngIf="error && !loading">
+        <span>😕</span>
+        <p>{{ error }}</p>
+        <button (click)="refrescarPerfil()">Reintentar</button>
+      </div>
 
-    <!-- ── ESTADO VACÍO ── -->
-    <div class="rec__empty" *ngIf="recomendaciones.length === 0">
-      <div class="rec__emptyIcon">🗺️</div>
-      <h3>Aún no tenemos recomendaciones</h3>
-      <p>Explora lugares, búscalos y deja reseñas para que podamos personalizar tu experiencia.</p>
-      <a routerLink="/principal" class="rec__emptyBtn">Explorar lugares</a>
+      <ng-container *ngIf="!loading && !error">
+
+        <!-- VACÍO -->
+        <div class="rec__empty" *ngIf="recomendaciones.length === 0">
+          <div class="rec__emptyIcon">🗺️</div>
+          <h3>Aún no tenemos recomendaciones</h3>
+          <p>Explora lugares, búscalos y deja reseñas para personalizar tu experiencia.</p>
+          <a routerLink="/principal" class="rec__emptyBtn">Explorar lugares</a>
+        </div>
+
+        <ng-container *ngIf="recomendaciones.length > 0">
+
+          <!-- ── DESTACADO #1 ── -->
+          <div class="rec__featLabel" *ngIf="destacado">
+            <i class="fa-solid fa-trophy"></i>
+            Mejor coincidencia para ti
+          </div>
+
+          <div class="rec__featured" *ngIf="destacado" (click)="irADetalle(destacado!)">
+
+            <!-- Ribbon -->
+            <div class="rec__ribbon"><span>#1</span></div>
+
+            <div class="rec__featImg">
+              <img
+                *ngIf="destacado.imagen; else featFallback"
+                [src]="destacado.imagen"
+                [alt]="destacado.nombre_establecimiento"
+                class="rec__featImgPhoto"
+              />
+              <ng-template #featFallback>
+                <div class="rec__featImgFallback"></div>
+              </ng-template>
+              <div class="rec__featImgOverlay"></div>
+
+              <span class="rec__featBadge">
+                <i class="fa-solid fa-medal"></i> Mejor coincidencia
+              </span>
+            </div>
+
+            <div class="rec__featBody">
+              <div class="rec__featType">
+                {{ destacado.nombre_tipo }} · {{ destacado.ubicacion }}
+              </div>
+              <h2 class="rec__featName">{{ destacado.nombre_establecimiento }}</h2>
+
+              <div class="rec__featLoc" *ngIf="destacado.direccion">
+                <i class="fa-solid fa-location-dot"></i>
+                {{ truncar(destacado.direccion, 48) }}
+              </div>
+
+              <div class="rec__featReason">
+                <i class="fa-solid fa-lightbulb"></i>
+                {{ destacado.razon }}
+              </div>
+
+              <!-- Barra de match % relativa al mejor score -->
+              <div class="rec__matchWrap">
+                <div class="rec__matchLabel">
+                  <span>Compatibilidad</span>
+                  <strong>
+                    {{ recomendaciones[0]?.score_relevancia > 0
+                        ? (100 | number:'1.0-0')
+                        : '—' }}%
+                  </strong>
+                </div>
+                <div class="rec__matchBar">
+                  <div class="rec__matchFill rec__matchFill--orange" style="width: 100%"></div>
+                </div>
+              </div>
+
+              <div class="rec__featFoot">
+                <div class="rec__featStars">
+                  <span class="rec__featStarsVal">
+                    {{ destacado.calificacion_promedio | number:'1.1-1' }}
+                  </span>
+                  <span class="rec__featStarsIco">
+                    <span *ngFor="let s of starsArray()">
+                      {{ s <= destacado.calificacion_promedio ? '★' : '☆' }}
+                    </span>
+                  </span>
+                  <span class="rec__featStarsCnt">({{ destacado.total_resenas }})</span>
+                </div>
+                <button class="rec__featBtn" type="button">
+                  Ver lugar <i class="fa-solid fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── PORQUE LOS BUSCASTE ── -->
+          <div class="rec__section" *ngIf="porBusquedas.length > 0">
+            <div class="rec__secHead">
+              <div class="rec__secTitle">
+                <div class="rec__secBar"></div>
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Porque los buscaste
+              </div>
+            </div>
+
+            <div class="rec__cards">
+              <div
+                class="rec__card"
+                *ngFor="let r of porBusquedas; let i = index"
+                (click)="irADetalle(r)"
+              >
+                <div class="rec__cardAccent rec__cardAccent--orange"></div>
+                <div class="rec__cardThumb" [style.background]="getThumbColor(i)">
+                  <img
+                    *ngIf="r.imagen"
+                    [src]="r.imagen"
+                    [alt]="r.nombre_establecimiento"
+                    class="rec__cardThumbImg"
+                  />
+                </div>
+                <div class="rec__cardInfo">
+                  <div class="rec__cardTop">
+                    <div class="rec__cardName">{{ r.nombre_establecimiento }}</div>
+                  </div>
+                  <div class="rec__cardLoc">
+                    <i class="fa-solid fa-location-dot"></i>
+                    {{ r.ubicacion }}, Quindío
+                  </div>
+                  <div class="rec__cardReason">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    {{ truncar(r.razon, 65) }}
+                  </div>
+
+                  <div class="rec__matchWrap rec__matchWrap--sm">
+                    <div class="rec__matchLabel">
+                      <span>Match</span>
+                      <strong>
+                        {{ recomendaciones[0]?.score_relevancia > 0
+                            ? ((r.score_relevancia / recomendaciones[0].score_relevancia * 100) | number:'1.0-0')
+                            : '—' }}%
+                      </strong>
+                    </div>
+                    <div class="rec__matchBar">
+                      <div
+                        class="rec__matchFill rec__matchFill--orange"
+                        [style.width.%]="recomendaciones[0]?.score_relevancia > 0
+                          ? (r.score_relevancia / recomendaciones[0].score_relevancia * 100)
+                          : 0"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── PORQUE LOS VISITASTE ── -->
+          <div class="rec__section" *ngIf="porVisitas.length > 0">
+            <div class="rec__secHead">
+              <div class="rec__secTitle">
+                <div class="rec__secBar rec__secBar--teal"></div>
+                <i class="fa-solid fa-eye"></i>
+                Porque los visitaste
+              </div>
+            </div>
+
+            <div class="rec__cards">
+              <div
+                class="rec__card"
+                *ngFor="let r of porVisitas; let i = index"
+                (click)="irADetalle(r)"
+              >
+                <div class="rec__cardAccent rec__cardAccent--teal"></div>
+                <div class="rec__cardThumb" [style.background]="getThumbColor(i + 2)">
+                  <img
+                    *ngIf="r.imagen"
+                    [src]="r.imagen"
+                    [alt]="r.nombre_establecimiento"
+                    class="rec__cardThumbImg"
+                  />
+                </div>
+                <div class="rec__cardInfo">
+                  <div class="rec__cardTop">
+                    <div class="rec__cardName">{{ r.nombre_establecimiento }}</div>
+                  </div>
+                  <div class="rec__cardLoc">
+                    <i class="fa-solid fa-location-dot"></i>
+                    {{ r.ubicacion }}, Quindío
+                  </div>
+                  <div class="rec__cardReason rec__cardReason--teal">
+                    <i class="fa-solid fa-heart"></i>
+                    {{ truncar(r.razon, 65) }}
+                  </div>
+
+                  <div class="rec__matchWrap rec__matchWrap--sm">
+                    <div class="rec__matchLabel">
+                      <span>Match</span>
+                      <strong>
+                        {{ recomendaciones[0]?.score_relevancia > 0
+                            ? ((r.score_relevancia / recomendaciones[0].score_relevancia * 100) | number:'1.0-0')
+                            : '—' }}%
+                      </strong>
+                    </div>
+                    <div class="rec__matchBar">
+                      <div
+                        class="rec__matchFill rec__matchFill--teal"
+                        [style.width.%]="recomendaciones[0]?.score_relevancia > 0
+                          ? (r.score_relevancia / recomendaciones[0].score_relevancia * 100)
+                          : 0"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── TAMBIÉN TE PUEDE GUSTAR ── -->
+          <div class="rec__section" *ngIf="otrasRecs.length > 0">
+            <div class="rec__secHead">
+              <div class="rec__secTitle">
+                <div class="rec__secBar rec__secBar--purple"></div>
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                También te puede gustar
+              </div>
+            </div>
+
+            <div class="rec__grid">
+              <div
+                class="rec__gridCard"
+                *ngFor="let r of otrasRecs; let i = index"
+                (click)="irADetalle(r)"
+              >
+                <div class="rec__gridThumb" [style.background]="getThumbColor(i)">
+                  <img
+                    *ngIf="r.imagen"
+                    [src]="r.imagen"
+                    [alt]="r.nombre_establecimiento"
+                    class="rec__gridThumbImg"
+                  />
+                  <div class="rec__gridThumbOverlay"></div>
+                </div>
+                <div class="rec__gridBody">
+                  <div class="rec__gridType">{{ r.nombre_tipo }}</div>
+                  <div class="rec__gridName">{{ truncar(r.nombre_establecimiento, 28) }}</div>
+                  <div class="rec__gridLoc">
+                    <i class="fa-solid fa-location-dot"></i> {{ r.ubicacion }}
+                  </div>
+                  <div class="rec__gridFoot">
+                    <span class="rec__gridRating">
+                      ★ {{ r.calificacion_promedio | number:'1.1-1' }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </ng-container>
+      </ng-container>
     </div>
 
-    <ng-container *ngIf="recomendaciones.length > 0">
+    <!-- ══ COLUMNA DERECHA: panel sticky ══ -->
+    <aside class="rec__bodyAside">
 
-      <!-- ── DESTACADO #1 ── -->
-      <div class="rec__featLabel" *ngIf="destacado">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#E27921" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-        </svg>
-        Mejor coincidencia para ti
-      </div>
-
-      <div class="rec__featured" *ngIf="destacado" (click)="irADetalle(destacado!)">
-        <div class="rec__featImg" [style.background]="'linear-gradient(135deg, #0C1B1F, #0E6973)'">
-          <div class="rec__featImgDeco1"></div>
-          <div class="rec__featImgDeco2"></div>
-          <ng-container *ngIf="destacado.imagen">
-            <img [src]="destacado.imagen" [alt]="destacado.nombre_establecimiento" class="rec__featImgPhoto" />
-          </ng-container>
-          <span class="rec__featBadge">Recomendado #1</span>
-          <div class="rec__featScorePill">
-            <span class="rec__featScoreNum">{{ destacado.score_relevancia }}</span>
-            <span class="rec__featScoreLbl">/ relevancia</span>
+      <!-- STATS -->
+      <div class="rec__asideStats">
+        <div class="rec__asideStat">
+          <div class="rec__asideStatIcon rec__asideStatIcon--teal">
+            <i class="fa-solid fa-map-location-dot"></i>
+          </div>
+          <div class="rec__asideStatInfo">
+            <span class="rec__asideStatVal">{{ recomendaciones.length }}</span>
+            <span class="rec__asideStatLbl">Recomendaciones</span>
           </div>
         </div>
-        <div class="rec__featBody">
-          <div class="rec__featType">{{ destacado.nombre_tipo }} · {{ destacado.ubicacion }}</div>
-          <h2 class="rec__featName">{{ destacado.nombre_establecimiento }}</h2>
-          <div class="rec__featLoc" *ngIf="destacado.direccion">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9BA3AF" stroke-width="2" stroke-linecap="round">
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
-            </svg>
-            {{ truncar(destacado.direccion, 45) }}
+        <div class="rec__asideStat">
+          <div class="rec__asideStatIcon rec__asideStatIcon--orange">
+            <i class="fa-solid fa-star"></i>
           </div>
-          <div class="rec__featReason">{{ destacado.razon }}</div>
-          <div class="rec__featFoot">
-            <div class="rec__featStars">
-              <span class="rec__featStarsVal">{{ destacado.calificacion_promedio | number:'1.1-1' }}</span>
-              <span class="rec__featStarsIco">
-                <span *ngFor="let s of starsArray(5)">{{ s <= destacado.calificacion_promedio ? '★' : '☆' }}</span>
-              </span>
-              <span class="rec__featStarsCnt">({{ destacado.total_resenas }})</span>
-            </div>
-            <button class="rec__featBtn" type="button">
-              Ver lugar
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </button>
+          <div class="rec__asideStatInfo">
+            <span class="rec__asideStatVal">
+              {{ (perfil?.promedio_calificaciones_dadas | number:'1.1-1') ?? '—' }}
+            </span>
+            <span class="rec__asideStatLbl">Tu promedio ★</span>
+          </div>
+        </div>
+        <div class="rec__asideStat">
+          <div class="rec__asideStatIcon rec__asideStatIcon--purple">
+            <i class="fa-solid fa-city"></i>
+          </div>
+          <div class="rec__asideStatInfo">
+            <span class="rec__asideStatVal">
+              {{ perfil?.ubicaciones_favoritas?.length ?? 0 }}
+            </span>
+            <span class="rec__asideStatLbl">Pueblos</span>
           </div>
         </div>
       </div>
 
-      <!-- ── PORQUE LOS BUSCASTE ── -->
-      <div class="rec__section" *ngIf="porBusquedas.length > 0">
-        <div class="rec__secHead">
-          <div class="rec__secTitle">
-            <div class="rec__secBar"></div>
-            Porque los buscaste
-          </div>
-        </div>
-        <div class="rec__cards">
-          <div
-            class="rec__card"
-            *ngFor="let r of porBusquedas; let i = index"
-            (click)="irADetalle(r)">
-            <div class="rec__cardThumb" [style.background]="getThumbColor(i)">
-              <img *ngIf="r.imagen" [src]="r.imagen" [alt]="r.nombre_establecimiento" class="rec__cardThumbImg" />
-              <svg *ngIf="!r.imagen" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round">
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
-                <circle cx="12" cy="9" r="2.5"/>
-              </svg>
-            </div>
-            <div class="rec__cardInfo">
-              <div class="rec__cardTop">
-                <div class="rec__cardName">{{ r.nombre_establecimiento }}</div>
-                <div class="rec__cardScore">{{ r.score_relevancia }} pts</div>
-              </div>
-              <div class="rec__cardLoc">{{ r.ubicacion }}, Quindío</div>
-              <div class="rec__cardReason">{{ truncar(r.razon, 60) }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── PORQUE LOS VISITASTE ── -->
-      <div class="rec__section" *ngIf="porVisitas.length > 0">
-        <div class="rec__secHead">
-          <div class="rec__secTitle">
-            <div class="rec__secBar rec__secBar--teal"></div>
-            Porque los visitaste
-          </div>
-        </div>
-        <div class="rec__cards">
-          <div
-            class="rec__card"
-            *ngFor="let r of porVisitas; let i = index"
-            (click)="irADetalle(r)">
-            <div class="rec__cardThumb" [style.background]="getThumbColor(i + 2)">
-              <img *ngIf="r.imagen" [src]="r.imagen" [alt]="r.nombre_establecimiento" class="rec__cardThumbImg" />
-              <svg *ngIf="!r.imagen" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                <circle cx="12" cy="12" r="3"/>
-              </svg>
-            </div>
-            <div class="rec__cardInfo">
-              <div class="rec__cardTop">
-                <div class="rec__cardName">{{ r.nombre_establecimiento }}</div>
-                <div class="rec__cardScore">{{ r.score_relevancia }} pts</div>
-              </div>
-              <div class="rec__cardLoc">{{ r.ubicacion }}, Quindío</div>
-              <div class="rec__cardReason rec__cardReason--teal">{{ truncar(r.razon, 60) }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── OTRAS RECOMENDACIONES ── -->
-      <div class="rec__section" *ngIf="otrasRecs.length > 0">
-        <div class="rec__secHead">
-          <div class="rec__secTitle">
-            <div class="rec__secBar rec__secBar--purple"></div>
-            También te puede gustar
-          </div>
-        </div>
-        <div class="rec__grid">
-          <div
-            class="rec__gridCard"
-            *ngFor="let r of otrasRecs; let i = index"
-            (click)="irADetalle(r)">
-            <div class="rec__gridThumb" [style.background]="getThumbColor(i)">
-              <img *ngIf="r.imagen" [src]="r.imagen" [alt]="r.nombre_establecimiento" class="rec__gridThumbImg" />
-            </div>
-            <div class="rec__gridBody">
-              <div class="rec__gridType">{{ r.nombre_tipo }}</div>
-              <div class="rec__gridName">{{ truncar(r.nombre_establecimiento, 28) }}</div>
-              <div class="rec__gridLoc">{{ r.ubicacion }}</div>
-              <div class="rec__gridFoot">
-                <span class="rec__gridRating">★ {{ r.calificacion_promedio | number:'1.1-1' }}</span>
-                <span class="rec__gridScore">{{ r.score_relevancia }} pts</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── PERFIL VIAJERO ── -->
+      <!-- PERFIL VIAJERO -->
       <div class="rec__perfil" *ngIf="perfil && !loadingPerfil">
         <div class="rec__perfilHeader">
           <div class="rec__perfilHeaderDeco1"></div>
           <div class="rec__perfilHeaderDeco2"></div>
           <div class="rec__perfilHeaderLabel">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-              <circle cx="12" cy="7" r="4"/>
-            </svg>
+            <i class="fa-solid fa-circle-user"></i>
             Tu perfil viajero
           </div>
         </div>
+
         <div class="rec__perfilBody">
           <div class="rec__perfilTop">
             <div>
               <div class="rec__perfilTitle">Tus intereses</div>
-              <div class="rec__perfilSub">{{ perfil.total_interacciones }} interacciones registradas</div>
+              <div class="rec__perfilSub">
+                <i class="fa-solid fa-chart-line"></i>
+                {{ perfil.total_interacciones }} interacciones
+              </div>
             </div>
-            <button class="rec__perfilRefresh" type="button" (click)="refrescarPerfil()" title="Actualizar perfil">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-                <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
-                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-              </svg>
+            <button
+              class="rec__perfilRefresh"
+              type="button"
+              (click)="refrescarPerfil()"
+              title="Actualizar perfil"
+            >
+              <i class="fa-solid fa-rotate-right"></i>
             </button>
           </div>
 
-          <!-- Barras de tipos -->
           <div class="rec__perfilBars">
-            <div class="rec__perfilBar" *ngFor="let t of perfil.tipos_favoritos.slice(0,5); let i = index">
-              <span class="rec__perfilBarName">{{ truncar(t.nombre_tipo, 18) }}</span>
+            <div
+              class="rec__perfilBar"
+              *ngFor="let t of perfil.tipos_favoritos.slice(0, 5); let i = index"
+            >
+              <span class="rec__perfilBarName">{{ truncar(t.nombre_tipo, 16) }}</span>
               <div class="rec__perfilBarWrap">
-                <div class="rec__perfilBarFill"
+                <div
+                  class="rec__perfilBarFill"
                   [style.width.%]="getBarWidth(t.score)"
-                  [style.background]="getBarColor(i)">
-                </div>
+                  [style.background]="getBarColor(i)"
+                ></div>
               </div>
               <span class="rec__perfilBarScore">{{ t.score }}</span>
             </div>
@@ -265,22 +472,35 @@
 
           <div class="rec__perfilDiv"></div>
 
-          <!-- Pueblos favoritos -->
-          <div class="rec__perfilLocsLbl">Pueblos favoritos</div>
+          <div class="rec__perfilLocsLbl">
+            <i class="fa-solid fa-map-pin"></i> Pueblos favoritos
+          </div>
           <div class="rec__perfilLocs">
             <span
               class="rec__perfilLoc"
               *ngFor="let u of perfil.ubicaciones_favoritas; let i = index"
-              [class.rec__perfilLoc--on]="i < 3">
+              [class.rec__perfilLoc--on]="i < 3"
+            >
               {{ u.ubicacion | titlecase }}
             </span>
           </div>
+
         </div>
       </div>
 
-    </ng-container>
-  </ng-container>
+      <!-- Skeleton perfil mientras carga -->
+      <div class="rec__perfilSkeleton" *ngIf="loadingPerfil">
+        <div class="rec__skeletonHeader"></div>
+        <div class="rec__skeletonBody">
+          <div class="rec__skeletonLine rec__skeletonLine--lg"></div>
+          <div class="rec__skeletonLine"></div>
+          <div class="rec__skeletonLine"></div>
+          <div class="rec__skeletonLine rec__skeletonLine--sm"></div>
+        </div>
+      </div>
 
+    </aside>
+  </div>
 </div>
 
 <app-footer></app-footer>
