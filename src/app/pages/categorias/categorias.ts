@@ -21,7 +21,7 @@ type ChatMessage = { role: 'user' | 'ai'; text: string; };
 })
 export class Categorias implements OnInit, OnDestroy, AfterViewChecked {
 
-  @ViewChild('chatBox') chatBox!: ElementRef;
+  @ViewChild('chatBoxMobile') chatBox!: ElementRef;
 
   portadaTipo = portadaTipo;
 
@@ -45,6 +45,8 @@ export class Categorias implements OnInit, OnDestroy, AfterViewChecked {
   aiQuery   = '';
   aiLoading = false;
   showProModal = false;
+  chatOpen = false;
+  isDesktop = window.innerWidth > 1020;
 
   chatMessages: ChatMessage[] = [
     { role: 'ai', text: '¡Hola! Soy tu asistente de viaje. ¿Qué tipo de experiencia buscas hoy? 🌿' }
@@ -157,6 +159,20 @@ closeProModal(): void {
   document.body.style.overflow = '';
   document.body.style.position = '';
   document.body.style.width = '';
+}
+
+toggleChatMobile(): void {
+  this.chatOpen = !this.chatOpen;
+  document.body.style.overflow = this.chatOpen ? 'hidden' : '';
+}
+
+closeChatMobile(): void {
+  this.chatOpen = false;
+  document.body.style.overflow = '';
+}
+
+isMobile(): boolean {
+  return !this.isDesktop;
 }
   // logica de llamado de backend para chatbot 
   async sendAIMessage(): Promise<void> {

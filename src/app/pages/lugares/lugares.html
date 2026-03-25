@@ -89,107 +89,92 @@
 
     </main>
 
- <aside class="cat__side">
-  <div class="aiPanel">
+ 
 
-    <!-- Header -->
-    <div class="aiPanel__header">
-      <div class="aiPanel__headerLeft">
-        <div class="aiPanel__avatar">
-          <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-            <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z"
-              fill="#fff" opacity="0.9"/>
-          </svg>
-        </div>
-        <div>
-          <h3 class="aiPanel__name">Asistente TRIPGO</h3>
-          <div class="aiPanel__status">
-            <span class="aiPanel__dot"></span>
-            En línea · IA activa
-          </div>
-        </div>
-      </div>
-      <div class="aiPanel__badge">IA</div>
-    </div>
+<button class="chatFab" type="button"
+  (click)="toggleChatMobile()"
+  [class.chatFab--open]="chatOpen">
 
-    <!-- Sugerencias rápidas -->
-    <div class="aiPanel__suggestions">
-      <span class="aiPanel__sugLabel">Sugerencias rápidas</span>
-      <div class="aiPanel__chips">
-        <button class="aiPanel__chip" type="button"
-          (click)="askAI('¿Qué lugares me recomiendas en ' + townSlug + '?')">
-          📍 Lugares top
-        </button>
-        <button class="aiPanel__chip" type="button"
-          (click)="askAI('Plan romántico en ' + townSlug)">
-          💫 Plan romántico
-        </button>
-        <button class="aiPanel__chip" type="button"
-          (click)="askAI('Plan aventura en ' + townSlug)">
-          🏔️ Aventura
-        </button>
-        <button class="aiPanel__chip" type="button"
-          (click)="askAI('¿Qué comer en ' + townSlug + '?')">
-          🍽️ Gastronomía
-        </button>
-      </div>
-    </div>
-
-    <!-- Mensajes -->
-    <div class="aiPanel__chat" #chatBox>
-      <div
-        *ngFor="let msg of chatMessages"
-        class="aiMsg"
-        [class.aiMsg--user]="msg.role==='user'"
-        [class.aiMsg--ai]="msg.role==='ai'"
-      >
-        <div *ngIf="msg.role==='ai'" class="aiMsg__avatar">
-          <svg width="12" height="12" fill="none" viewBox="0 0 24 24">
-            <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="#fff"/>
-          </svg>
-        </div>
-        <div class="aiMsg__bubble" [class.aiMsg__bubble--user]="msg.role==='user'">
-          {{ msg.text }}
-        </div>
-      </div>
-
-      <!-- Loading dots -->
-      <div *ngIf="aiLoading" class="aiMsg aiMsg--ai">
-        <div class="aiMsg__avatar">
-          <svg width="12" height="12" fill="none" viewBox="0 0 24 24">
-            <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="#fff"/>
-          </svg>
-        </div>
-        <div class="aiMsg__bubble">
-          <div class="aiDots"><span></span><span></span><span></span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Input -->
-    <form class="aiPanel__inputWrap" (ngSubmit)="sendAIMessage()">
-      <input
-        type="text"
-        [(ngModel)]="aiQuery"
-        name="aiQuery"
-        placeholder="Pregunta lo que quieras..."
-        (focus)="onAiInputFocus()"
-        [disabled]="aiLoading"
-        autocomplete="off"
-      />
-      <button type="submit" [disabled]="aiLoading || !aiQuery.trim()">
-        <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
-          <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"
-            stroke="currentColor" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-    </form>
-
-  </div>
-</aside>
+  <span *ngIf="!chatOpen">✨</span>
+  <span *ngIf="chatOpen">✕</span>
+</button>
 
   </div>
 </section>
+
+
+<!-- CHATBOT FLOTANTE MÓVIL -->
+<div class="chatFab__backdrop" *ngIf="chatOpen" (click)="closeChatMobile()"></div>
+
+<div class="chatFab__panel" [class.chatFab__panel--open]="chatOpen">
+  <div class="chatFab__panelHeader">
+    <div class="chatFab__panelHeaderLeft">
+      <div class="aiPanel__avatar">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+          <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="#fff" opacity="0.9"/>
+        </svg>
+      </div>
+      <div>
+        <div class="chatFab__panelName">Asistente TripGo</div>
+        <div class="aiPanel__status">
+          <span class="aiPanel__dot"></span>
+          En línea · IA activa
+        </div>
+      </div>
+    </div>
+    <button
+  class="chatFab"
+  type="button"
+  *ngIf="!chatOpen"
+  (click)="toggleChatMobile()"
+>
+  <span>✨</span>
+</button>
+  </div>
+
+  <div class="aiPanel__suggestions">
+    <span class="aiPanel__sugLabel">Sugerencias rápidas</span>
+    <div class="aiPanel__chips">
+      <button class="aiPanel__chip" type="button"
+        (click)="askAI('¿Qué lugares me recomiendas en ' + townSlug + '?')">
+        📍 Lugares top
+      </button>
+      <button class="aiPanel__chip" type="button"
+        (click)="askAI('Plan romántico en ' + townSlug)">
+        💫 Plan romántico
+      </button>
+      <button class="aiPanel__chip" type="button"
+        (click)="askAI('Plan aventura en ' + townSlug)">
+        🏔️ Aventura
+      </button>
+      <button class="aiPanel__chip" type="button"
+        (click)="askAI('¿Qué comer en ' + townSlug + '?')">
+        🍽️ Gastronomía
+      </button>
+    </div>
+  </div>
+
+  <div class="aiPanel__chat" #chatBoxMobile>
+    <div *ngFor="let msg of chatMessages"
+      class="aiMsg"
+      [class.aiMsg--user]="msg.role==='user'"
+      [class.aiMsg--ai]="msg.role==='ai'">
+
+      <div *ngIf="msg.role==='ai'" class="aiMsg__avatar">✨</div>
+      <div class="aiMsg__bubble">{{ msg.text }}</div>
+    </div>
+  </div>
+
+  <form class="aiPanel__inputWrap" (ngSubmit)="sendAIMessage()">
+    <input type="text"
+      [(ngModel)]="aiQuery"
+      name="aiQueryMobile"
+      placeholder="Pregunta lo que quieras..."
+      [disabled]="aiLoading"
+      autocomplete="off"/>
+
+    <button type="submit" [disabled]="aiLoading || !aiQuery.trim()">➤</button>
+  </form>
+</div>
 
 <app-footer></app-footer>

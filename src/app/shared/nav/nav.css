@@ -1159,7 +1159,6 @@
   flex-shrink: 0;
 }
 
-
 /* =========================
    MEDIA QUERIES
    ========================= */
@@ -1172,6 +1171,16 @@
   .itPopover{ width: 360px; }
 }
 
+/* ── Tablet grande: ocultar hamburger solo si está logueado ── */
+@media (max-width: 1024px) {
+  .OpLaterales {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+  }
+  /* sideMenu y menuOverlay ya se controlan con @if en el HTML, no con CSS */
+}
+
 /* 2) Tablet */
 @media (max-width: 850px){
   .nav-bar{ gap: 12px; }
@@ -1182,21 +1191,46 @@
 /* 3) MOBILE/TABLET */
 @media (max-width: 768px){
 
-  .hamburgerBtn{ display: inline-flex; }
+  .hamburgerBtn {
+    display: block !important;  /* ← ahora sí aparece */
+    font-size: 24px;
+  }
+ .nav-bar { display: none; }  
+  
 
-  .nav-bar{ display: none; }
-  .OpLaterales{ display: none; }
+  .OpLaterales{
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+  }
 
-  .rightActions{ gap: 10px; }
+  .OpLaterales a{
+    padding: 6px 8px;
+    font-size: 0.9rem;
+  }
 
-  /* icono un poco más compacto */
+  .langBtn{
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+
+  .rightActions{
+    gap: 8px;
+    margin-left: auto;
+  }
+
+  .itWrap{ display: none; }
+
   .itHeaderBtn.iconOnly{
     width: 42px;
     height: 42px;
   }
-  .itIcon{ width: 21px; height: 21px; }
 
-  /*  popover pasa a modal */
+  .itIcon{
+    width: 21px;
+    height: 21px;
+  }
+
   .itPopover{
     position: fixed;
     top: calc(var(--nav-offset) + 12px);
@@ -1204,13 +1238,15 @@
     right: 12px;
     width: auto;
   }
-  .itPopover::before{ display: none; }
+
+  .itPopover::before{
+    display: none;
+  }
 }
 
 /* 4) móvil pequeño */
 @media (max-width: 480px){
   .navPrincipal{ padding: 12px; }
-
   .contLogo img{ width: 56px; height: 42px; }
 
   .itHeaderBtn.iconOnly{
@@ -1233,15 +1269,6 @@
 }
 
 .itHeaderBtn.iconOnly{
-  background: rgba(255,255,255,0.20);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.22);
-}
-
-.itHeaderBtn.iconOnly:hover{
-  background: rgba(255,255,255,0.28);
-}
-
-.itHeaderBtn.iconOnly{
   width: 46px;
   height: 46px;
   background: linear-gradient(145deg, rgba(255,255,255,0.22), rgba(255,255,255,0.12));
@@ -1259,4 +1286,168 @@
     height: 38px;
   }
   .itIcon{ width: 19px; height: 19px; }
+}
+
+/* =========================
+   BOTTOM NAV MÓVIL
+   ========================= */
+.bottomNav {
+  display: none;
+}
+
+.itBackdropMobile {
+  display: none;
+}
+
+.itPopoverMobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+
+  /* ── Bottom Nav ── */
+  .bottomNav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: #ffffff;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    z-index: 3000;
+    align-items: stretch;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .bottomNav__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    text-decoration: none;
+    color: #9BA3AF;
+    font-size: 10px;
+    font-weight: 600;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 8px 4px;
+    transition: color 0.2s ease;
+    position: relative;
+  }
+
+  .bottomNav__item svg {
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;
+    transition: stroke 0.2s ease;
+  }
+
+  .bottomNav__item span {
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .bottomNav__item--active {
+    color: #0d7377;
+  }
+
+  .bottomNav__item--active svg {
+    stroke: #0d7377;
+  }
+
+  .bottomNav__item--cart {
+    color: #9BA3AF;
+  }
+
+  .bottomNav__cartWrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: #0d7377;
+    border-radius: 50%;
+    margin-top: -20px;
+    box-shadow: 0 4px 14px rgba(13, 115, 119, 0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .bottomNav__item--cart:hover .bottomNav__cartWrap,
+  .bottomNav__item--cart:active .bottomNav__cartWrap {
+    transform: scale(1.08);
+    box-shadow: 0 6px 20px rgba(13, 115, 119, 0.5);
+  }
+
+  .bottomNav__item--cart svg {
+    width: 20px;
+    height: 20px;
+    stroke: #ffffff;
+  }
+
+  .bottomNav__item--cart span {
+    color: #9BA3AF;
+    font-size: 10px;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+
+  .bottomNav__badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border-radius: 20px;
+    background: #E27921;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+  }
+
+  body {
+    padding-bottom: 64px;
+  }
+
+  /* ── Panel itinerario móvil (sube desde abajo) ── */
+  .itBackdropMobile {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    animation: itFadeIn 0.2s ease;
+  }
+
+  .itPopoverMobile {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    bottom: 64px;
+    left: 0;
+    right: 0;
+    max-height: 80vh;
+    background: #fff;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    overflow: hidden;
+    animation: slideUp 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
 }

@@ -831,14 +831,121 @@
 .aiInput button:hover  { background: #0a5a63; transform: scale(1.08); }
 .aiInput button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 
+
+/* ── Fix chat panel desktop ── */
+.chatFab__panelHeader {
+  background: linear-gradient(135deg, #0e6973, #0a5a63) !important;
+  padding: 14px 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-shrink: 0 !important;
+}
+
+.chatFab__panelName {
+  color: #fff !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+}
+
+.chatFab__panelClose {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+  background: rgba(255,255,255,0.1) !important;
+  color: #fff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+}
+
+.chatFab__panelHeaderLeft {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.chatFab__panel .aiPanel__status {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  font-size: 10px !important;
+  color: rgba(255,255,255,0.7) !important;
+}
+
+.chatFab__panel .aiPanel__dot {
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  background: #4ade80 !important;
+  box-shadow: 0 0 6px rgba(74,222,128,0.6) !important;
+}
+
+.chatFab__panel .aiPanel__avatar {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: rgba(255,255,255,0.18) !important;
+  border: 1.5px solid rgba(255,255,255,0.3) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.chatFab__panel .aiPanel__suggestions {
+  padding: 10px 12px !important;
+  border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+  background: #fafafa !important;
+}
+
+.chatFab__panel .aiPanel__chat {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding: 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+
+.chatFab__panel .aiPanel__inputWrap {
+  padding: 10px 12px !important;
+  border-top: 1px solid rgba(0,0,0,0.06) !important;
+  background: #fff !important;
+  display: flex !important;
+  gap: 8px !important;
+  align-items: center !important;
+}
+
+.chatFab__panel .aiPanel__inputWrap input {
+  flex: 1 !important;
+  border: 1.5px solid #e0e0e0 !important;
+  border-radius: 50px !important;
+  padding: 9px 16px !important;
+  font-size: 12px !important;
+  outline: none !important;
+  background: #f7f7f7 !important;
+}
+
+.chatFab__panel .aiPanel__inputWrap button {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  border: none !important;
+  background: #0e6973 !important;
+  color: #fff !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+
+
 /* ─────────────────────────────────────
    RESPONSIVE
 ───────────────────────────────────── */
-@media (max-width: 1020px) {
-  .cat__panel { grid-template-columns: 1fr; }
-  .cat__side  { padding: 0 1.5rem 2rem; position: relative; top: 0; max-height: none; }
-  .cat__grid  { grid-template-columns: repeat(2, 1fr); }
-}
 @media (max-width: 640px) {
   .cat__hero    { height: 260px; }
   .cat__heroOverlay { padding: 1.2rem; }
@@ -851,5 +958,96 @@
 @media (max-width: 420px) {
   .cat__grid { grid-template-columns: 1fr; }
   .cat__cardImgWrap { height: 180px; }
+}
+/* =========================
+   CHATBOT FLOTANTE MÓVIL
+   ========================= */
+.chatFab {
+  display: flex;
+  position: fixed;
+  bottom: 52px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0e6973, #1a8a6e);
+  border: none;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(14,105,115,0.45);
+  z-index: 2000;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.chatFab:hover {
+  transform: scale(1.08);
+  box-shadow: 0 12px 32px rgba(14,105,115,0.55);
+}
+
+.chatFab--open {
+  background: linear-gradient(135deg, #555, #333);
+}
+
+.chatFab__backdrop {
+  display: none;
+}
+
+.chatFab__panel {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  bottom: 80px;
+  right: 24px;
+  left: auto;
+  width: 320px;
+  height: 420px;
+  max-height: calc(100vh - 200px);
+  background: #fff;
+  border-radius: 24px;
+  z-index: 2002;
+  overflow: hidden;
+  transform: translateY(calc(100% + 100px));
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.chatFab__panel--open {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .cat__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 0;
+  }
+
+  .cat__cardImgWrap {
+    height: 130px;
+  }
+
+  .cat__main {
+    padding: 1rem;
+  }
+
+  .cat__panel {
+    grid-template-columns: 1fr;
+  }
+
+  .chatFab {
+    bottom: 80px;
+    right: 16px;
+  }
+
+  .chatFab__panel {
+    bottom: 64px;
+    right: 8px;
+    left: 8px;
+    width: auto;
+    height: 55vh;
+    border-radius: 24px;
+    max-height: none;
+  }
 }
 

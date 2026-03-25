@@ -592,6 +592,118 @@
 }
 .proModal__close:hover { color: #666; }
 
+/* CHATBOT FLOTANTE MÓVIL */
+.chatFab,
+.chatFab__backdrop {
+  display: none;
+}
+
+.chatFab__panel {
+  position: fixed;
+  right: 16px;
+  left: 16px;
+  bottom: 156px;
+  max-height: 70vh;
+  background: #fff;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+  z-index: 3999;
+  opacity: 0;
+  transform: translateY(20px) scale(0.98);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .chatFab {
+    display: flex;
+    position: fixed;
+    right: 18px;
+    bottom: 88px;
+    width: 56px;
+    height: 56px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0e6973, #1a8a6e);
+    color: #fff;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.22);
+    cursor: pointer;
+    z-index: 4000;
+    font-size: 22px;
+  }
+
+  .chatFab__backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 3998;
+  }
+
+  .chatFab__panel {
+    display: flex;
+  }
+
+  .chatFab__panel:not(.chatFab__panel--open) {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  .chatFab__panel.chatFab__panel--open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+    visibility: visible;
+  }
+
+  .chatFab__panelHeader {
+    background: linear-gradient(135deg, #0e6973 0%, #0a5a63 50%, #1a7a6e 100%);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .chatFab__panelHeaderLeft {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .chatFab__panelName {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  .chatFab__panelClose {
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.14);
+  color: #fff;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+  .aiPanel__chat {
+    min-height: 180px;
+    max-height: 280px;
+  }
+}
+
 /* ─────────────────────────────────────
    RESPONSIVE
 ───────────────────────────────────── */

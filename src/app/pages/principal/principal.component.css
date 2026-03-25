@@ -363,6 +363,20 @@
 .home__ally img { height: 22px; object-fit: contain; opacity: 0.8; transition: opacity 0.2s; }
 .home__ally:hover img { opacity: 1; }
 
+footer {
+  padding: var(--padding-lg);
+  background-color: var(--secondary-color);
+}
+
+.footer p {
+  color: var(--light-text-color);
+  text-align: center;
+}
+
+.footer span {
+  color: orange;
+}
+
 /* ─────────────────────────────────────
    RESPONSIVE
 ───────────────────────────────────── */
@@ -383,19 +397,57 @@
   .home__cats  { padding: 2rem 1rem 1.6rem; }
 }
 
-/* Base visual más limpia en móvil */
+
 @media (max-width: 767px) {
   .home {
     background: #f6f3ee;
-    padding-bottom: 88px;
+    padding-bottom: 40px;
+  }
+
+  .home__allies {
+    padding: 1.6rem 1rem 2rem;
+  }
+ 
+  .home__alliesInner {
+    align-items: center;
+    gap: 1.2rem;
+  }
+ 
+  .home__alliesGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 100%;
+    justify-items: center;
+    grid-auto-flow: column;
+  }
+ 
+  /* El 5to aliado centrado solo */
+  .home__ally:last-child:nth-child(3n+1) {
+    grid-column: 1 / -1;
+    max-width: 140px;
+  }
+ 
+  .home__ally {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 14px;
+    justify-content: center;
+  }
+ 
+  .home__ally img {
+    height: 18px;
+    max-width: 100%;
+    object-fit: contain;
   }
 
   /* ─────────────────────────────────────
      HERO
   ───────────────────────────────────── */
-  .home__hero {
+ .home__hero {
     height: auto;
-    min-height: 620px;
+    min-height: 320px;
+    max-height: 420px;
     justify-content: flex-end;
     align-items: stretch;
     padding-top: 72px;
@@ -419,7 +471,7 @@
     width: 100%;
     align-items: flex-start;
     text-align: left;
-    padding: 0 16px 94px;
+    padding: 0 16px 24px;
   }
 
   .hero__eyebrow {
@@ -430,19 +482,15 @@
   }
 
   .hero__title {
-    font-size: 2rem;
+    font-size: 1.6rem;
     line-height: 1.03;
     max-width: 290px;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
     letter-spacing: -0.8px;
   }
 
   .hero__sub {
-    font-size: 0.95rem;
-    line-height: 1.45;
-    max-width: 310px;
-    color: rgba(255,255,255,0.82);
-    margin-bottom: 1rem;
+    display: none;
   }
 
   .hero__search {
@@ -477,14 +525,7 @@
   }
 
   .hero__tags {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    gap: 8px;
-    width: 100%;
-    justify-content: flex-start;
-    padding-bottom: 2px;
-    scrollbar-width: none;
+    display: none;
   }
 
   .hero__tags::-webkit-scrollbar {
@@ -579,6 +620,7 @@
     padding: 18px 14px 16px;
     box-shadow: 0 18px 40px rgba(17, 24, 39, 0.08);
     gap: 1rem;
+    margin-top: 25px;
   }
 
   .home__catsGrid {
@@ -650,10 +692,17 @@
   .carousel__track,
   .carousel__track--slow,
   .carousel__track--rev {
-    animation: none !important;
     gap: 12px;
     width: max-content;
     padding: 6px 0 10px;
+  }
+
+  .carousel__track--slow {
+    animation: scrollLeft 30s linear infinite;
+  }
+
+  .carousel__track--rev {
+    animation: scrollLeft 34s linear infinite reverse;
   }
 
   .dest__card {
@@ -761,10 +810,22 @@
     line-height: 1.45;
   }
 
+   .footer {
+    display: none;
+  }
+
+
+  /* Tablet */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .footer {
+    display: none;
+  }
+}
+
   /* ─────────────────────────────────────
      ALIADOS
   ───────────────────────────────────── */
-  .home__allies {
+  /* .home__allies {
     padding: 1.4rem 1rem 1rem;
     background: #f6f3ee;
   }
@@ -787,7 +848,12 @@
   .home__ally img {
     height: 18px;
   }
+} */
 }
+
+
+
+
 
 /* ─────────────────────────────────────
    MÓVILES PEQUEÑOS
@@ -836,10 +902,42 @@
   }
 }
 
+@media (max-width: 1023px) {
+  .footer {
+    display: none;
+  }
+}
+
+/* Ocultar en tablet y móvil */
+@media (max-width: 1024px) {
+  .footer {
+    display: none;
+  }
+}
+
 /* ─────────────────────────────────────
    TABLET
 ───────────────────────────────────── */
 @media (min-width: 768px) and (max-width: 1023px) {
+
+  .home__alliesGrid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    width: 100%;
+  }
+ 
+  .home__ally {
+    width: 100%;
+    padding: 12px 16px;
+    justify-content: center;
+  }
+ 
+  .home__ally img {
+    height: 20px;
+  }
+
+  
   .home__hero {
     height: 78vh;
     min-height: 620px;

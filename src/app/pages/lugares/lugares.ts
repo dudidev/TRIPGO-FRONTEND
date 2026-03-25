@@ -38,6 +38,7 @@ export class LugaresComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   // ── AI Chat ──────────────────────────────
   aiQuery      = '';
+  chatOpen = false;
   aiLoading    = false;
   showProModal = false;
   chatMessages : ChatMessage[] = [
@@ -128,6 +129,13 @@ export class LugaresComponent implements OnInit, OnDestroy, AfterViewChecked {
   askAI(prompt: string): void {
     this.aiQuery = prompt;
     this.sendAIMessage();
+  }
+    toggleChatMobile() {
+    this.chatOpen = !this.chatOpen;
+  }
+
+  closeChatMobile() {
+    this.chatOpen = false;
   }
 
   onAiInputFocus(): void {

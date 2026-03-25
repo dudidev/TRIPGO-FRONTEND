@@ -22,6 +22,7 @@ export class Nav implements AfterViewInit {
   itinerarioOpen = false;
   enviandoEmail  = false;
   emailEnviado  = false;
+  isMobileOrTablet = window.innerWidth <= 1024;
 
   // Mapa de personas por item: { [itemId]: number }
   private personasMap: Record<string, number> = {};
@@ -42,12 +43,17 @@ export class Nav implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.updateViewportState();
     this.setNavOffset();
     setTimeout(() => this.setNavOffset(), 0);
   }
 
   @HostListener('window:resize')
-  onResize() { this.setNavOffset(); }
+  onResize() { this.setNavOffset(); this.updateViewportState(); }
+
+  private updateViewportState(): void {
+  this.isMobileOrTablet = window.innerWidth <= 1024;
+  }
 
   private setNavOffset() {
     if (!this.headerRef?.nativeElement) return;
@@ -59,8 +65,10 @@ export class Nav implements AfterViewInit {
   get isEmpresaPage(): boolean { return this.router.url.includes('/empresa'); }
 
   // ── Itinerario popover ────────────────────────────────────────
-  toggleItinerario()  { this.itinerarioOpen = !this.itinerarioOpen; }
-  closeItinerario()   { this.itinerarioOpen = false; }
+toggleItinerario(event?: Event) {
+  if (event) event.stopPropagation();
+  this.itinerarioOpen = !this.itinerarioOpen;
+}  closeItinerario()   { this.itinerarioOpen = false; }
 
   @HostListener('document:keydown.escape')
   onEsc() { this.closeItinerario(); }
