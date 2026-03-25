@@ -427,6 +427,10 @@
   transform: translateX(3px);
 }
 
+
+
+
+
 /* -------- RESPONSIVE -------- */
 @media (max-width: 900px) {
   .perfil-container {
@@ -443,3 +447,4 @@
     flex-direction: row;
   }
 }
+
