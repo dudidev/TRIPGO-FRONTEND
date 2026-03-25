@@ -59,7 +59,7 @@
 .OpLaterales{
   display: flex;
   align-items: center;
-  gap: var(--padding-s);
+  gap: 10px;
 }
 
 .OpLaterales a{
@@ -1128,6 +1128,44 @@
   opacity: 0.9;
   transform: translateY(-1px);
 }
+.btnLogin {
+  color: white;
+  text-decoration: none;
+  font-size: 5px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255,255,255,0.6);
+  background: transparent;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+
+.btnLogin:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: white;
+}
+
+/* BOTÓN PRINCIPAL */
+.btnRegister {
+  color: white;
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255,255,255,0.6);
+  background: transparent;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+
+.btnRegister:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+
+.desktopOnly {
+  display: inline-flex;
+}
 
 /* ── Responsive ── */
 @media (max-width: 480px) {
@@ -1190,6 +1228,10 @@
 
 /* 3) MOBILE/TABLET */
 @media (max-width: 768px){
+
+  .desktopOnly {
+    display: none !important;
+  }
 
   .hamburgerBtn {
     display: block !important;  /* ← ahora sí aparece */
