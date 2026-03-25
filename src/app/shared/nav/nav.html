@@ -136,12 +136,12 @@
             <button type="button" class="langBtn desktopOnly" (click)="lang.toggle()">
               {{ lang.current === 'es' ? 'EN' : 'ES' }}
             </button>
-          } @else {
-            <a href="#" class="desktopOnly" (click)="confirmLogout(); $event.preventDefault()">Salir</a>
-            <button type="button" class="langBtn desktopOnly" (click)="lang.toggle()">
-              {{ lang.current === 'es' ? 'EN' : 'ES' }}
-            </button>
-          }
+         } @else {
+  <a href="#" class="topActionLink" (click)="confirmLogout(); $event.preventDefault()">Salir</a>
+  <button type="button" class="langBtn" (click)="lang.toggle()">
+    {{ lang.current === 'es' ? 'EN' : 'ES' }}
+  </button>
+}
         </div>
 
         <!-- Hamburger: solo móvil, solo sin login -->

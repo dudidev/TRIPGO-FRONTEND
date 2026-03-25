@@ -1167,6 +1167,22 @@
   display: inline-flex;
 }
 
+.topActionLink{
+  color: var(--bg-color);
+  text-decoration: none;
+  font-size: 1em;
+  font-weight: 800;
+  padding: 10px;
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+
+.topActionLink:hover,
+.topActionLink:focus{
+  color: var(--text-color);
+}
+
 /* ── Responsive ── */
 @media (max-width: 480px) {
   .itPopover {
@@ -1241,9 +1257,13 @@
   
 
   .OpLaterales{
-    display: flex !important;
-    align-items: center;
-    gap: 8px;
+   
+    gap: 4px;
+  }
+
+  .topActionLink{
+    padding: 6px 4px;
+    font-size: 0.92rem;
   }
 
   .OpLaterales a{
@@ -1257,7 +1277,7 @@
   }
 
   .rightActions{
-    gap: 8px;
+    gap: 6px;
     margin-left: auto;
   }
 
