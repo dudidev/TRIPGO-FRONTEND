@@ -89,16 +89,6 @@
 
     </main>
 
- 
-
-<button class="chatFab" type="button"
-  (click)="toggleChatMobile()"
-  [class.chatFab--open]="chatOpen">
-
-  <span *ngIf="!chatOpen">✨</span>
-  <span *ngIf="chatOpen">✕</span>
-</button>
-
   </div>
 </section>
 
@@ -123,13 +113,13 @@
       </div>
     </div>
     <button
-  class="chatFab"
-  type="button"
-  *ngIf="!chatOpen"
-  (click)="toggleChatMobile()"
->
-  <span>✨</span>
-</button>
+        class="chatFab"
+        type="button"
+        *ngIf="!chatOpen"
+        (click)="toggleChatMobile()"
+      >
+      <span>✨</span>
+    </button>
   </div>
 
   <div class="aiPanel__suggestions">

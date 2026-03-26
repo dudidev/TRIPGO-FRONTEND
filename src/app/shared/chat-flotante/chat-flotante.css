@@ -16,6 +16,34 @@
   to   { opacity: 1; }
 }
 
+.chatF__fab {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 58px;
+  height: 58px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0e6973, #1a8a6e);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 10px 28px rgba(14, 105, 115, 0.38);
+  z-index: 8003;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.chatF__icon {
+  font-size: 20px;
+  color: #fff;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.chatF__fab--open .chatF__icon {
+  transform: rotate(90deg);
+}
 
 
 .chatF__fab:hover {
@@ -30,7 +58,7 @@
 /* Panel */
 .chatF__panel {
   position: fixed;
-  bottom: 160px;
+  bottom: 90px;
   right: 24px;
   width: 340px;
   height: 460px;
