@@ -38,6 +38,7 @@ export class LugaresComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   // ── AI Chat ──────────────────────────────
   aiQuery      = '';
+  chatOpen = false;
   aiLoading    = false;
   showProModal = false;
   chatMessages : ChatMessage[] = [
@@ -55,26 +56,28 @@ export class LugaresComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   ngOnInit(): void {
     this.api.establecimientos$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (data: any[]) => {
-          this.items = (data ?? []).map((e: any) => ({
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (data: any[]) => {
+        this.items = (data ?? [])
+          .filter((e: any) => (e.estado ?? 'activo') === 'activo') // 👈 solo activos
+          .map((e: any) => ({
             slug  : String(e.id_establecimiento ?? e.id ?? 'sin-id'),
             titulo: e.nombre_establecimiento ?? e.nombre ?? e.direccion ?? 'Sin nombre',
             img   : e.imagen ?? null
           }));
-          this.filtered = this.applySearch(this.query);
-          this.loading  = false;
-          this.errorMsg = !this.items.length
-            ? 'No hay establecimientos registrados para este tipo en este pueblo.'
-            : '';
-        },
-        error: () => {
-          this.items = []; this.filtered = [];
-          this.loading = false;
-          this.errorMsg = 'Error cargando establecimientos';
-        }
-      });
+        this.filtered = this.applySearch(this.query);
+        this.loading  = false;
+        this.errorMsg = !this.items.length
+          ? 'No hay establecimientos registrados para este tipo en este pueblo.'
+          : '';
+      },
+      error: () => {
+        this.items = []; this.filtered = [];
+        this.loading = false;
+        this.errorMsg = 'Error cargando establecimientos';
+      }
+  });
 
     this.route.paramMap
       .pipe(takeUntil(this.destroy$))
@@ -126,6 +129,13 @@ export class LugaresComponent implements OnInit, OnDestroy, AfterViewChecked {
   askAI(prompt: string): void {
     this.aiQuery = prompt;
     this.sendAIMessage();
+  }
+    toggleChatMobile() {
+    this.chatOpen = !this.chatOpen;
+  }
+
+  closeChatMobile() {
+    this.chatOpen = false;
   }
 
   onAiInputFocus(): void {
@@ -215,19 +225,57 @@ No uses markdown, no uses asteriscos ni listas con guiones. Habla de forma natur
       salento: [
         'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765732081/cabalgata_portada_-_5_xjw3xq.jpg',
         'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729542/portada_8_jrmbd6.jpg',
-        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765731463/cabalgata_-_portada_4_dma1bo.jpg'
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773601569/mirador_ss0bel.webp',
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1771997990/mirador_alto_de_la_cruz_vl62jj.jpg',
+        'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765729538/portada_6_lbjntm.jpg',
       ],
-      filandia  : ['', '', ''],
-      calarca   : ['', '', ''],
-      montenegro: ['', '', ''],
-      quimbaya  : ['', '', ''],
-      circasia  : ['', '', ''],
-      armenia   : ['', '', ''],
-      buenavista: ['', '', ''],
-      pijao     : ['', '', ''],
-      cordoba   : ['', '', ''],
-      tebaida   : ['', '', ''],
-      genova    : ['', '', ''],
+      filandia  : [
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765685143/gastronomia_3-_portada_pdxw7k.jpg',
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765685143/gastronomia_2-portada_e7tr5m.jpg',
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765685143/filandia_1-portada_tu13tg.jpg',
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773676024/comedor_ajyvsc.webp',
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773676025/helena_adentro1_fswy9j.webp',
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773676025/helena_adentro2_mo2adf.webp',
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773676026/la_azotea_filandia_votre8.webp',
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773676025/la_azotea_filandia2_ilxmzt.webp',
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773676025/la_azotea_filandia4_tjxxlh.webp',
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773676026/la_azotea_filandia3_fywvg3.webp',
+
+        ],
+      calarca   : [
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765733124/amigos_caballiztas_wmm1yd.jpg',
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773339220/jardin-botanico-calarca_qlgdk7.webp',
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773601568/senderismo_ngirma.webp',
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773672478/Cafe-del-Rio-Mirador-calarca-_dnjdwr.webp',
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773672577/cafa-c-del-rio-mirador-calarca_vh3vzm.webp'
+        ],
+      montenegro: [
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765685156/parque_del_cafe3-portada_zhiusk.jpg', 
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765685155/Parque_del_cafe_2-portada_d35goj.jpg', 
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765685155/Parque_del_cafe_ani4un.jpg', 
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1765685154/Img_Parque_del_cafe_ruzil0.jpg',
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773675954/parque_los_arrieros_montenegro_mazhgw.webp'
+          
+        ],
+      quimbaya  : [
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773676027/panaca1_montenegro_rmhzhc.webp', 
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773676047/panaca2_montenegro_qicyog.webp', 
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773676048/panaca4_wcyziw.webp', 
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773676048/panaca3_qvq5qz.webp',
+          'https://res.cloudinary.com/dshqbl8d1/image/upload/v1773676048/parque_de_los_arrieros_montenegro_le1nxh.webp'
+        ],
+      circasia  : [
+          '', 
+          '', 
+          '', 
+          ''
+        ],
+      armenia   : ['', '', '', ''],
+      buenavista: ['', '', '', ''],
+      pijao     : ['', '', '', ''],
+      cordoba   : ['', '', '', ''],
+      tebaida   : ['', '', '', ''],
+      genova    : ['', '', '', ''],
     };
 
     this.heroImgs  = heroMap[t]?.filter(Boolean) ?? [];

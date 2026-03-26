@@ -9,9 +9,10 @@ import { Categorias } from './pages/categorias/categorias';
 import { LugaresComponent } from './pages/lugares/lugares';
 import { Detalles } from './pages/detalles/detalles';
 import { EditarCuentaComponent } from './pages/editar-cuenta/editar-cuenta';
-import { About } from './pages/about/about'; 
+import { About } from './pages/about/about';
 import { Prices } from './pages/prices/prices';
 import { Soporte } from './pages/soporte/soporte';
+import { Recomendaciones } from './pages/recomendaciones/recomendaciones';
 
 
 
@@ -44,8 +45,10 @@ export const routes: Routes = [
   {path: 'about', component: About},
   {path: 'prices', component: Prices},
   {path: 'soporte', component: Soporte},
+  {path: 'recomendaciones', component: Recomendaciones},
 
- 
+  {path: 'forgot-password', loadComponent: () => import('./pages/forgot-password/forgot-password')},
+  {path: 'reset-password', loadComponent: () => import('./pages/reset-password/reset-password')},
 
   { path: '**', redirectTo: '' },
 ];

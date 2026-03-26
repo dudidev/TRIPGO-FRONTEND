@@ -123,10 +123,17 @@
   display: flex; align-items: center; gap: 10px;
   font-size: 16px; font-weight: 800; color: #0F3B3E; margin-bottom: 1.1rem;
 }
-.det__sectionIcon {
-  width: 30px; height: 30px; border-radius: 8px;
-  background: rgba(14,105,115,0.1); display: flex;
-  align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0;
+.det__infoIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(14,105,115,0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  font-size: 14px;
+  flex-shrink: 0;
 }
 .det__desc { font-size: 14px; color: #555; line-height: 1.75; white-space: pre-line; }
 .det__emptyText { font-size: 13px; color: #aaa; font-style: italic; }
@@ -173,7 +180,18 @@
 .det__infoList { display: flex; flex-direction: column; }
 .det__infoRow  { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 0.5px solid rgba(0,0,0,0.05); }
 .det__infoRow:last-child { border-bottom: none; }
-.det__infoIcon { width: 32px; height: 32px; border-radius: 8px; background: rgba(14,105,115,0.08); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.det__infoIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(14,105,115,0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  font-size: 14px;
+  flex-shrink: 0;
+}
 .det__infoLabel{ font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #aaa; }
 .det__infoVal  { font-size: 12px; font-weight: 700; color: #1a1a1a; margin-top: 1px; }
 
@@ -288,6 +306,67 @@
 .det__menuTotalUSD { font-size: 13px; font-weight: 600; color: #aaa; text-align: right; display: block; }
 .det__menuTotal--active .det__menuTotalUSD { color: rgba(255,255,255,0.6) !important; }
 
+/* ─── CONTADOR DE PRODUCTOS ─── */
+.det__menuCounter {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: #f5f3ef;
+  border: 1px solid #e8e5df;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.det__menuCountBtn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: #666;
+  font-size: 16px;
+  font-weight: 400;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, color 0.12s;
+  line-height: 1;
+}
+
+.det__menuCountBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.det__menuCountMinus:hover:not(:disabled) {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+.det__menuCountPlus:hover:not(:disabled) {
+  background: #0e6973;
+  color: #fff;
+}
+
+.det__menuCountNum {
+  font-size: 13px;
+  font-weight: 600;
+  color: #aaa;
+  min-width: 24px;
+  text-align: center;
+  transition: color 0.15s;
+}
+
+.det__menuCountNum--on {
+  color: #0e6973;
+}
+
+/* Ajuste: el item ahora no necesita el det__menuCheck viejo */
+.det__menuCheck { display: none; }
+
+
+
 /* ─── CTA PRINCIPAL VERDE ─── */
 .det__ctaMain {
   width: 100%; display: flex; align-items: center; gap: 14px;
@@ -309,6 +388,264 @@
 .det__ctaMainTitle   { font-size: 14px; font-weight: 800; margin-bottom: 2px; }
 .det__ctaMainSub     { font-size: 11px; opacity: 0.75; }
 
+/* ── Reseñas ─────────────────────────────────────── */
+.det__resenaStats {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  background: var(--surface, #f9f9f9);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+.det__resenaStatMain {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.det__resenaPromedio {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.det__resenaTotalLabel {
+  font-size: 0.8rem;
+  color: #888;
+}
+.det__resenaDistrib { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.det__resenaDistribRow { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; }
+.det__resenaDistribNum { width: 22px; text-align: right; color: #666; }
+.det__resenaBar { flex: 1; height: 6px; background: #e0e0e0; border-radius: 4px; overflow: hidden; }
+.det__resenaBarFill { height: 100%; background: #f5a623; border-radius: 4px; transition: width 0.3s; }
+.det__resenaDistribCount { width: 20px; color: #888; }
+
+.det__miResena {
+  border: 1.5px solid #f5a623;
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  margin-bottom: 1rem;
+  background: #fffbf2;
+}
+.det__miResenaBtns { margin-left: auto; display: flex; gap: 8px; }
+.det__resenaEditBtn,
+.det__resenaDelBtn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 0.82rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+.det__resenaEditBtn:hover { background: #f0f0f0; }
+.det__resenaDelBtn:hover  { background: #fdecea; color: #c0392b; }
+
+.det__resenaNewBtn {
+  width: 100%;
+  padding: 0.7rem;
+  margin-bottom: 1rem;
+  border: 1.5px dashed #ccc;
+  border-radius: 10px;
+  background: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #555;
+  transition: border-color 0.2s, color 0.2s;
+}
+.det__resenaNewBtn:hover { border-color: #f5a623; color: #f5a623; }
+
+.det__resenaForm {
+  background: #f9f9f9;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+.det__resenaForm h4 { margin: 0 0 0.6rem; font-size: 0.95rem; }
+.det__starPicker { display: flex; gap: 6px; margin-bottom: 0.75rem; }
+.det__starPicker span {
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: #ccc;
+  transition: color 0.15s;
+}
+.det__starPicker span.active,
+.det__starPicker span:hover { color: #f5a623; }
+
+.det__resenaForm textarea {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.9rem;
+  resize: vertical;
+  box-sizing: border-box;
+}
+.det__resenaFormBtns { display: flex; gap: 8px; margin-top: 0.75rem; }
+.det__resenaSendBtn {
+  padding: 0.5rem 1.1rem;
+  background: #f5a623;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+.det__resenaSendBtn:hover { background: #e0921a; }
+.det__resenaCancelBtn {
+  padding: 0.5rem 1rem;
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.88rem;
+}
+.det__resenaCancelBtn:hover { background: #f0f0f0; }
+
+.det__resenaFecha {
+  margin-left: auto;
+  font-size: 0.78rem;
+  color: #aaa;
+}
+
+/* ─── MENSAJES DE RESEÑA ─── */
+.det__resenaMsg {
+  font-size: 13px;
+  font-weight: 600;
+  color: #E27921;
+  padding: 8px 12px;
+  background: rgba(226, 121, 33, 0.08);
+  border: 1px solid rgba(226, 121, 33, 0.2);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  animation: fadeUp 0.3s ease both;
+}
+
+/* Hint de validación */
+.det__resenaHint {
+  font-size: 11px;
+  color: #E27921;
+  margin-top: 4px;
+  display: block;
+}
+
+/* Botón deshabilitado */
+.det__resenaSendBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.3);
+}
+.det__thumbs {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.det__thumbs::-webkit-scrollbar {
+  height: 6px;
+}
+
+.det__thumbs::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.35);
+  border-radius: 999px;
+}
+
+.det__thumb {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  flex: 0 0 auto;
+  border-radius: 14px;
+  overflow: hidden;
+  opacity: 0.75;
+  transition: transform .2s ease, opacity .2s ease, box-shadow .2s ease;
+}
+
+.det__thumb img {
+  width: 92px;
+  height: 72px;
+  object-fit: cover;
+  display: block;
+}
+
+.det__thumb:hover {
+  transform: translateY(-2px);
+  opacity: 1;
+}
+
+.det__thumb--active {
+  opacity: 1;
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px rgba(255,255,255,0.18);
+}
+/* ===== Slider suave en hero ===== */
+.det__heroSingle img,
+.det__heroTwo img,
+.det__heroGrid img,
+.det__heroMain,
+.det__heroSide img,
+.det__heroMoreWrap img {
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  will-change: opacity, transform;
+}
+
+/* Efecto visual sutil */
+.det__heroSingle img:hover,
+.det__heroTwo img:hover,
+.det__heroGrid img:hover,
+.det__heroMain:hover,
+.det__heroSide img:hover,
+.det__heroMoreWrap img:hover {
+  transform: scale(1.01);
+}
+
+/* Asegura que las imágenes llenen bien su espacio */
+.det__heroSingle img,
+.det__heroTwo img,
+.det__heroGrid img,
+.det__heroMain,
+.det__heroSide img,
+.det__heroMoreWrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Por si alguna imagen tarda en cargar */
+.det__heroSingle,
+.det__heroTwo,
+.det__heroGrid,
+.det__heroMain,
+.det__heroSide img,
+.det__heroMoreWrap img {
+  background: #e9eef3;
+}
+/* ─── SLIDER HERO ─── */
+.det__heroSlider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.det__slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+  will-change: opacity;
+}
+
+.det__slide--active {
+  opacity: 1;
+}
+
+
 /* ─── RESPONSIVE ─── */
 @media (max-width: 1020px) {
   .det__body { grid-template-columns: 1fr; }
@@ -328,5 +665,8 @@
   .det__body { padding: 0 .8rem; }
   .det__hoursGrid { grid-template-columns: 1fr; }
   .det__ctaRow { grid-template-columns: 1fr; }
-  .det__section { padding: 1.2rem; }
+  .det__section { padding: 1.2rem; }.det__thumb img {
+    width: 78px;
+    height: 62px;
+  }
 }

@@ -21,7 +21,7 @@ type ChatMessage = { role: 'user' | 'ai'; text: string; };
 })
 export class Categorias implements OnInit, OnDestroy, AfterViewChecked {
 
-  @ViewChild('chatBox') chatBox!: ElementRef;
+  @ViewChild('chatBoxMobile') chatBox!: ElementRef;
 
   portadaTipo = portadaTipo;
 
@@ -45,6 +45,8 @@ export class Categorias implements OnInit, OnDestroy, AfterViewChecked {
   aiQuery   = '';
   aiLoading = false;
   showProModal = false;
+  chatOpen = false;
+  isDesktop = window.innerWidth > 1020;
 
   chatMessages: ChatMessage[] = [
     { role: 'ai', text: '¡Hola! Soy tu asistente de viaje. ¿Qué tipo de experiencia buscas hoy? 🌿' }
@@ -159,50 +161,81 @@ closeProModal(): void {
   document.body.style.width = '';
 }
 
+toggleChatMobile(): void {
+  this.chatOpen = !this.chatOpen;
+  document.body.style.overflow = this.chatOpen ? 'hidden' : '';
+}
+
+closeChatMobile(): void {
+  this.chatOpen = false;
+  document.body.style.overflow = '';
+}
+
+isMobile(): boolean {
+  return !this.isDesktop;
+}
+  // logica de llamado de backend para chatbot 
   async sendAIMessage(): Promise<void> {
-    const text = this.aiQuery.trim();
-    if (!text || this.aiLoading) return;
 
-    this.chatMessages.push({ role: 'user', text });
-    this.aiQuery      = '';
-    this.aiLoading    = true;
-    this.shouldScrollChat = true;
+  const text = this.aiQuery.trim();
+  if (!text || this.aiLoading) return;
 
-    const tiposCtx    = this.tipos.map(t => t.nombre_tipo).join(', ');
-    const systemPrompt = `Eres un asistente de viaje especialista en el Eje Cafetero colombiano, específicamente en ${this.townSlug}, Quindío.
-Las categorías disponibles en este pueblo son: ${tiposCtx || 'variadas'}.
-Responde siempre en español, de forma breve (máximo 3-4 oraciones), amigable y concreta.
-Recomienda categorías o experiencias según lo que pida el usuario. No uses markdown ni listas con guiones.`;
+  this.chatMessages.push({ role: 'user', text });
 
-    try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body   : JSON.stringify({
-          model     : 'claude-sonnet-4-20250514',
-          max_tokens: 300,
-          system    : systemPrompt,
-          messages  : [
-            ...this.chatMessages.slice(-6).map(m => ({
-              role   : m.role === 'user' ? 'user' : 'assistant',
-              content: m.text
-            })),
-            { role: 'user', content: text }
-          ]
-        })
+  this.aiQuery = '';
+  this.aiLoading = true;
+  this.shouldScrollChat = true;
+
+  try {
+
+    const response = await fetch('https://tripgo-backend-arehbhbubshxdpg7.chilecentral-01.azurewebsites.net/ia/chatbot', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        mensaje: text
+      })
+    });
+
+    const lugares = await response.json();
+
+    let aiText = '';
+
+    if (!lugares || lugares.length === 0) {
+
+      aiText = "No encontré lugares con esa búsqueda";
+
+    } else {
+
+      aiText = "Te recomiendo estos lugares:\n\n";
+
+      lugares.forEach((l:any) => {
+
+        aiText += `• ${l.nombre_establecimiento} (${l.nombre_tipo})\n`;
+
       });
 
-      const data   = await response.json();
-      const aiText = data?.content?.[0]?.text ?? 'No pude generar una respuesta. Intenta de nuevo.';
-      this.chatMessages.push({ role: 'ai', text: aiText });
-
-    } catch {
-      this.chatMessages.push({ role: 'ai', text: 'Hubo un error al conectar con la IA. Intenta de nuevo más tarde.' });
     }
 
-    this.aiLoading    = false;
-    this.shouldScrollChat = true;
+    this.chatMessages.push({
+      role: 'ai',
+      text: aiText
+    });
+
+  } catch {
+
+    this.chatMessages.push({
+      role: 'ai',
+      text: 'Hubo un error conectando con la IA.'
+    });
+
   }
+
+  this.aiLoading = false;
+  this.shouldScrollChat = true;
+
+}
 
   private scrollChatToBottom(): void {
     try {

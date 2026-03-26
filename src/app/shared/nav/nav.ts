@@ -4,32 +4,37 @@ import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { User } from '../../service/user';
 import { LanguageService } from '../../service/language.service';
-import { ItinerarioService } from '../../service/itinerario.service';
+import { ItinerarioService, ItinerarioItem } from '../../service/itinerario.service';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog';
-import{ConfirmService} from '../../service/confirm.service';
+import { ConfirmService } from '../../service/confirm.service';
 
 @Component({
   selector: 'app-nav',
   standalone: true,
   imports: [RouterModule, CommonModule, ConfirmDialogComponent],
-  templateUrl: './nav.html', 
+  templateUrl: './nav.html',
   styleUrl: './nav.css'
 })
 export class Nav implements AfterViewInit {
-  menuOpen = false;
+  menuOpen       = false;
   itinerarioOpen = false;
-  enviandoEmail = false;
+  enviandoEmail  = false;
+  emailEnviado  = false;
+  isMobileOrTablet = window.innerWidth <= 1024;
+
+  // Mapa de personas por item: { [itemId]: number }
+  private personasMap: Record<string, number> = {};
 
   @ViewChild('headerRef') headerRef!: ElementRef<HTMLElement>;
 
   constructor(
-    private userService: User,
-    private router: Router,
-    private http: HttpClient,
-    public lang: LanguageService,
-    public itinerario: ItinerarioService,
+    private userService   : User,
+    private router        : Router,
+    private http          : HttpClient,
+    public  lang          : LanguageService,
+    public  itinerario    : ItinerarioService,
     private confirmService: ConfirmService
   ) {
     this.router.events
@@ -38,13 +43,16 @@ export class Nav implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.updateViewportState();
     this.setNavOffset();
     setTimeout(() => this.setNavOffset(), 0);
   }
 
   @HostListener('window:resize')
-  onResize() {
-    this.setNavOffset();
+  onResize() { this.setNavOffset(); this.updateViewportState(); }
+
+  private updateViewportState(): void {
+  this.isMobileOrTablet = window.innerWidth <= 1024;
   }
 
   private setNavOffset() {
@@ -53,54 +61,149 @@ export class Nav implements AfterViewInit {
     document.documentElement.style.setProperty('--nav-offset', `${h}px`);
   }
 
-  get isLoggedIn(): boolean {
-    return this.userService.isLoggedIn();
-  }
+  get isLoggedIn(): boolean  { return this.userService.isLoggedIn(); }
+  get isEmpresaPage(): boolean { return this.router.url.includes('/empresa'); }
 
-  get isEmpresaPage(): boolean {
-    return this.router.url.includes('/empresa');
-  }
-
-  toggleItinerario() {
-    this.itinerarioOpen = !this.itinerarioOpen;
-  }
-
-  closeItinerario() {
-    this.itinerarioOpen = false;
-  }
-
-  removeItItem(id: string) {
-    this.itinerario.remove(id);
-  }
-
-  clearItinerario() {
-    this.itinerario.clear();
-  }
+  // ── Itinerario popover ────────────────────────────────────────
+toggleItinerario(event?: Event) {
+  if (event) event.stopPropagation();
+  this.itinerarioOpen = !this.itinerarioOpen;
+}  closeItinerario()   { this.itinerarioOpen = false; }
 
   @HostListener('document:keydown.escape')
-  onEsc() {
-    this.closeItinerario();
-  }
+  onEsc() { this.closeItinerario(); }
 
-  /* ✅ NUEVO: cerrar itinerario al hacer click fuera */
   @HostListener('document:click')
   onDocClick() {
-    // si el menú lateral está abierto, no hacemos nada (evita cierres raros)
-    if (this.menuOpen) return;
-
-    if (this.enviandoEmail) return;
-
-    // si está abierto el itinerario y clickean fuera, se cierra.
-    // (en el HTML debes tener stopPropagation en .itWrap/.itPopover)
+    if (this.menuOpen || this.enviandoEmail) return;
     if (this.itinerarioOpen) this.closeItinerario();
   }
 
+  // ── Personas por lugar ────────────────────────────────────────
+  getPersonas(id: string): number {
+    return this.personasMap[id] ?? 1;
+  }
+
+  incrementPersonas(id: string): void {
+    this.personasMap[id] = this.getPersonas(id) + 1;
+  }
+
+  decrementPersonas(id: string): void {
+    const actual = this.getPersonas(id);
+    if (actual > 1) this.personasMap[id] = actual - 1;
+  }
+
+  // ── Cálculos ──────────────────────────────────────────────────
+
+  /** Subtotal de un item = suma productos × personas */
+  getSubtotal(item: ItinerarioItem): number {
+  if (!item.productos?.length) return 0;
+  return item.productos.reduce((acc, p) => acc + (p.precio * (p.cantidad ?? 1)), 0);
+}
+
+  /** Total global = suma de todos los subtotales */
+  getTotalGlobal(): number {
+    return this.itinerario.items.reduce((acc, item) => acc + this.getSubtotal(item), 0);
+  }
+
+  /** Total de personas únicas (suma de todas las entradas de personasMap) */
+  getTotalPersonas(): number {
+    return this.itinerario.items.reduce((acc, item) => acc + this.getPersonas(item.id), 0);
+  }
+
+  // ── Quitar item con confirmación ──────────────────────────────
+  async confirmarQuitarItem(id: string): Promise<void> {
+    const item = this.itinerario.items.find(i => i.id === id);
+    const ok = await this.confirmService.open({
+      title      : 'Quitar lugar',
+      message    : `¿Deseas quitar "${item?.nombre ?? 'este lugar'}" de tu itinerario?`,
+      confirmText: 'Sí, quitar',
+      cancelText : 'Cancelar',
+      variant    : 'warning'
+    });
+    if (ok) {
+      this.itinerario.remove(id);
+      delete this.personasMap[id];
+    }
+  }
+
+  // ── Limpiar con confirmación ──────────────────────────────────
+  async confirmarLimpiar(): Promise<void> {
+    if (this.itinerario.count === 0) return;
+    const ok = await this.confirmService.open({
+      title      : 'Limpiar itinerario',
+      message    : '¿Seguro que deseas eliminar todos los lugares de tu itinerario?',
+      confirmText: 'Sí, limpiar todo',
+      cancelText : 'Cancelar',
+      variant    : 'warning'
+    });
+    if (ok) {
+      this.itinerario.clear();
+      this.personasMap = {};
+      this.closeItinerario();
+    }
+  }
+
+  // ── Enviar itinerario ─────────────────────────────────────────
+  private enviarItinerario(): void {
+    if (this.itinerario.count === 0 || this.enviandoEmail) return;
+
+    this.enviandoEmail = true;
+
+    const usuario = this.userService.getCurrentUser();
+    const token   = localStorage.getItem('token');
+
+    this.http.post(
+      `${environment.apiBaseUrl}/itinerario/enviar-email`,
+      {
+        email : usuario.correo_usuario,
+        nombre: usuario.nombre_usuario,
+        items : this.itinerario.items.map(i => ({
+          nombre   : i.nombre,
+          direccion: i.direccion ?? '',
+          imagenUrl: i.imagenUrl ?? null,
+          productos: i.productos ?? [],
+          personas : this.getPersonas(i.id),
+          subtotal : this.getSubtotal(i),
+        }))
+      },
+      { headers: { Authorization: `Bearer ${token}` } }
+    ).subscribe({
+      next: () => {
+        this.enviandoEmail = false;
+        this.emailEnviado  = true; 
+        this.itinerario.clear();
+        this.personasMap = {};
+        setTimeout(()=> {
+        this.emailEnviado = false,
+        this.closeItinerario();
+      }, 2000)
+        
+      },
+      error: () => { 
+        this.enviandoEmail = false; }
+    });
+  }
+
+  async confirmarItinerario(): Promise<void> {
+    if (this.itinerario.count === 0 || this.enviandoEmail) return;
+
+    const ok = await this.confirmService.open({
+      title      : 'Confirmar itinerario',
+      message    : `¿Deseas confirmar tu itinerario con ${this.itinerario.count} lugar${this.itinerario.count !== 1 ? 'es' : ''} y un total estimado de $${this.getTotalGlobal().toLocaleString('es-CO')} COP?`,
+      confirmText: 'Sí, confirmar',
+      cancelText : 'Cancelar',
+      variant    : 'warning'
+    });
+
+    if (ok) this.enviarItinerario();
+  }
+
+  // ── Menú hamburguesa ──────────────────────────────────────────
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
     document.body.style.overflow = this.menuOpen ? 'hidden' : 'auto';
     setTimeout(() => this.setNavOffset(), 0);
-
-    //  opcional: si abres menú, cierra carrito
     if (this.menuOpen) this.closeItinerario();
   }
 
@@ -110,75 +213,21 @@ export class Nav implements AfterViewInit {
     setTimeout(() => this.setNavOffset(), 0);
   }
 
- private enviarItinerario() {
-  if (this.itinerario.count === 0 || this.enviandoEmail) return;
-
-  this.enviandoEmail = true;
-
-  const usuario = this.userService.getCurrentUser();
-  const token = localStorage.getItem('token');
-
-  this.http.post(
-    `${environment.apiBaseUrl}/itinerario/enviar-email`,
-    {
-      email: usuario.correo_usuario,
-      nombre: usuario.nombre_usuario,
-      items: this.itinerario.items.map(i => ({
-        nombre: i.nombre,
-        direccion: i.direccion ?? '',
-        imagenUrl: i.imagenUrl ?? null,
-      }))
-    },
-    {
-      headers: { Authorization: `Bearer ${token}` }
-    }
-  ).subscribe({
-    next: () => {
-      this.enviandoEmail = false;
-      this.itinerario.clear();
-      this.closeItinerario();
-    },
-    error: () => {
-      this.enviandoEmail = false;
-    }
-  });
-}
-
-async confirmarItinerario() {
-  if (this.itinerario.count === 0 || this.enviandoEmail) return;
-
-  const ok = await this.confirmService.open({
-    title: 'Confirmar itinerario',
-    message: '¿Deseas confirmar tus lugares seleccionados?',
-    confirmText: 'Sí, confirmar',
-    cancelText: 'Cancelar',
-    variant: 'warning'
-  });
-
-  if (ok) {
-    this.enviarItinerario();
-  }
-}
-
   logout(): void {
     this.userService.logout();
     this.closeMenu();
     this.closeItinerario();
     this.router.navigate(['/login']);
   }
-  async confirmLogout() {
-    console.log("CLICK SALIR");
-  const ok = await this.confirmService.open({
-    title: 'Cerrar sesión',
-    message: '¿Seguro que deseas cerrar sesión?',
-    confirmText: 'Sí, salir',
-    cancelText: 'Cancelar',
-    variant: 'warning'
-  });
 
-    console.log("RESPUESTA:", ok);
-  if (ok) {
-    this.logout();
+  async confirmLogout(): Promise<void> {
+    const ok = await this.confirmService.open({
+      title      : 'Cerrar sesión',
+      message    : '¿Seguro que deseas cerrar sesión?',
+      confirmText: 'Sí, salir',
+      cancelText : 'Cancelar',
+      variant    : 'warning'
+    });
+    if (ok) this.logout();
   }
-}
 }

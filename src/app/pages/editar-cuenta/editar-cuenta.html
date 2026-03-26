@@ -2,98 +2,139 @@
 
 <div class="perfil-container">
 
-  <!-- ================== EDITAR CUENTA ================== -->
-  <section class="card">
-    <h2>Editar cuenta</h2>
+  <!-- ================== PERFIL ================== -->
+  <section class="perfil-card" [class.edit-mode]="editMode">
 
-    <!-- FOTO PERFIL -->
-    <div class="perfil">
+    <div class="perfil-banner"></div>
 
-      <img
-        [src]="fotoPreview || fotoActual || 'https://cdn-icons-png.flaticon.com/512/847/847969.png'"
-        alt="Foto de perfil"
-      />
+    <div class="perfil-body">
+      <div class="avatar-wrap">
+        <img
+          class="avatar-img"
+          [src]="fotoPreview || fotoActual || 'https://cdn-icons-png.flaticon.com/512/847/847969.png'"
+          alt="Foto de perfil"
+        />
+        <input type="file" accept="image/*" (change)="onFileSelected($event)" hidden #fileInput />
+        <button
+          class="btn-editar-top"
+          type="button"
+          [class.btn-cancelar-top]="editMode"
+          (click)="editMode ? cancelarEdicion() : activarEdicion()"
+        >
+          <i
+            [class]="editMode ? 'fa-solid fa-xmark btn-icon' : 'fa-solid fa-pen btn-icon'"
+          ></i>
+          {{ editMode ? 'Cancelar' : 'Editar perfil' }}
+        </button>
+      </div>
 
-      <input
-        type="file"
-        accept="image/*"
-        (change)="onFileSelected($event)"
-        hidden
-        #fileInput
-      />
+      <div class="avatar-name">{{ form.value.nombre_usuario || '—' }}</div>
+      <div class="avatar-email">{{ form.value.correo_usuario || '—' }}</div>
 
-      <button class="btn-link" type="button" (click)="fileInput.click()">
-        Cambiar foto
-      </button>
+      <div *ngIf="mensaje" class="alerta" [ngClass]="tipoMensaje">{{ mensaje }}</div>
+
+      <!-- MODO LECTURA -->
+      <ng-container *ngIf="!editMode">
+        <div class="info-row">
+          <label>Nombre</label>
+          <span class="val">{{ form.value.nombre_usuario || '—' }}</span>
+        </div>
+        <div class="info-row">
+          <label>Email</label>
+          <span class="val">{{ form.value.correo_usuario || '—' }}</span>
+        </div>
+      </ng-container>
+
+      <!-- MODO EDICIÓN -->
+      <form [formGroup]="form" (ngSubmit)="guardar()" *ngIf="editMode">
+        <div class="campo">
+          <label>Nombre</label>
+          <input type="text" formControlName="nombre_usuario" />
+        </div>
+        <div class="campo">
+          <label>Email</label>
+          <input type="email" formControlName="correo_usuario" />
+        </div>
+
+        <button class="btn-foto" type="button" (click)="fileInput.click()">
+          <i class="fa-solid fa-camera"></i> Cambiar foto
+        </button>
+
+        <div class="divider">Cambiar contraseña</div>
+
+        <div class="campo">
+          <label>Contraseña actual</label>
+          <input type="password" formControlName="password_actual" placeholder="••••••••" />
+        </div>
+        <div class="campo">
+          <label>Nueva contraseña</label>
+          <input type="password" formControlName="password_nueva" placeholder="••••••••" />
+        </div>
+        <div class="campo">
+          <label>Confirmar contraseña</label>
+          <input type="password" formControlName="password_confirmacion" placeholder="••••••••" />
+        </div>
+
+        <div class="error-msg"
+          *ngIf="form.value.password_nueva && form.value.password_nueva !== form.value.password_confirmacion">
+          Las contraseñas no coinciden
+        </div>
+
+        <button type="submit" class="btn-guardar" [disabled]="saving">
+          <i class="fa-solid fa-floppy-disk btn-icon" *ngIf="!saving"></i>
+          {{ saving ? 'Guardando...' : 'Guardar cambios' }}
+        </button>
+      </form>
 
     </div>
-
-    <!-- MENSAJES -->
-    <div *ngIf="mensaje" class="alerta" [ngClass]="tipoMensaje">
-      {{ mensaje }}
-    </div>
-
-    <form [formGroup]="form" (ngSubmit)="guardar()">
-
-      <!-- NOMBRE -->
-      <div class="campo">
-        <label>Nombre</label>
-        <input type="text" formControlName="nombre_usuario">
-      </div>
-
-      <!-- EMAIL -->
-      <div class="campo">
-        <label>Email</label>
-        <input type="email" formControlName="correo_usuario">
-      </div>
-
-      <!-- PASSWORD ACTUAL -->
-      <div class="campo">
-        <label>Contraseña actual</label>
-        <input type="password" formControlName="password_actual">
-      </div>
-
-      <!-- NUEVA PASSWORD -->
-      <div class="campo">
-        <label>Nueva contraseña</label>
-        <input type="password" formControlName="password_nueva">
-      </div>
-
-      <!-- CONFIRMAR PASSWORD -->
-      <div class="campo">
-        <label>Confirmar nueva contraseña</label>
-        <input type="password" formControlName="password_confirmacion">
-      </div>
-
-      <div class="error" *ngIf="form.value.password_nueva && form.value.password_nueva !== form.value.password_confirmacion">
-  Las contraseñas no coinciden
-    </div>
-
-      <button class="btn-guardar" type="submit">
-        Guardar cambios
-      </button>
-
-    </form>
   </section>
 
+  <!-- ================== FAVORITOS ================== -->
+  <section class="fav-card-outer">
 
-  <!-- ================== EDITAR ITINERARIOS ================== -->
-  <section class="card">
-    <h2>Mis Favoritos</h2>
-
-    <div class="itinerario" *ngFor="let iti of itinerarios">
-      <div class="info">
-        <h3>{{ iti.nombre }}</h3>
-        <p>{{ iti.descripcion }}</p>
+    <div class="fav-header">
+      <div class="fav-header-icon">
+        <i class="fa-solid fa-heart"></i>
       </div>
-
-      <div class="acciones">
-        <button class="btn-editar">Editar</button>
-        <button class="btn-eliminar">Eliminar</button>
-      </div>
+      <span class="fav-header-title">Mis favoritos</span>
+      <span class="fav-count" *ngIf="favoritos.length > 0">
+        {{ favoritos.length }} lugar{{ favoritos.length !== 1 ? 'es' : '' }}
+      </span>
     </div>
 
-    <button class="btn-agregar">+ Agregar itinerario</button>
+    <div class="fav-list">
+
+      <p *ngIf="loadingFavoritos" class="fav-loading">Cargando favoritos...</p>
+
+      <div *ngIf="!loadingFavoritos && favoritos.length === 0" class="fav-empty">
+        <span class="fav-empty__icon"><i class="fa-solid fa-heart"></i></span>
+        <p>Aún no tienes lugares favoritos.</p>
+        <small>Explora y guarda los que más te gusten.</small>
+      </div>
+
+      <div
+        class="fav-item"
+        *ngFor="let fav of favoritos"
+      >
+        <div class="fav-thumb" (click)="irADetalle(fav)">
+          <img *ngIf="fav.imagenUrl" [src]="fav.imagenUrl" [alt]="fav.nombre" />
+          <span *ngIf="!fav.imagenUrl">{{ fav.nombre[0] }}</span>
+        </div>
+
+        <div class="fav-info" (click)="irADetalle(fav)">
+          <div class="fav-name">{{ fav.nombre }}</div>
+          <div class="fav-dir"><i class="fa-solid fa-location-dot"></i> {{ fav.direccion || '—' }}</div>
+        </div>
+
+        <div class="fav-actions">
+          <button class="btn-ver" type="button" (click)="irADetalle(fav)">Ver →</button>
+          <button class="btn-quitar" type="button" (click)="eliminarFavorito(fav)">✕ Quitar</button>
+        </div>
+
+        <span class="fav-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+      </div>
+
+    </div>
   </section>
 
 </div>

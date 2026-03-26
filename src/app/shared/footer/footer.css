@@ -1,12 +1,18 @@
 .footer{
-    padding: var(--padding-lg);
-    background-color: var(--secondary-color);
+    padding: 35px;
+    background-color: #E27921;
     p{
         color: var(--light-text-color);
         text-align: center;
-    }
+    };
 }
 
 .footer span{
     color: orange;
+}
+/* Ocultar en tablet y móvil */
+@media (max-width: 768px) {
+  .footer {
+    display: none;
+  }
 }
