@@ -902,18 +902,6 @@ footer {
   }
 }
 
-@media (max-width: 1023px) {
-  .footer {
-    display: none;
-  }
-}
-
-/* Ocultar en tablet y móvil */
-@media (max-width: 1024px) {
-  .footer {
-    display: none;
-  }
-}
 
 /* ─────────────────────────────────────
    TABLET

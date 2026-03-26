@@ -142,7 +142,8 @@
    PANEL
 ───────────────────────────────────── */
 .results__panel {
-  flex: 1; display: grid;
+  flex: 1; 
+  padding: 0px 20px;
   grid-template-columns: 1fr 360px;
   gap: 0; align-items: start;
 }

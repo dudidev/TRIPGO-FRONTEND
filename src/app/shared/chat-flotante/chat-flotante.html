@@ -74,13 +74,17 @@
 </div>
 
 <!-- Botón FAB -->
-<button class="chatF__fab" type="button" (click)="toggleChat($event)" [class.chatF__fab--open]="chatOpen">
-  <svg *ngIf="!chatOpen" width="24" height="24" fill="none" viewBox="0 0 24 24">
-    <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="#fff" opacity="0.9"/>
-  </svg>
-  <svg *ngIf="chatOpen" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
-    <path d="M18 6L6 18M6 6l12 12"/>
-  </svg>
+<button
+  class="chatF__fab"
+  type="button"
+  (click)="toggleChat($event)"
+  [class.chatF__fab--open]="chatOpen"
+>
+  <i
+    [class]="chatOpen 
+      ? 'fa-solid fa-xmark chatF__icon' 
+      : 'fa-regular fa-compass chatF__icon'"
+  ></i>
 </button>
 
 </ng-container>

@@ -197,9 +197,10 @@
    PANEL
 ───────────────────────────────────── */
 .cat__panel {
-  flex: 1; display: grid;
+  flex: 1;
   grid-template-columns: 1fr 360px;
   align-items: start;
+  padding: 0px 20px;
 }
 
 /* ─────────────────────────────────────
