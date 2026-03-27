@@ -4,6 +4,8 @@ import { Footer } from '../../shared/footer/footer';
 import { Router, RouterLink } from '@angular/router';
 import { User } from '../../service/user';
 import { FormsModule, NgForm } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -17,14 +19,23 @@ export class Login {
   password = '';
   errorMessage = '';
   successMessage = '';
+  showPassword = false;
 
-  constructor(private userService: User, private router: Router) {}
+  constructor(
+    private userService: User, 
+    private router: Router,
+    private route: ActivatedRoute,   
+    private authService : AuthService ) {}
 
   showSuccess(message: string) {
     this.successMessage = message;
     this.errorMessage = '';
     setTimeout(() => (this.successMessage = ''), 3000);
   }
+
+  togglePassword(): void {
+  this.showPassword = !this.showPassword;
+}
 
  onSubmit(form: NgForm) {
 
@@ -39,9 +50,7 @@ export class Login {
   }).subscribe({
     next: (res) => {
 
-      // 🔐 Guardar token
-      localStorage.setItem('token', res.token);
-      localStorage.setItem('user', JSON.stringify(res.user));
+      this.authService.setSession(res.token, res.user);
 
       // 👇 Para que el chatbot desaparezca inmediatamente
       window.dispatchEvent(new Event('storage'));
@@ -54,7 +63,9 @@ export class Login {
         if (res.user.rol === 'empresa') {
           this.router.navigate(['/empresa']);
         } else {
-          this.router.navigate(['/principal']);
+            const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/principal';
+            this.router.navigateByUrl(returnUrl);
+
         }
 
       }, 900); 
