@@ -53,11 +53,12 @@
     </div>
 
     <button
-      class="det__heroFav"
-      (click)="toggleFavorito()"
-      [title]="esFavorito ? 'Quitar' : 'Favorito'"
-    >
-      {{ esFavorito ? '♥' : '♡' }}
+        class="det__heroFav"
+        type="button"
+        (click)="onFavoritoClick($event)"
+        [title]="esFavorito ? 'Quitar' : 'Favorito'"
+      >
+        {{ esFavorito ? '♥' : '♡' }}
     </button>
   </div>
 
@@ -162,7 +163,13 @@
             </div>
             <div class="det__miResenaBtns">
               <button class="det__resenaEditBtn" (click)="iniciarEdicion()"><i class="fa-solid fa-pen-to-square det__btnIcon fa-icon"></i> Editar</button>
-              <button class="det__resenaDelBtn" (click)="eliminarResena()"><i class="fa-solid fa-trash det__btnIcon fa-icon"></i> Eliminar</button>
+          <button
+            type="button"
+            class="det__resenaDelBtn"
+            (click)="eliminarResena()">
+            <i class="fa-solid fa-trash det__btnIcon fa-icon"></i>
+            Eliminar
+          </button>        
             </div>
           </div>
           <p class="det__opinionText">{{ miResena.comentario }}</p>
@@ -293,81 +300,94 @@
           </div>
         </div>
 
-        <!-- <div class="det__ctaRow">
-          <button class="det__ctaBtn det__ctaWa" type="button">💬 WhatsApp</button>
-          <button class="det__ctaBtn det__ctaIt" type="button" (click)="agregarItinerario()">
-            <i class="fa-solid fa-calendar-days"></i> Itinerario <span *ngIf="itMsg">✓</span>
-          </button>
-        </div> -->
+       
       </div>
 
-      <div class="det__card det__card--menu">
-        <div class="det__menuHeader">
-          <div>
-            <h3 class="det__cardTitle" style="margin-bottom:2px"><i class="fa-solid fa-coins"></i> Saquemos cuentas</h3>
-            <p class="det__menuSub">Selecciona lo que quieres disfrutar</p>
-          </div>
-          <div class="det__menuRate">
-            <span class="det__menuRateLabel">Tasa</span>
-            <span class="det__menuRateVal">1 USD = ${{ tasaCopUsd | number:'1.0-0' }}</span>
-          </div>
+    <div class="det__card det__card--menu" [class.det__card--menuLocked]="!authService.isLoggedIn()">
+  <div class="det__menuLock" *ngIf="!authService.isLoggedIn()">
+    <div class="det__menuLockBox">
+      <span class="det__menuLockIcon"><i class="fa-solid fa-lock"></i></span>
+      <h4>DEBES INICIAR SESIÓN</h4>
+      <p>PARA AJUSTAR TU PRESUPUESTO</p>
+      <a
+        class="det__menuLockBtn"
+        [routerLink]="['/login']"
+        [queryParams]="{ returnUrl: router.url }">
+        Iniciar sesión
+      </a>
+    </div>
+  </div>
+
+  <div class="det__menuHeader">
+    <div>
+      <h3 class="det__cardTitle" style="margin-bottom:2px">
+        <i class="fa-solid fa-coins"></i> Saquemos cuentas
+      </h3>
+      <p class="det__menuSub">Selecciona lo que quieres disfrutar</p>
+    </div>
+    <div class="det__menuRate">
+      <span class="det__menuRateLabel">Tasa</span>
+      <span class="det__menuRateVal">1 USD = ${{ tasaCopUsd | number:'1.0-0' }}</span>
+    </div>
+  </div>
+
+  <div class="det__menuBody">
+    <ng-container *ngFor="let grupo of menuAgrupado">
+      <div class="det__menuCatLabel">{{ grupo.cat }}</div>
+
+      <div
+        class="det__menuItem"
+        *ngFor="let item of grupo.items"
+        [class.det__menuItem--on]="item.cantidad > 0">
+
+        <div class="det__menuCounter">
+          <button
+            class="det__menuCountBtn det__menuCountMinus"
+            type="button"
+           
+            (click)="decrementItem(item); $event.stopPropagation()"
+            [disabled]="item.cantidad === 0 || !authService.isLoggedIn()">−</button>
+
+          <span
+            class="det__menuCountNum"
+            [class.det__menuCountNum--on]="item.cantidad > 0">
+            {{ item.cantidad }}
+          </span>
+
+          <button
+            class="det__menuCountBtn det__menuCountPlus"
+            type="button"
+            (click)="incrementItem(item); $event.stopPropagation()"
+            [disabled]="!authService.isLoggedIn()">+</button>
         </div>
 
-        <div class="det__menuBody">
-          <ng-container *ngFor="let grupo of menuAgrupado">
-            <div class="det__menuCatLabel">{{ grupo.cat }}</div>
+        <span class="det__menuName">{{ item.nombre }}</span>
 
-            <div
-              class="det__menuItem"
-              *ngFor="let item of grupo.items"
-              [class.det__menuItem--on]="item.cantidad > 0">
-
-              <div class="det__menuCounter">
-                <button
-                  class="det__menuCountBtn det__menuCountMinus"
-                  type="button"
-                  (click)="decrementItem(item); $event.stopPropagation()"
-                  [disabled]="item.cantidad === 0">−</button>
-
-                <span
-                  class="det__menuCountNum"
-                  [class.det__menuCountNum--on]="item.cantidad > 0">
-                  {{ item.cantidad }}
-                </span>
-
-                <button
-                  class="det__menuCountBtn det__menuCountPlus"
-                  type="button"
-                  (click)="incrementItem(item); $event.stopPropagation()">+</button>
-              </div>
-
-              <span class="det__menuName">{{ item.nombre }}</span>
-
-              <div class="det__menuPrices">
-                <span class="det__menuCOP">${{ item.precio | number:'1.0-0' }}</span>
-                <span class="det__menuUSD">≈ ${{ item.precio / tasaCopUsd | number:'1.2-2' }} USD</span>
-              </div>
-            </div>
-          </ng-container>
-        </div>
-
-        <div class="det__menuTotal" [class.det__menuTotal--active]="totalCOP > 0">
-          <div class="det__menuTotalLeft">
-            <span class="det__menuTotalLabel">Total estimado</span>
-            <span class="det__menuTotalCount" *ngIf="itemsSeleccionados > 0">
-              {{ itemsSeleccionados }} ítem{{ itemsSeleccionados !== 1 ? 's' : '' }}
-            </span>
-            <span class="det__menuTotalCount" *ngIf="itemsSeleccionados === 0">
-              Selecciona productos para ver el total
-            </span>
-          </div>
-
-          <div class="det__menuTotalRight">
-            <span class="det__menuTotalCOP">${{ totalCOP | number:'1.0-0' }}</span>
-            <span class="det__menuTotalUSD">≈ ${{ totalCOP / tasaCopUsd | number:'1.2-2' }} USD</span>
-          </div>
+        <div class="det__menuPrices">
+          <span class="det__menuCOP">${{ item.precio | number:'1.0-0' }}</span>
+          <span class="det__menuUSD">≈ ${{ item.precio / tasaCopUsd | number:'1.2-2' }} USD</span>
         </div>
       </div>
+    </ng-container>
+  </div>
+
+  <div class="det__menuTotal" [class.det__menuTotal--active]="totalCOP > 0">
+    <div class="det__menuTotalLeft">
+      <span class="det__menuTotalLabel">Total estimado</span>
+      <span class="det__menuTotalCount" *ngIf="itemsSeleccionados > 0">
+        {{ itemsSeleccionados }} ítem{{ itemsSeleccionados !== 1 ? 's' : '' }}
+      </span>
+      <span class="det__menuTotalCount" *ngIf="itemsSeleccionados === 0">
+        Selecciona productos para ver el total
+      </span>
+    </div>
+
+    <div class="det__menuTotalRight">
+      <span class="det__menuTotalCOP">${{ totalCOP | number:'1.0-0' }}</span>
+      <span class="det__menuTotalUSD">≈ ${{ totalCOP / tasaCopUsd | number:'1.2-2' }} USD</span>
+    </div>
+  </div>
+</div>
 
       <button class="det__ctaMain" type="button" (click)="agregarItinerario()">
         <span><i class="fa-solid fa-circle-check"></i></span>
@@ -381,6 +401,24 @@
       </button>
 
     </aside>
+  </div>
+</div>
+
+<!-- MODAL CONFIRMAR ELIMINAR RESEÑA -->
+<div class="modal-overlay" *ngIf="mostrarConfirmacion">
+  <div class="modal-box">
+    <div class="modal-icon">🗑️</div>
+    <h3>Eliminar reseña</h3>
+    <p>¿Seguro que deseas eliminar tu reseña? Esta acción no se puede deshacer.</p>
+
+    <div class="modal-actions">
+      <button type="button" class="btn-cancel" (click)="cancelarEliminacion()">
+        Cancelar
+      </button>
+      <button type="button" class="btn-delete" (click)="confirmarEliminacion()">
+        Eliminar
+      </button>
+    </div>
   </div>
 </div>
 

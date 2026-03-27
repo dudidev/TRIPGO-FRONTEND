@@ -213,6 +213,99 @@
 /* ─── CALCULADORA TIPO MENÚ ─── */
 .det__card--menu { padding-bottom: 0; overflow: hidden; }
 
+/* ─── BLOQUEO VISUAL DE "SAQUEMOS CUENTAS" ─── */
+.det__card--menu {
+  position: relative;
+}
+
+.det__card--menuLocked .det__menuHeader,
+.det__card--menuLocked .det__menuBody,
+.det__card--menuLocked .det__menuTotal {
+  filter: blur(4px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.det__card--menuLocked .det__menuTotal {
+  opacity: 0.9;
+}
+
+.det__menuLock {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  border-radius: 20px;
+}
+
+.det__menuLockBox {
+  width: 100%;
+  max-width: 250px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(14, 105, 115, 0.12);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.10);
+  border-radius: 18px;
+  padding: 18px 16px;
+}
+
+.det__menuLockIcon {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 10px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0e6973, #1a8a6e);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 8px 18px rgba(14, 105, 115, 0.25);
+}
+
+.det__menuLockBox h4 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 900;
+  color: #0F3B3E;
+  line-height: 1.25;
+}
+
+.det__menuLockBox p {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: #5f6b73;
+  line-height: 1.4;
+}
+
+.det__menuLockBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 14px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(135deg, #0e6973, #1a8a6e);
+  box-shadow: 0 8px 18px rgba(14, 105, 115, 0.20);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.det__menuLockBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 22px rgba(14, 105, 115, 0.28);
+}
+
 .det__menuHeader {
   display: flex; align-items: flex-start; justify-content: space-between;
   gap: 8px; padding-bottom: 10px; border-bottom: 0.5px solid rgba(0,0,0,0.06);
@@ -276,7 +369,7 @@
 .det__menuTotal {
   display: flex; align-items: center; justify-content: space-between;
   padding: 14px 20px;
-  margin: 0;                              /* ← quita el margin negativo */
+  margin-block: 12px;                              /* ← quita el margin negativo */
   background: #f0f0f0;
   border-top: 1px solid rgba(0,0,0,0.08);
   transition: background 0.3s;
@@ -397,6 +490,7 @@
   border-radius: 12px;
   padding: 1rem 1.25rem;
   margin-bottom: 1.25rem;
+
 }
 .det__resenaStatMain {
   display: flex;
@@ -579,6 +673,9 @@
   opacity: 1;
   box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px rgba(255,255,255,0.18);
 }
+
+
+
 /* ===== Slider suave en hero ===== */
 .det__heroSingle img,
 .det__heroTwo img,
@@ -656,6 +753,8 @@
   .det__heroOverlay { padding: 1.2rem 1.5rem; }
   .det__heroTitle { font-size: 1.5rem; }
   .det__body { padding: 0 1rem; margin-top: 1rem; }
+
+  
 }
 @media (max-width: 520px) {
   .det__hero { height: 260px; }
@@ -665,8 +764,83 @@
   .det__body { padding: 0 .8rem; }
   .det__hoursGrid { grid-template-columns: 1fr; }
   .det__ctaRow { grid-template-columns: 1fr; }
-  .det__section { padding: 1.2rem; }.det__thumb img {
+  .det__section { padding: 1.2rem; }
+
+  .det__thumb img {
     width: 78px;
     height: 62px;
   }
+
+  /* OPINIONES */
+  .det__resenaStats {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 18px;
+  }
+
+  .det__resenaStatMain {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .35rem;
+    text-align: center;
+  }
+
+  .det__resenaPromedio {
+    font-size: 2.2rem;
+    line-height: 1;
+  }
+
+  .det__resenaTotalLabel {
+    display: block;
+    font-size: .85rem;
+    color: #7a7a7a;
+  }
+
+  .det__stars {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    font-size: .95rem;
+  }
+
+  .det__resenaDistrib {
+    width: 100%;
+  }
+
+  .det__resenaDistribRow {
+    display: grid;
+    grid-template-columns: 28px 1fr 20px;
+    align-items: center;
+    gap: .45rem;
+  }
+
+  .det__resenaDistribNum,
+  .det__resenaDistribCount {
+    font-size: .8rem;
+  }
+
+  .det__resenaBar {
+    width: 100%;
+    height: 6px;
+    border-radius: 999px;
+  }
+
+  .det__resenaNewBtn {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    padding: .95rem 1rem;
+    border-radius: 14px;
+    font-size: .95rem;
+  }
+
+  .det__emptyText {
+    font-size: .9rem;
+    line-height: 1.5;
+  }
+
 }
