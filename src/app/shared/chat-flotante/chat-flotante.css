@@ -52,7 +52,7 @@
 }
 
 .chatF__fab--open {
-  background: linear-gradient(135deg, #444, #222);
+  background: linear-gradient(135deg, #0e6973, #1a8a6e); /* mismo color */
 }
 
 /* Panel */
@@ -333,14 +333,14 @@
    ========================= */
 @media (max-width: 768px) {
   .chatF__fab {
-    bottom: 80px;
-    right: 16px;
-    width: 52px;
-    height: 52px;
+    bottom: 117px;
+    right: 12px;
+    width: 47px;
+    height: 47px;
   }
 
   .chatF__panel {
-    bottom: 64px;
+    bottom: 170px;
     right: 8px;
     left: 8px;
     width: auto;
