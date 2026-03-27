@@ -34,7 +34,6 @@
     <span class="chatF__sugLabel">Sugerencias rápidas</span>
     <div class="chatF__chips">
       <button class="chatF__chip" type="button" (click)="askAI('¿Qué lugares me recomiendas en el Quindío?')">📍 Lugares top</button>
-      <button class="chatF__chip" type="button" (click)="askAI('Plan romántico en el Quindío')">💫 Plan romántico</button>
       <button class="chatF__chip" type="button" (click)="askAI('Plan de aventura en el Quindío')">🏔️ Aventura</button>
       <button class="chatF__chip" type="button" (click)="askAI('¿Qué comer en el Quindío?')">🍽️ Gastronomía</button>
     </div>
@@ -80,11 +79,7 @@
   (click)="toggleChat($event)"
   [class.chatF__fab--open]="chatOpen"
 >
-  <i
-    [class]="chatOpen 
-      ? 'fa-solid fa-xmark chatF__icon' 
-      : 'fa-regular fa-compass chatF__icon'"
-  ></i>
+  <i class="fa-regular fa-compass chatF__icon"></i>
 </button>
 
 </ng-container>

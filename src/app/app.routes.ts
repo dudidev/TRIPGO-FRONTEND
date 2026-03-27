@@ -13,6 +13,7 @@ import { About } from './pages/about/about';
 import { Prices } from './pages/prices/prices';
 import { Soporte } from './pages/soporte/soporte';
 import { Recomendaciones } from './pages/recomendaciones/recomendaciones';
+import { authGuard } from './services/auth.guard';
 
 
 
@@ -38,14 +39,14 @@ export const routes: Routes = [
 
   { path: 'detalles/:slug', component: Detalles },
 
-  { path: 'editar-cuenta', component: EditarCuentaComponent },
+  { path: 'editar-cuenta', component: EditarCuentaComponent, canActivate: [authGuard] },
 
   // ✅ Ruta exclusiva empresa
   { path: 'empresa', component: EmpresaComponent, canActivate: [empresaGuard] },
   {path: 'about', component: About},
   {path: 'prices', component: Prices},
-  {path: 'soporte', component: Soporte},
-  {path: 'recomendaciones', component: Recomendaciones},
+  {path: 'soporte', component: Soporte, canActivate: [authGuard]},
+  {path: 'recomendaciones', component: Recomendaciones, canActivate: [authGuard]},
 
   {path: 'forgot-password', loadComponent: () => import('./pages/forgot-password/forgot-password')},
   {path: 'reset-password', loadComponent: () => import('./pages/reset-password/reset-password')},

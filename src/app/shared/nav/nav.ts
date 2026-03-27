@@ -9,6 +9,7 @@ import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog';
 import { ConfirmService } from '../../service/confirm.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-nav',
@@ -35,7 +36,8 @@ export class Nav implements AfterViewInit {
     private http          : HttpClient,
     public  lang          : LanguageService,
     public  itinerario    : ItinerarioService,
-    private confirmService: ConfirmService
+    private confirmService: ConfirmService,
+    public authService   : AuthService
   ) {
     this.router.events
       .pipe(filter(e => e instanceof NavigationEnd))
@@ -47,6 +49,19 @@ export class Nav implements AfterViewInit {
     this.setNavOffset();
     setTimeout(() => this.setNavOffset(), 0);
   }
+
+  goToProtected(event: Event, route: string): void {
+  if (this.authService.isLoggedIn()) {
+    return;
+  }
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  this.router.navigate(['/login'], {
+    queryParams: { returnUrl: route }
+  });
+}
 
   @HostListener('window:resize')
   onResize() { this.setNavOffset(); this.updateViewportState(); }
@@ -61,14 +76,23 @@ export class Nav implements AfterViewInit {
     document.documentElement.style.setProperty('--nav-offset', `${h}px`);
   }
 
-  get isLoggedIn(): boolean  { return this.userService.isLoggedIn(); }
-  get isEmpresaPage(): boolean { return this.router.url.includes('/empresa'); }
+get isLoggedIn(): boolean  { return this.authService.isLoggedIn(); }
+get isEmpresaPage(): boolean { return this.router.url.includes('/empresa'); }
 
   // ── Itinerario popover ────────────────────────────────────────
 toggleItinerario(event?: Event) {
   if (event) event.stopPropagation();
+
+  // 🔐 Si no está logueado, redirige al login
+  if (!this.authService.isLoggedIn()) {
+    this.router.navigate(['/login'], {
+      queryParams: { returnUrl: '/principal' }
+    });
+    return;
+  }
+
   this.itinerarioOpen = !this.itinerarioOpen;
-}  closeItinerario()   { this.itinerarioOpen = false; }
+} closeItinerario()   { this.itinerarioOpen = false; }
 
   @HostListener('document:keydown.escape')
   onEsc() { this.closeItinerario(); }
