@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Nav } from '../../shared/nav/nav';
 import { Footer } from '../../shared/footer/footer';
 import { MapaComponent } from '../../shared/mapa/mapa';
@@ -14,6 +14,7 @@ import { getMenuByTipo, ItemMenu, TASA_COP_USD, copToUsd } from '../../data/menu
 import { getServiciosByTipo } from '../../data/servicios-establecimiento.data';
 import { environment } from '../../../environments/environment';
 import { EstablecimientoService } from '../../services/establecimiento.service';
+import { AuthService } from '../../services/auth.service';
 
 type Opinion = { usuario: string; comentario: string; rating: number; };
 
@@ -68,6 +69,7 @@ miResena       : any    = null;  // si el usuario ya tiene una reseña
 
 // Formulario nueva reseña
 mostrarFormulario = false;
+mostrarConfirmacion = false;
 nuevaCalificacion = 0;
 nuevoComentario   = '';
 resenaMsg         = '';
@@ -76,6 +78,7 @@ resenaMsg         = '';
 editando          = false;
 editCalificacion  = 0;
 editComentario    = '';
+
 
   // ── Calculadora ──────────────────────────────────────────────
   menuItems      : ItemMenu[] = [];
@@ -123,11 +126,13 @@ decrementItem(item: ItemMenu): void {
 
   constructor(
     private route           : ActivatedRoute,
+    public router          : Router, 
     private api             : Api,
     private itinerario      : ItinerarioService,
     private favoritosService: FavoritosService,
     private http            : HttpClient, 
-    private establecimientoService: EstablecimientoService
+    private establecimientoService: EstablecimientoService,
+    public authService     : AuthService 
   ) {}
 
   ngOnInit(): void {
@@ -144,6 +149,20 @@ decrementItem(item: ItemMenu): void {
     });
 
   }
+
+  onFavoritoClick(event: Event): void {
+  event.preventDefault();
+  event.stopPropagation();
+
+  if (!this.authService.isLoggedIn()) {
+    this.router.navigate(['/login'], {
+      queryParams: { returnUrl: this.router.url }
+    });
+    return;
+  }
+
+  this.toggleFavorito();
+}
 
  getImagen(index: number): string {
   if (!this.lugar?.imagenes?.length) return '';
@@ -271,8 +290,8 @@ ngOnDestroy(): void {
         }
       }
 
-      console.log('IMAGENES DETALLE BACKEND:', this.imagenesLugar);
-      console.log('IMAGENES DETALLE FINALES:', this.lugar?.imagenes);
+      // console.log('IMAGENES DETALLE BACKEND:', this.imagenesLugar);
+      // console.log('IMAGENES DETALLE FINALES:', this.lugar?.imagenes);
     },
     error: (err: any) => {
       console.error('getImagenesLugar detalle error:', err);
@@ -335,6 +354,14 @@ toggleItem(item: ItemMenu): void {
 
   // ── Itinerario ────────────────────────────────────────────────
   agregarItinerario(): void {
+  // 🔐 Si no está logueado, redirige al login con returnUrl
+  if (!this.authService.isLoggedIn()) {
+    this.router.navigate(['/login'], {
+      queryParams: { returnUrl: this.router.url }
+    });
+    return;
+  }
+
   if (!this.lugar) return;
 
   const productosSeleccionados = this.menuItems
@@ -506,8 +533,13 @@ crearResena(): void {
 eliminarResena(): void {
   if (!this.miResena) return;
 
-  const confirmar = window.confirm('¿Estás seguro de que deseas eliminar tu reseña? Esta acción no se puede deshacer.');
-  if (!confirmar) return;
+  this.mostrarConfirmacion = true;
+}
+cancelarEliminacion(): void {
+  this.mostrarConfirmacion = false;
+}
+confirmarEliminacion(): void {
+  if (!this.miResena) return;
 
   const token = localStorage.getItem('token');
 
@@ -517,14 +549,17 @@ eliminarResena(): void {
     }
   }).subscribe({
     next: () => {
-      this.miResena  = null;
+      this.miResena = null;
       this.resenaMsg = 'Reseña eliminada.';
+      this.mostrarConfirmacion = false;
       this.cargarResenas();
+
       setTimeout(() => (this.resenaMsg = ''), 2000);
     },
     error: (err) => {
       console.error('Error eliminar:', err);
       this.resenaMsg = err.error?.message || 'Error al eliminar.';
+      this.mostrarConfirmacion = false;
     }
   });
 }

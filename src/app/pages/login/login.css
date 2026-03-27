@@ -236,6 +236,36 @@ input:focus {
 
 
 
+.password-field .input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-field input {
+  width: 100%;
+  padding-right: 40px; /* espacio para el ojito */
+}
+
+.toggle-password {
+  position: absolute;
+  right: 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #667085;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle-password:hover {
+  color: #0E6973;
+}
+
+
+
 /* ===========================
    RESPONSIVE (LOGIN)
    =========================== */
