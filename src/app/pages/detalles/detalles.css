@@ -462,24 +462,41 @@
 
 /* ─── CTA PRINCIPAL VERDE ─── */
 .det__ctaMain {
-  width: 100%; display: flex; align-items: center; gap: 14px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
   padding: 1.1rem 1.2rem;
-  background: linear-gradient(135deg, var(--primary), #1a8a6e);
-  /* background-color: var(--primary); */
-  border: none; border-radius: 20px; cursor: pointer; color: black;
-  text-align: left; box-shadow: 0 8px 24px rgba(14,105,115,0.3);
+  background: linear-gradient(135deg, #10b981, #059669);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 20px;
+  cursor: pointer;
+  color: white;
+  text-align: left;
+  box-shadow: 0 8px 24px rgba(14,105,115,0.3);
   transition: transform 0.2s, box-shadow 0.2s;
+   margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  pointer-events: auto;
+ 
 }
-.det__ctaMain:hover { transform: translateY(-3px); 
-  box-shadow: 0 14px 36px rgba(14,105,115,0.4);
-  background-color: var(--primary);
-  color: black; /* Fallback sólido para hover */
- }
+.det__ctaMain:hover {
+  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+  transform: translateY(-2px);
+  color: white;
+  transition: all 0.2s ease;
+}
 
 .det__ctaMain > span { font-size: 24px; flex-shrink: 0; }
 .det__ctaMain > svg  { margin-left: auto; flex-shrink: 0; opacity: 0.7; }
-.det__ctaMainTitle   { font-size: 14px; font-weight: 800; margin-bottom: 2px; }
+.det__ctaMainTitle   { font-size: 15px; font-weight: 900; margin-bottom: 2px; }
 .det__ctaMainSub     { font-size: 11px; opacity: 0.75; }
+
+.det__body {
+  padding-bottom: 120px;
+}
+
+
 
 /* ── Reseñas ─────────────────────────────────────── */
 .det__resenaStats {
