@@ -4,19 +4,21 @@
 
   <!-- ═══════════ HERO ═══════════ -->
   <header class="results__hero">
-    <div class="results__heroCarousel">
-      <ng-container *ngIf="heroImgs?.length; else heroFallback">
-        <img
-          *ngFor="let img of heroImgs; let i = index"
-          class="results__heroImg"
-          [class.active]="i === heroIndex"
-          [src]="img" alt="Hero"
-        />
-      </ng-container>
-      <ng-template #heroFallback>
-        <div class="results__heroPlaceholder"></div>
-      </ng-template>
-    </div>
+    <!-- DESPUÉS -->
+<div class="results__heroCarousel"
+     [sharedHero]="'tipo-' + idTipo">
+  <ng-container *ngIf="heroImgs?.length; else heroFallback">
+    <img
+      *ngFor="let img of heroImgs; let i = index"
+      class="results__heroImg"
+      [class.active]="i === heroIndex"
+      [src]="img" alt="Hero"
+    />
+  </ng-container>
+  <ng-template #heroFallback>
+    <div class="results__heroPlaceholder"></div>
+  </ng-template>
+</div>
 
     <div class="results__heroOverlay">
       <div class="results__heroContent">
@@ -55,10 +57,7 @@
     <main class="results__main">
 
       <!-- Loading -->
-      <div *ngIf="loading" class="results__state">
-        <div class="results__spinner"></div>
-        <p>Cargando experiencias...</p>
-      </div>
+      <app-skeleton *ngIf="loading" type="lugar" [count]="4" />
 
       <!-- Error -->
       <div *ngIf="!loading && errorMsg" class="results__state results__state--empty">

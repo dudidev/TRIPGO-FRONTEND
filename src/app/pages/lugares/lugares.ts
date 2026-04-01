@@ -6,6 +6,8 @@ import { Nav } from '../../shared/nav/nav';
 import { Footer } from '../../shared/footer/footer';
 import { Api } from '../../api';
 import { Subject, takeUntil } from 'rxjs';
+import { SkeletonLoaderComponent } from '../../shared/skeleton-loader/skeleton-loader';
+import { SharedHeroDirective } from '../../shared/shared-element-hero.directive';
 
 type CardItem = { slug: string; titulo: string; img: string; };
 
@@ -14,7 +16,7 @@ type ChatMessage = { role: 'user' | 'ai'; text: string; };
 @Component({
   selector: 'app-lugares',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, Nav, Footer],
+  imports: [CommonModule, FormsModule, RouterModule, Nav, Footer, SkeletonLoaderComponent, SharedHeroDirective],
   templateUrl: './lugares.html',
   styleUrl: './lugares.css'
 })
