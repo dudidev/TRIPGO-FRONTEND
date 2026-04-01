@@ -957,8 +957,8 @@
   .cat__searchBar   { padding: 10px 1rem; }
 }
 @media (max-width: 420px) {
-  .cat__grid { grid-template-columns: 1fr; }
-  .cat__cardImgWrap { height: 180px; }
+  .cat__grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .cat__cardImgWrap { height: 110px; }
 }
 /* =========================
    CHATBOT FLOTANTE MÓVIL

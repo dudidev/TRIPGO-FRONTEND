@@ -83,10 +83,7 @@
     <main class="cat__main">
 
       <!-- Loading -->
-      <div *ngIf="loadingTipos" class="cat__state">
-        <div class="cat__spinner"></div>
-        <p>Cargando categorías...</p>
-      </div>
+      <app-skeleton *ngIf="loadingTipos" type="categoria" [count]="8" />
 
       <!-- Vacío -->
       <div *ngIf="!loadingTipos && tipos.length === 0" class="cat__state cat__state--empty">
@@ -96,20 +93,22 @@
 
       <!-- Grid de categorías -->
       <div class="cat__grid" *ngIf="!loadingTipos && tipos.length > 0">
-        <button
-          class="cat__card"
-          type="button"
-          *ngFor="let t of tipos"
-          (click)="goTipo(t.id_tipo)"
-        >
-          <div class="cat__cardImgWrap">
-            <img [src]="portadaTipo(t.id_tipo)" [alt]="t.nombre_tipo" />
-          </div>
-          <div class="cat__cardBody">
-            <span class="cat__cardName">{{ t.nombre_tipo | titlecase }}</span>
-            <span class="cat__cardCta">Explorar →</span>
-          </div>
-        </button>
+       <button
+  class="cat__card"
+  type="button"
+  *ngFor="let t of tipos"
+  [sharedElement]="'/lugares/' + townSlug + '/tipo/' + t.id_tipo"
+  [sharedKey]="'tipo-' + t.id_tipo"
+  [sharedImage]="portadaTipo(t.id_tipo)"
+>
+  <div class="cat__cardImgWrap">
+    <img [src]="portadaTipo(t.id_tipo)" [alt]="t.nombre_tipo" />
+  </div>
+  <div class="cat__cardBody">
+    <span class="cat__cardName">{{ t.nombre_tipo | titlecase }}</span>
+    <span class="cat__cardCta">Explorar →</span>
+  </div>
+</button>
       </div>
 
     </main>
