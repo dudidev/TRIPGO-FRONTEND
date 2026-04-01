@@ -41,8 +41,7 @@
         placeholder="Busca en {{ data?.nombre || (townSlug | titlecase) }}..."
         autocomplete="off"
       />
-      <button type="submit">Buscar</button>
-    </form>
+<button type="submit" (click)="haptic.medium()">Buscar</button>    </form>
   </div>
 
   <!-- ═══════════ SEARCH PANEL ═══════════ -->
@@ -86,13 +85,21 @@
       <app-skeleton *ngIf="loadingTipos" type="categoria" [count]="8" />
 
       <!-- Vacío -->
-      <div *ngIf="!loadingTipos && tipos.length === 0" class="cat__state cat__state--empty">
-        <span class="cat__emptyIcon"><i class="fas fa-info-circle"></i></span>
-        <p>No hay categorías registradas para este pueblo aún.</p>
-      </div>
+      <app-empty
+        *ngIf="!loadingTipos && tipos.length === 0"
+        type="categoria"
+        title="Sin categorías aún"
+        description="Este pueblo aún no tiene categorías registradas. Pronto habrá más destinos disponibles."
+        actionLabel="Explorar otros pueblos"
+        actionRoute="/principal">
+      </app-empty>
 
       <!-- Grid de categorías -->
-      <div class="cat__grid" *ngIf="!loadingTipos && tipos.length > 0">
+    <div class="cat__grid" 
+     *ngIf="!loadingTipos && tipos.length > 0"
+     staggerList
+     [staggerDelay]="70"
+     staggerFrom="bottom">
        <button
   class="cat__card"
   type="button"
