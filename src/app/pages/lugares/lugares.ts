@@ -8,6 +8,9 @@ import { Api } from '../../api';
 import { Subject, takeUntil } from 'rxjs';
 import { SkeletonLoaderComponent } from '../../shared/skeleton-loader/skeleton-loader';
 import { SharedHeroDirective } from '../../shared/shared-element-hero.directive';
+import { StaggerDirective } from '../../shared/stagger.directive';
+import { HapticService } from '../../shared/haptic.service';
+import { EmptyStateComponent } from '../../shared/empty-state/empty-state';
 
 type CardItem = { slug: string; titulo: string; img: string; };
 
@@ -16,7 +19,9 @@ type ChatMessage = { role: 'user' | 'ai'; text: string; };
 @Component({
   selector: 'app-lugares',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, Nav, Footer, SkeletonLoaderComponent, SharedHeroDirective],
+  imports: [CommonModule, FormsModule, RouterModule,
+     Nav, Footer, SkeletonLoaderComponent, SharedHeroDirective,
+      StaggerDirective, EmptyStateComponent],
   templateUrl: './lugares.html',
   styleUrl: './lugares.css'
 })
@@ -53,7 +58,8 @@ export class LugaresComponent implements OnInit, OnDestroy, AfterViewChecked {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private api: Api
+    private api: Api,
+    private haptic: HapticService
   ) {}
 
   ngOnInit(): void {

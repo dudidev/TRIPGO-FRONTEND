@@ -60,13 +60,21 @@
       <app-skeleton *ngIf="loading" type="lugar" [count]="4" />
 
       <!-- Error -->
-      <div *ngIf="!loading && errorMsg" class="results__state results__state--empty">
-        <span class="results__emptyIcon">🗺️</span>
-        <p>{{ errorMsg }}</p>
-      </div>
+      <app-empty
+        *ngIf="!loading && errorMsg"
+        type="lugar"
+        title="Sin lugares disponibles"
+        [description]="errorMsg"
+        actionLabel="Volver a categorías"
+        [actionRoute]="'/lugares/' + townSlug">
+      </app-empty>
 
       <!-- Grid de cards -->
-      <div class="cards" *ngIf="!loading && !errorMsg">
+      <div class="cards" 
+     *ngIf="!loading && !errorMsg"
+     staggerList
+     [staggerDelay]="90"
+     staggerFrom="bottom">
         <button
           class="card"
           type="button"
