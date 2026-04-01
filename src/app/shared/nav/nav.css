@@ -402,7 +402,7 @@
   top: env(safe-area-inset-top);
   right: 0;
   width: min(320px, 85vw);
-  height: calc(71vh - env(safe-area-inset-top));
+  height: calc(76vh - env(safe-area-inset-top));
   background: #ffffff;
   border-radius: 15px;
   z-index: 1000;
