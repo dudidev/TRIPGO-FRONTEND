@@ -56,7 +56,7 @@ html {
   position: relative;
   z-index: 3;
   width: min(680px, 88%);
-  margin-left: auto;
+  /* margin-left: auto; */
   margin-right: 5%;
   display: flex;
   flex-direction: column;
