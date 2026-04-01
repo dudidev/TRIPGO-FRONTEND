@@ -414,7 +414,7 @@ footer {
 @media (max-width: 767px) {
   .home {
     background: #f6f3ee;
-    padding-bottom: 40px;
+    padding-bottom: calc(40px + env(safe-area-inset-bottom));
   }
 
   .home__allies {
@@ -564,18 +564,18 @@ footer {
      SEARCH PANEL
   ───────────────────────────────────── */
   .searchPanel {
-    top: auto;
-    left: 12px;
-    right: 12px;
-    bottom: 84px;
-    transform: none;
-    width: auto;
-    max-height: 56vh;
-    border-radius: 24px;
-    border-top: none;
-    padding: 12px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.24);
-  }
+  top: auto;
+  left: 12px;
+  right: 12px;
+  bottom: calc(62px + env(safe-area-inset-bottom) + 67px);
+  transform: none;
+  width: auto;
+  max-height: calc(81vh - var(--nav-offset, 120px) - 64px - env(safe-area-inset-bottom) - env(safe-area-inset-top) - 24px);
+  border-radius: 24px;
+  border-top: none;
+  padding: 12px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.24);
+}
 
   .searchPanel__head {
     padding: 4px 4px 12px;
