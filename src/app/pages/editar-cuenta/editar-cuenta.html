@@ -112,31 +112,38 @@
         <small>Explora y guarda los que más te gusten.</small>
       </div>
 
-      <div
-        class="fav-item"
-        *ngFor="let fav of favoritos"
-      >
-        <div class="fav-thumb" (click)="irADetalle(fav)">
-          <img *ngIf="fav.imagenUrl" [src]="fav.imagenUrl" [alt]="fav.nombre" />
-          <span *ngIf="!fav.imagenUrl">{{ fav.nombre[0] }}</span>
+     <div
+          class="fav-item"
+          *ngFor="let fav of favoritos"
+          (click)="irADetalle(fav)"
+        >
+          <div class="fav-thumb">
+            <img *ngIf="fav.imagenUrl" [src]="fav.imagenUrl" [alt]="fav.nombre" />
+            <span *ngIf="!fav.imagenUrl" class="fav-thumb__initial">
+              {{ fav.nombre[0] | uppercase }}
+            </span>
+          </div>
+
+          <div class="fav-info">
+            <div class="fav-name">{{ fav.nombre }}</div>
+            <div class="fav-dir">
+              <i class="fa-solid fa-location-dot"></i> {{ fav.direccion || '—' }}
+            </div>
+          </div>
+
+          <button
+            class="btn-quitar"
+            type="button"
+            (click)="$event.stopPropagation(); eliminarFavorito(fav)"
+            [title]="'Quitar ' + fav.nombre + ' de favoritos'"
+          >
+            <i class="fa-solid fa-heart"></i>
+          </button>
         </div>
 
-        <div class="fav-info" (click)="irADetalle(fav)">
-          <div class="fav-name">{{ fav.nombre }}</div>
-          <div class="fav-dir"><i class="fa-solid fa-location-dot"></i> {{ fav.direccion || '—' }}</div>
+            </div>
+          </section>
+
         </div>
-
-        <div class="fav-actions">
-          <button class="btn-ver" type="button" (click)="irADetalle(fav)">Ver →</button>
-          <button class="btn-quitar" type="button" (click)="eliminarFavorito(fav)">✕ Quitar</button>
-        </div>
-
-        <span class="fav-arrow"><i class="fa-solid fa-chevron-right"></i></span>
-      </div>
-
-    </div>
-  </section>
-
-</div>
 
 <app-footer></app-footer>

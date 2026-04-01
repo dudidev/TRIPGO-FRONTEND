@@ -15,6 +15,9 @@ import { getServiciosByTipo } from '../../data/servicios-establecimiento.data';
 import { environment } from '../../../environments/environment';
 import { EstablecimientoService } from '../../services/establecimiento.service';
 import { AuthService } from '../../services/auth.service';
+import { StaggerDirective } from '../../shared/stagger.directive';
+import { HapticService } from '../../shared/haptic.service';
+import { EmptyStateComponent } from '../../shared/empty-state/empty-state';
 
 type Opinion = { usuario: string; comentario: string; rating: number; };
 
@@ -39,7 +42,8 @@ type LugarDetalle = {
 @Component({
   selector   : 'app-detalles',
   standalone : true,
-  imports    : [Nav, CommonModule, Footer, RouterModule, MapaComponent, FormsModule],
+  imports    : [Nav, CommonModule, Footer, 
+    RouterModule, MapaComponent, FormsModule, StaggerDirective, EmptyStateComponent],
   templateUrl: './detalles.html',
   styleUrl   : './detalles.css',
 })
@@ -132,7 +136,8 @@ decrementItem(item: ItemMenu): void {
     private favoritosService: FavoritosService,
     private http            : HttpClient, 
     private establecimientoService: EstablecimientoService,
-    public authService     : AuthService 
+    public authService     : AuthService ,
+    private haptic          : HapticService
   ) {}
 
   ngOnInit(): void {
