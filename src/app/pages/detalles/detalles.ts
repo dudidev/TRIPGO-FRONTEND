@@ -412,7 +412,7 @@ toggleItem(item: ItemMenu): void {
     const datosGenerales: string[] = [];
     if (base?.telefono) datosGenerales.push(`Teléfono: ${base.telefono}`);
     if (base?.correo)   datosGenerales.push(`Correo: ${base.correo}`);
-    if (base?.estado)   datosGenerales.push(`Estado: ${base.estado}`);
+    // if (base?.estado)   datosGenerales.push(`Estado: ${base.estado}`);
 
     const servicios: string[] = Array.isArray(base?.servicios)
       ? base.servicios.map(String)
