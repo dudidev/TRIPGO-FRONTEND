@@ -75,7 +75,11 @@
         <button type="button" (click)="closePanel()">✕</button>
       </div>
       @if (results.length === 0) {
-        <p class="searchEmpty">No se encontraron resultados.</p>
+        <app-empty
+          type="search"
+          title='Sin resultados para "{{ query }}"'
+          description="Intenta con otro término o explora las categorías disponibles.">
+        </app-empty>
       } @else {
         <div class="searchList">
           @for (r of results; track r.title) {
