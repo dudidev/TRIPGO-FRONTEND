@@ -112,3 +112,7 @@ p{
     padding-bottom: calc(64px + env(safe-area-inset-bottom));
   }
 }
+
+/* Evita scroll horizontal durante transiciones */
+body { overflow-x: hidden; }
+router-outlet + * { display: block; overflow-x: hidden; }
