@@ -1,0 +1,54 @@
+/* skeleton-loader.component.css */
+.skeleton-wrap { padding: 16px; }
+
+/* Shimmer base */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    #e0e0e0 25%,
+    #f0f0f0 50%,
+    #e0e0e0 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 12px;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Imágenes */
+.sk-img.sq   { width: 72px; height: 72px; border-radius: 16px; }
+.sk-img.wide { width: 100%; height: 160px; border-radius: 16px; }
+.sk-hero     { width: 100%; height: 240px; border-radius: 0; }
+
+/* Líneas de texto */
+.sk-line {
+  height: 14px;
+  width: 100%;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+.sk-line.short { width: 55%; }
+
+/* Layout categorías (grid 4 cols) */
+.sk-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.sk-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Layout lugares (lista) */
+.sk-list { display: flex; flex-direction: column; gap: 16px; }
+.sk-card { display: flex; flex-direction: column; }
+
+/* Body del detalle */
+.sk-body { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
