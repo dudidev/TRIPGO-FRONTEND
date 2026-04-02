@@ -1,22 +1,54 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
-export type Lang = 'es' | 'en';
+export type Language = 'es' | 'en';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class LanguageService {
-  private readonly KEY = 'tripgo_lang';
-  private lang: Lang = (localStorage.getItem(this.KEY) as Lang) || 'es';
+  private translate = inject(TranslateService);
+  private readonly STORAGE_KEY = 'tripgo_language';
+  current: any;
 
-  get current(): Lang {
-    return this.lang;
+  constructor() {
+    this.initLanguage();
   }
 
-  set(lang: Lang) {
-    this.lang = lang;
-    localStorage.setItem(this.KEY, lang);
+  private initLanguage(): void {
+    // Idiomas disponibles
+    this.translate.addLangs(['es', 'en']);
+
+    // Idioma por defecto
+    this.translate.setDefaultLang('es');
+
+    // Cargar idioma guardado o usar default
+    const savedLang = this.getSavedLanguage();
+    this.translate.use(savedLang);
   }
 
-  toggle() {
-    this.set(this.lang === 'es' ? 'en' : 'es');
+  getCurrentLanguage(): Language {
+    return this.translate.currentLang as Language;
+  }
+
+  private getSavedLanguage(): Language {
+    const saved = localStorage.getItem(this.STORAGE_KEY);
+    return (saved === 'en' || saved === 'es') ? saved : 'es';
+  }
+
+  setLanguage(lang: Language): void {
+    this.translate.use(lang);
+    localStorage.setItem(this.STORAGE_KEY, lang);
+  }
+
+  toggleLanguage(): void {
+    const currentLang = this.getCurrentLanguage();
+    const newLang: Language = currentLang === 'es' ? 'en' : 'es';
+    this.setLanguage(newLang);
+  }
+
+  // Helper para obtener traducciones de forma síncrona
+  instant(key: string, params?: any): string {
+    return this.translate.instant(key, params);
   }
 }
