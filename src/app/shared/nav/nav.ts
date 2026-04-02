@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog';
 import { ConfirmService } from '../../service/confirm.service';
 import { AuthService } from '../../services/auth.service';
+import { DarkModeService } from '../dark-mode/dark-mode';
 
 @Component({
   selector: 'app-nav',
@@ -37,7 +38,8 @@ export class Nav implements AfterViewInit {
     public  lang          : LanguageService,
     public  itinerario    : ItinerarioService,
     private confirmService: ConfirmService,
-    public authService   : AuthService
+    public authService   : AuthService,
+    public  darkMode      : DarkModeService
   ) {
     this.router.events
       .pipe(filter(e => e instanceof NavigationEnd))
