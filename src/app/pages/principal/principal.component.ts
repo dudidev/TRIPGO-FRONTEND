@@ -7,13 +7,13 @@ import { Nav } from '../../shared/nav/nav';
 import { Footer } from '../../shared/footer/footer';
 import { SearchService, SearchResult } from '../../service/search.service';
 import { Api } from '../../api';
-
+import { EmptyStateComponent } from '../../shared/empty-state/empty-state';
 import { take } from 'rxjs';
 
 @Component({
   selector: 'app-principal',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, Nav, Footer],
+  imports: [CommonModule, RouterModule, FormsModule, Nav, Footer, EmptyStateComponent],
   templateUrl: './principal.component.html',
   styleUrls: ['./principal.component.css']
 })

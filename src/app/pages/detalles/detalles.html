@@ -52,14 +52,10 @@
       <p class="det__heroAddr">📍 {{ l.direccion }}</p>
     </div>
 
-    <button
-        class="det__heroFav"
-        type="button"
-        (click)="onFavoritoClick($event)"
-        [title]="esFavorito ? 'Quitar' : 'Favorito'"
-      >
-        {{ esFavorito ? '♥' : '♡' }}
-    </button>
+    <button class="det__heroFav" type="button"
+  (click)="onFavoritoClick($event); haptic.success()">
+  {{ esFavorito ? '♥' : '♡' }}
+</button>
   </div>
 
   </section>
@@ -77,19 +73,32 @@
 
       <section class="det__section">
         <h2 class="det__sectionTitle"><span class="det__sectionIcon"><i class="fa-solid fa-star"></i></span>Servicios y amenidades</h2>
-        <div class="det__amenities" *ngIf="l.servicios?.length; else noServicios">
-          <div class="det__amenity" *ngFor="let s of l.servicios">
-            <span class="det__amenityDot"></span>{{ s }}
+        <!-- Amenidades — agrega staggerList -->
+      <div class="det__amenities" 
+          *ngIf="l.servicios?.length; else noServicios"
+          staggerList
+          [staggerDelay]="60"
+          staggerFrom="fade">
+        <div class="det__amenity" *ngFor="let s of l.servicios">
+          <span class="det__amenityDot"></span>{{ s }}
+        </div>
+      </div>
+
+      <!-- Reseñas — agrega staggerList -->
+      <ng-container *ngIf="!resenaLoading">
+        <div staggerList [staggerDelay]="80" staggerFrom="bottom">
+          <div class="det__opinion" *ngFor="let r of resenas">
+            <!-- igual que antes -->
           </div>
         </div>
+      </ng-container>
         <ng-template #noServicios>
           <p class="det__emptyText">Los servicios de este lugar estarán disponibles pronto.</p>
         </ng-template>
       </section>
 
       <section class="det__section">
-        <h2 class="det__sectionTitle"><span class="det__sectionIcon"><li class="fa-solid fa-clock"></li></span>Horarios y ubicación</h2>
-        <div class="det__hoursGrid" *ngIf="l.horarios?.length; else noHorarios">
+<h2 class="det__sectionTitle"><span class="det__sectionIcon"><i class="fa-solid fa-clock"></i></span>Horarios y ubicación</h2>        <div class="det__hoursGrid" *ngIf="l.horarios?.length; else noHorarios">
           <div class="det__hourItem" *ngFor="let h of l.horarios">
             <span class="det__hourLabel">Horario</span>
             <span class="det__hourVal">{{ h }}</span>
@@ -204,39 +213,60 @@
         <button
           class="det__resenaNewBtn"
           *ngIf="!miResena && !mostrarFormulario"
-          (click)="mostrarFormulario = true">
-          <i class="fa-solid fa-pen det__btnIcon fa-icon"></i>Escribir una reseña
+          (click)="authService.isLoggedIn() ? (mostrarFormulario = true) : (mostrarLoginResena = true)">
+          <i class="fa-solid fa-pen det__btnIcon fa-icon"></i>
+          Escribir una reseña
         </button>
 
-        <div class="det__resenaForm" *ngIf="mostrarFormulario && !miResena">
-          <h4>Tu opinión</h4>
-          <div class="det__starPicker">
-            <span
-              *ngFor="let s of [1,2,3,4,5]"
-              (click)="setCalificacion(s)"
-              [class.active]="s <= nuevaCalificacion">★</span>
-          </div>
 
-          <small class="det__resenaHint" *ngIf="!nuevaCalificacion">
-            Selecciona una calificación para continuar
-          </small>
 
-          <textarea
-            [(ngModel)]="nuevoComentario"
-            rows="3"
-            placeholder="Cuéntanos tu experiencia (mín. 10 caracteres)">
-          </textarea>
 
-          <div class="det__resenaFormBtns">
-            <button
-              class="det__resenaSendBtn"
-              (click)="crearResena()"
-              [disabled]="!nuevaCalificacion || nuevoComentario.trim().length < 10">
-              Publicar reseña
-            </button>
-            <button class="det__resenaCancelBtn" (click)="mostrarFormulario = false">Cancelar</button>
-          </div>
-        </div>
+        
+
+       <div class="det__resenaForm" *ngIf="authService.isLoggedIn() && mostrarFormulario && !miResena">
+  <h4>Tu opinión</h4>
+
+  <div class="det__starPicker">
+    <span
+      *ngFor="let s of [1,2,3,4,5]"
+      (click)="setCalificacion(s); haptic.light()"
+      [class.active]="s <= nuevaCalificacion">
+      ★
+    </span>
+  </div>
+
+  <small class="det__resenaHint" *ngIf="!nuevaCalificacion">
+    Selecciona una calificación para continuar
+  </small>
+
+  <textarea
+    [(ngModel)]="nuevoComentario"
+    rows="3"
+    placeholder="Cuéntanos tu experiencia (mín. 10 caracteres)">
+  </textarea>
+
+  <div class="det__resenaFormBtns">
+    <button
+      class="det__resenaSendBtn"
+      (click)="crearResena(); haptic.success()"
+      [disabled]="!nuevaCalificacion || nuevoComentario.trim().length < 10">
+      Publicar reseña
+    </button>
+
+    <button
+      class="det__resenaCancelBtn"
+      (click)="mostrarFormulario = false">
+      Cancelar
+    </button>
+  </div>
+</div>
+
+
+
+
+
+
+
 
         <ng-container *ngIf="!resenaLoading">
           <div class="det__opinion" *ngFor="let r of resenas">
@@ -255,9 +285,12 @@
             <p class="det__opinionText">{{ r.comentario }}</p>
           </div>
 
-          <p class="det__emptyText" *ngIf="resenas.length === 0 && !resenaError">
-            Aún no hay opiniones para este lugar.
-          </p>
+          <app-empty
+            *ngIf="resenas.length === 0 && !resenaError && !resenaLoading"
+            type="resena"
+            title="Sin opiniones aún"
+            description="Sé el primero en compartir tu experiencia en este lugar.">
+          </app-empty>
         </ng-container>
       </section>
 
@@ -278,7 +311,7 @@
                   ? 'fa-solid fa-phone'
                   : d.startsWith('Correo')
                   ? 'fa-solid fa-envelope'
-                  : 'fa-solid fa-circle-check'
+                  : 'fa-solid fa-circle-check' 
               "
             ></i>
           </span>
@@ -293,8 +326,7 @@
         <p class="det__emptyText" *ngIf="!l.datosGenerales?.length">Sin información de contacto aún.</p>
 
         <div class="det__promo" *ngIf="l.promociones">
-          <span class="det__promoIcon"><li class="fa-solid fa-gift" ></li></span>
-          <div>
+            <span class="det__promoIcon"><i class="fa-solid fa-gift"></i></span>          <div>
             <div class="det__promoLabel">Promoción activa</div>
             <div class="det__promoText">{{ l.promociones }}</div>
           </div>
@@ -389,7 +421,8 @@
   </div>
 </div>
 
-<button class="det__ctaMain" type="button" (click)="agregarItinerario()">
+<button class="det__ctaMain" type="button" 
+  (click)="agregarItinerario(); haptic.medium()">
         <span><i class="fa-solid fa-circle-check"></i></span>
         <div>
           <div class="det__ctaMainTitle">Agregar a mi itinerario</div>
@@ -419,6 +452,30 @@
       </button>
       <button type="button" class="btn-delete" (click)="confirmarEliminacion()">
         Eliminar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL LOGIN RESEÑA -->
+<div class="modal-overlay" *ngIf="mostrarLoginResena">
+  <div class="modal-box">
+    <div class="modal-icon">
+      <i class="fa-solid fa-user"></i>
+    </div>
+
+    <h3>DEBES INICIAR SESIÓN</h3>
+    <p>PARA PUBLICAR TU RESEÑA</p>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="mostrarLoginResena = false">
+        Cancelar
+      </button>
+
+      <button
+        class="btn-delete"
+        (click)="router.navigate(['/login'], { queryParams: { returnUrl: router.url } })">
+        Iniciar sesión
       </button>
     </div>
   </div>

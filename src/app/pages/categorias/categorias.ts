@@ -8,6 +8,11 @@ import { SearchService, SearchResult } from '../../service/search.service';
 import { CATEGORIAS_DATA, CategoriaData } from '../../data/categorias.data';
 import { Api } from '../../api';
 import { portadaTipo } from '../../shared/tipos-portada';
+import { SkeletonLoaderComponent } from '../../shared/skeleton-loader/skeleton-loader';
+import { SharedElementDirective } from '../../shared/shared-element.directive';
+import { StaggerDirective } from '../../shared/stagger.directive';
+import { HapticService } from '../../shared/haptic.service';
+import { EmptyStateComponent } from '../../shared/empty-state/empty-state';
 
 type TipoItem    = { id_tipo: number; nombre_tipo: string; };
 type ChatMessage = { role: 'user' | 'ai'; text: string; };
@@ -15,7 +20,9 @@ type ChatMessage = { role: 'user' | 'ai'; text: string; };
 @Component({
   selector: 'app-categorias',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, Nav, Footer],
+  imports: [CommonModule, FormsModule, RouterModule,
+     Nav, Footer, SkeletonLoaderComponent,
+      SharedElementDirective, StaggerDirective , EmptyStateComponent],
   templateUrl: './categorias.html',
   styleUrls: ['./categorias.css']
 })
@@ -47,6 +54,7 @@ export class Categorias implements OnInit, OnDestroy, AfterViewChecked {
   showProModal = false;
   chatOpen = false;
   isDesktop = window.innerWidth > 1020;
+  isLoading = true;
 
   chatMessages: ChatMessage[] = [
     { role: 'ai', text: '¡Hola! Soy tu asistente de viaje. ¿Qué tipo de experiencia buscas hoy? 🌿' }
@@ -57,10 +65,13 @@ export class Categorias implements OnInit, OnDestroy, AfterViewChecked {
     private route  : ActivatedRoute,
     private router : Router,
     private search : SearchService,
-    private api    : Api
+    private api    : Api,
+    public haptic  : HapticService
+
   ) {}
 
   ngOnInit(): void {
+    
     this.route.paramMap.subscribe(params => {
       this.townSlug = params.get('townSlug') || '';
 

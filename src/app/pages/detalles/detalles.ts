@@ -15,6 +15,9 @@ import { getServiciosByTipo } from '../../data/servicios-establecimiento.data';
 import { environment } from '../../../environments/environment';
 import { EstablecimientoService } from '../../services/establecimiento.service';
 import { AuthService } from '../../services/auth.service';
+import { StaggerDirective } from '../../shared/stagger.directive';
+import { HapticService } from '../../shared/haptic.service';
+import { EmptyStateComponent } from '../../shared/empty-state/empty-state';
 
 type Opinion = { usuario: string; comentario: string; rating: number; };
 
@@ -39,7 +42,8 @@ type LugarDetalle = {
 @Component({
   selector   : 'app-detalles',
   standalone : true,
-  imports    : [Nav, CommonModule, Footer, RouterModule, MapaComponent, FormsModule],
+  imports    : [Nav, CommonModule, Footer, 
+    RouterModule, MapaComponent, FormsModule, StaggerDirective, EmptyStateComponent],
   templateUrl: './detalles.html',
   styleUrl   : './detalles.css',
 })
@@ -85,6 +89,8 @@ editComentario    = '';
   totalCOP       = 0;
   tasaCopUsd     = TASA_COP_USD;
 
+  mostrarLoginResena = false;
+
   // ✅ después — recalcula cuando cambia menuItems
 private buildMenu(): void {
   const map = new Map<string, ItemMenu[]>();
@@ -93,6 +99,13 @@ private buildMenu(): void {
     map.get(item.categoria)!.push(item);
   }
   this.menuAgrupado = Array.from(map.entries()).map(([cat, items]) => ({ cat, items }));
+}
+
+irALogin() {
+  this.mostrarLoginResena = false;
+  this.router.navigate(['/login'], {
+    queryParams: { returnUrl: this.router.url }
+  });
 }
 
 
@@ -132,7 +145,8 @@ decrementItem(item: ItemMenu): void {
     private favoritosService: FavoritosService,
     private http            : HttpClient, 
     private establecimientoService: EstablecimientoService,
-    public authService     : AuthService 
+    public authService     : AuthService ,
+    private haptic          : HapticService
   ) {}
 
   ngOnInit(): void {
@@ -412,7 +426,7 @@ toggleItem(item: ItemMenu): void {
     const datosGenerales: string[] = [];
     if (base?.telefono) datosGenerales.push(`Teléfono: ${base.telefono}`);
     if (base?.correo)   datosGenerales.push(`Correo: ${base.correo}`);
-    if (base?.estado)   datosGenerales.push(`Estado: ${base.estado}`);
+    // if (base?.estado)   datosGenerales.push(`Estado: ${base.estado}`);
 
     const servicios: string[] = Array.isArray(base?.servicios)
       ? base.servicios.map(String)
@@ -496,13 +510,19 @@ cargarResenas(): void {
 }
 
 crearResena(): void {
+  // 🔐 VALIDACIÓN DE SESIÓN
+  if (!this.authService.isLoggedIn()) {
+    this.mostrarLoginResena = true;
+    return;
+  }
+
   const id = this.lugar?.id_establecimiento;
   if (!id || !this.nuevaCalificacion || !this.nuevoComentario.trim()) return;
 
-  const token = localStorage.getItem('token');  // ← toma el token directo
-  
+  const token = localStorage.getItem('token');
+
   this.http.post<any>(
-    `${this.apiUrl}/resenas`,                   // ← verifica que apiUrl tenga http://localhost:8080
+    `${this.apiUrl}/resenas`,
     {
       id_establecimiento: id,
       calificacion      : this.nuevaCalificacion,
@@ -524,7 +544,6 @@ crearResena(): void {
       setTimeout(() => (this.resenaMsg = ''), 2000);
     },
     error: (err) => {
-      console.error('Error reseña:', err); // ← agrega esto para ver el error real
       this.resenaMsg = err.error?.message || 'Error al publicar la reseña.';
     }
   });

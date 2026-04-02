@@ -1,71 +1,152 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import "leaflet/dist/leaflet.css";
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family:  'Open Sans', sans-serif;
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Open Sans', sans-serif;
 }
 
+/* ══════════════════════════════════════
+   VARIABLES — MODO CLARO (por defecto)
+   ══════════════════════════════════════ */
+:root {
+  /* Colores primarios */
+  --primary-color:   #0E6973;
+  --secondary-color: #E27921;
 
-:root{
-    /*Colores primarios*/
-    --primary-color: #0E6973;
-    --secondary-color: #E27921;
+  /* Colores neutros */
+  --bg-color:        #F8F9FA;
+  --text-color:      #2B2D42;
+  --light-text-color: #fff;
 
-    /*Colores neutros*/
-    --bg-color: #F8F9FA;
-    --text-color: #2B2D42;
-    --light-text-color: #fff;
+  /* Tipografías */
+  --font-primary: "Poppins", sans-serif;
 
-    /*Tipografías*/
-    --font-primary: "Poppins", sans-serif;
+  /* Bordes y espaciados */
+  --radius-sm: 5px;
+  --radius-m:  10px;
+  --radius-lg: 30px;
 
-    /*Bordes y espaciados*/
-    --radius-sm: 5px;
-    --radius-m: 10px;
-    --radius-lg: 30px;
+  --padding-sm: 8px;
+  --padding-m:  14px;
+  --padding-lg: 30px;
 
-    --padding-sm: 8px;
-    --padding-m: 14px;
-    --padding-lg: 30px;
+  /* Tamaños texto */
+  --font-size-base: 1rem;
+  --font-size-sm:   0.875rem;
+  --font-size-m:    1.25rem;
+  --font-size-lg:   2rem;
 
-    /*Tamaños texto*/
-    --font-size-base: 1rem;
-    --font-size-sm: 0.875rem;
-    --font-size-m: 1.25rem;
-    --font-size-lg: 2rem;
+  /* ── Superficies ── */
+  --bg-app:       #f0ede8;
+  --bg-surface:   #ffffff;
+  --bg-surface-2: #fafaf8;
+  --bg-surface-3: #f5f3ef;
+  --bg-input:     #fcfcfb;
+
+  /* ── Texto semántico ── */
+  --text-primary:   #0F3B3E;
+  --text-secondary: #667577;
+  --text-muted:     #9BA3AF;
+
+  /* ── Bordes ── */
+  --border-color: rgba(15, 59, 62, 0.08);
+  --border-hover: rgba(14, 105, 115, 0.18);
+
+  /* ── Sombras ── */
+  --shadow-card: 0 12px 32px rgba(15, 59, 62, 0.10);
+  --shadow-nav:  0 4px 8px rgba(0, 0, 0, 0.5);
+
+  /* ── Nav ── */
+  --nav-bg:     #0E6973;
+  --nav-text:   #ffffff;
+  --nav-bar-bg: #E27921;
+
+  --card-radius: 28px;
 }
 
-body{
-    font-family: var(--font-primary);
-    background-color: var(--bg-color);
-    font-size: var(--font-size-base);
-    line-height: 1.6;
+/* ══════════════════════════════════════
+   VARIABLES — MODO OSCURO
+   ══════════════════════════════════════ */
+html.dark {
+  --bg-color:        #0d1a1c;
+  --text-color:      #e8f4f5;
+  --light-text-color: #e8f4f5;
+
+  --bg-app:       #0d1a1c;
+  --bg-surface:   #162224;
+  --bg-surface-2: #1c2d30;
+  --bg-surface-3: #1f3235;
+  --bg-input:     #1a2a2d;
+
+  --text-primary:   #e8f4f5;
+  --text-secondary: #8ab3b8;
+  --text-muted:     #5a8a90;
+
+  --border-color: rgba(255, 255, 255, 0.07);
+  --border-hover: rgba(14, 105, 115, 0.4);
+
+  --primary-color:   #1a8f9c;
+  --secondary-color: #E27921;
+
+  --shadow-card: 0 12px 32px rgba(0, 0, 0, 0.4);
+  --shadow-nav:  0 4px 8px rgba(0, 0, 0, 0.8);
+
+  --nav-bg:     #0a1f22;
+  --nav-text:   #e8f4f5;
+  --nav-bar-bg: #b85e10;
 }
 
-h1, h2{
-    font-family: var(--bg-color);
-    color: var(--bg-color);
-    margin-bottom: var(--padding-m);
+/* ══════════════════════════════════════
+   TRANSICIÓN GLOBAL SUAVE
+   ══════════════════════════════════════ */
+*, *::before, *::after {
+  transition:
+    background-color 0.25s ease,
+    border-color     0.25s ease,
+    color            0.2s  ease,
+    box-shadow       0.25s ease;
 }
 
-p{
-    color: var(--text-color);
+/* ══════════════════════════════════════
+   BASE
+   ══════════════════════════════════════ */
+body {
+  font-family:      var(--font-primary);
+  background-color: var(--bg-color);
+  font-size:        var(--font-size-base);
+  line-height:      1.6;
+  overflow-x:       hidden;
 }
-.app-icon {
-  font-size: 18px;
-  line-height: 1;
-  vertical-align: middle;
+
+h1, h2 {
+  font-family:   var(--font-primary);
+  color:         var(--text-primary);
+  margin-bottom: var(--padding-m);
+}
+
+p {
   color: var(--text-color);
 }
 
-.icon-text {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+/* ══════════════════════════════════════
+   ICONOS
+   ══════════════════════════════════════ */
+.app-icon {
+  font-size:      18px;
+  line-height:    1;
+  vertical-align: middle;
+  color:          var(--text-color);
 }
-/* ─── ICONOS FONT AWESOME ─── */
+
+.icon-text {
+  display:     inline-flex;
+  align-items: center;
+  gap:         8px;
+}
+
 .fa-solid,
 .fa-regular,
 .fa-brands {
@@ -74,24 +155,24 @@ p{
 
 .det__inlineIcon {
   margin-right: 6px;
-  font-size: 13px;
+  font-size:    13px;
 }
 
 .det__btnIcon {
   margin-right: 8px;
-  font-size: 13px;
+  font-size:    13px;
 }
 
 .det__titleInlineIcon {
   margin-right: 8px;
-  font-size: 14px;
-  color: var(--primary);
+  font-size:    14px;
+  color:        var(--primary-color);
 }
 
 .det__emptyIcon,
 .det__heroEmptyIcon {
-  display: inline-flex;
-  align-items: center;
+  display:         inline-flex;
+  align-items:     center;
   justify-content: center;
 }
 
@@ -107,8 +188,16 @@ p{
   line-height: 1;
 }
 
+/* ══════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════ */
 @media (max-width: 768px) {
   body {
     padding-bottom: calc(64px + env(safe-area-inset-bottom));
   }
+}
+
+router-outlet + * {
+  display:    block;
+  overflow-x: hidden;
 }
