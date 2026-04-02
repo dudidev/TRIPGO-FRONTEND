@@ -1,106 +1,103 @@
-:root{
-  --primary: #0E6973;
-  --secondary: #E27921;
-  --bg: #F8F9FA;
-  --text: #2B2D42;
-
-  --cardShadow: 0 12px 28px rgba(0,0,0,.16);
-  --softShadow: 0 8px 18px rgba(0,0,0,.12);
-  --radius: 18px;
-}
-
-.pricing{
-  background: var(--bg);
-  color: var(--text);
+.pricing {
+  background: var(--bg-app);
+  color: var(--text-primary);
   min-height: calc(100vh - 120px);
 }
 
 /* HERO */
-.pricing__hero{
+.pricing__hero {
   background:
-    radial-gradient(900px 300px at 20% 10%, rgba(226,121,33,.20), transparent 60%),
-    radial-gradient(700px 240px at 80% 20%, rgba(14,105,115,.22), transparent 60%),
-    linear-gradient(180deg, #0E6973 0%, #f3fbfb 100%);
-  border-bottom: 1px solid rgba(0,0,0,.06);
+    radial-gradient(900px 300px at 20% 10%, color-mix(in srgb, var(--secondary-color) 18%, transparent), transparent 60%),
+    radial-gradient(700px 240px at 80% 20%, color-mix(in srgb, var(--primary-color) 22%, transparent), transparent 60%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--primary-color) 88%, black 12%) 0%,
+      var(--bg-app) 100%
+    );
+  border-bottom: 1px solid var(--border-color);
 }
 
-.pricing__heroInner{
+.pricing__heroInner {
   width: min(980px, 92%);
   margin: 0 auto;
   padding: 54px 0 34px;
   text-align: center;
 }
 
-.pill{
+.pill {
   display: inline-flex;
   gap: 8px;
   align-items: center;
   padding: 8px 14px;
   border-radius: 999px;
-  background: rgba(14,105,115,.12);
-  color: var(--primary);
+  background: color-mix(in srgb, var(--primary-color) 12%, transparent);
+  color: var(--primary-color);
   font-weight: 900;
   margin-bottom: 14px;
+  border: 1px solid color-mix(in srgb, var(--primary-color) 20%, transparent);
 }
 
-.pricing__heroInner h1{
+.pricing__heroInner h1 {
   font-size: clamp(28px, 3.8vw, 44px);
   line-height: 1.1;
   margin: 0 0 10px;
   font-weight: 900;
+  color: var(--text-primary);
 }
 
-.subtitle{
+.subtitle {
   max-width: 720px;
   margin: 0 auto 18px;
   font-size: 15px;
-  opacity: .9;
+  color: var(--text-secondary);
 }
 
 /* Toggle */
-.billingToggle{
+.billingToggle {
   display: inline-grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  background: #fff;
+  background: var(--bg-surface);
   padding: 8px;
   border-radius: 999px;
-  box-shadow: var(--softShadow);
-  border: 1px solid rgba(0,0,0,.06);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-color);
   margin: 10px 0 18px;
 }
 
-.toggleBtn{
+.toggleBtn {
   border: none;
   cursor: pointer;
   border-radius: 999px;
   padding: 10px 14px;
   font-weight: 900;
   background: transparent;
-  color: var(--text);
-  transition: transform .12s ease, background .12s ease;
+  color: var(--text-primary);
+  transition: transform .12s ease, background .12s ease, color .12s ease;
 }
 
-.toggleBtn:hover{ transform: translateY(-1px); }
-
-.toggleBtn.active{
-  background: var(--primary);
-  color: #000000;
+.toggleBtn:hover {
+  transform: translateY(-1px);
 }
 
-.save{
+.toggleBtn.active {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.save {
   display: inline-block;
   margin-left: 8px;
   padding: 2px 8px;
   border-radius: 999px;
-  background: rgba(226,121,33,.18);
-  color: var(--secondary);
+  background: color-mix(in srgb, var(--secondary-color) 16%, transparent);
+  color: var(--secondary-color);
   font-weight: 900;
   font-size: 12px;
 }
 
 /* CTAs */
-.heroCtas{
+.heroCtas {
   display: flex;
   justify-content: center;
   gap: 10px;
@@ -108,228 +105,235 @@
   flex-wrap: wrap;
 }
 
-.btnPrimary, .btnSecondary, .btnPlan{
+.btnPrimary,
+.btnSecondary,
+.btnPlan {
   border: none;
   cursor: pointer;
   font-weight: 900;
   border-radius: 999px;
   padding: 12px 18px;
-  box-shadow: var(--softShadow);
+  box-shadow: var(--shadow-card);
 }
 
-.btnPrimary{
-  background: var(--secondary);
+.btnPrimary {
+  background: var(--secondary-color);
   color: #fff;
 }
 
-.btnSecondary{
-  background: var(--primary);
+.btnSecondary {
+  background: var(--primary-color);
   color: #fff;
 }
 
-.btnGhost{
+.btnGhost {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 999px;
   padding: 12px 18px;
   font-weight: 900;
-  color: var(--primary);
-  background: rgba(14,105,115,.10);
+  color: var(--primary-color);
+  background: color-mix(in srgb, var(--primary-color) 10%, transparent);
   text-decoration: none;
+  border: 1px solid color-mix(in srgb, var(--primary-color) 18%, transparent);
 }
 
-.trustRow{
+.trustRow {
   display: flex;
   justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
   font-weight: 800;
-  opacity: .9;
+  color: var(--text-secondary);
   font-size: 12px;
 }
 
 /* BODY */
-.pricing__body{
+.pricing__body {
   width: min(1100px, 92%);
   margin: 0 auto;
   padding: 26px 0 54px;
 }
 
-.plansGrid{
+.plansGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 14px;
   margin-top: 12px;
 }
 
-.planCard{
-  background: #fff;
-  border-radius: var(--radius);
-  box-shadow: var(--cardShadow);
+.planCard {
+  background: var(--bg-surface);
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
   overflow: hidden;
-  border: 1px solid rgba(0,0,0,.06);
+  border: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  border-radius: 10%;
 }
 
-.planCard.highlight{
-  border: 2px solid rgba(226,121,33,.65);
+.planCard.highlight {
+  border: 2px solid color-mix(in srgb, var(--secondary-color) 65%, var(--border-color) 35%);
   transform: translateY(-4px);
 }
 
-.planTop{
+.planTop {
   padding: 18px 16px 14px;
 }
 
-.planNameRow{
+.planNameRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
 }
 
-.planNameRow h3{
+.planNameRow h3 {
   margin: 0;
   font-size: 18px;
   font-weight: 900;
+  color: var(--text-primary);
 }
 
-.badge{
-  background: rgba(226,121,33,.18);
-  color: var(--secondary);
+.badge {
+  background: color-mix(in srgb, var(--secondary-color) 16%, transparent);
+  color: var(--secondary-color);
   font-weight: 900;
   font-size: 12px;
   padding: 6px 10px;
   border-radius: 999px;
 }
 
-.planDesc{
+.planDesc {
   margin: 10px 0 12px;
   font-size: 13px;
-  opacity: .9;
+  color: var(--text-secondary);
   min-height: 38px;
 }
 
-.price{
+.price {
   display: flex;
   align-items: baseline;
   gap: 6px;
   margin-bottom: 6px;
 }
 
-.currency{ font-weight: 900; color: var(--text); opacity: .75; }
-.amount{ font-size: 40px; font-weight: 900; letter-spacing: -1px; }
-.per{ font-weight: 900; opacity: .75; }
+.currency {
+  font-weight: 900;
+  color: var(--text-secondary);
+}
 
-.smallNote{
+.amount {
+  font-size: 40px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  color: var(--text-primary);
+}
+
+.per {
+  font-weight: 900;
+  color: var(--text-secondary);
+}
+
+.smallNote {
   font-size: 12px;
-  opacity: .85;
+  color: var(--text-secondary);
   margin: 0 0 12px;
 }
 
-.btnPlan{
+.btnPlan {
   width: 100%;
-  background: var(--primary);
+  background: var(--primary-color);
   color: #fff;
 }
 
-.planCard.highlight .btnPlan{
-  background: var(--secondary);
+.planCard.highlight .btnPlan {
+  background: var(--secondary-color);
 }
 
-.features{
+.features {
   list-style: none;
   margin: 0;
   padding: 14px 16px 18px;
-  border-top: 1px solid rgba(0,0,0,.06);
+  border-top: 1px solid var(--border-color);
   display: grid;
   gap: 10px;
 }
 
-.features li{
+.features li {
   display: grid;
   grid-template-columns: 18px 1fr;
   gap: 10px;
   align-items: start;
   font-weight: 700;
   font-size: 13px;
+  color: var(--text-primary);
 }
 
-.check{
+.check {
   width: 18px;
   height: 18px;
   border-radius: 6px;
   display: inline-grid;
   place-items: center;
-  background: rgba(14,105,115,.14);
-  color: var(--primary);
+  background: color-mix(in srgb, var(--primary-color) 14%, transparent);
+  color: var(--primary-color);
   font-weight: 900;
 }
 
 /* ENTERPRISE */
-.enterprise{
+.enterprise {
   margin-top: 18px;
-  background: linear-gradient( rgba(14,105,115,10), rgba(226,121,33,10));
-  border: 1px solid rgba(0,0,0,.06);
-  border-radius: 10px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--primary-color) 10%, var(--bg-surface) 90%),
+    color-mix(in srgb, var(--secondary-color) 10%, var(--bg-surface) 90%)
+  );
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
   padding: 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  box-shadow: var(--softShadow);
+  box-shadow: var(--shadow-card);
 }
 
-.enterprise__text h2{
+.enterprise__text h2 {
   margin: 0 0 6px;
   font-size: 18px;
   font-weight: 900;
-}
-.enterprise__text p{
-  margin: 0;
-  opacity: .9;
-  font-weight: 700;
-  font-size: 13px;
+  color: var(--text-primary);
 }
 
-/* FAQ */
-.faq{
-  margin-top: 26px;
-}
-.faq h2{
-  margin: 0 0 12px;
-  font-size: 18px;
-  font-weight: 900;
-}
-.faqGrid{
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-.faqItem{
-  background: #fff;
-  border-radius: 10px;
-  padding: 14px 14px 16px;
-  box-shadow: var(--softShadow);
-  border: 1px solid rgba(0,0,0,.06);
-}
-.faqItem h4{
-  margin: 0 0 6px;
-  font-weight: 900;
-}
-.faqItem p{
+.enterprise__text p {
   margin: 0;
-  font-size: 13px;
-  opacity: .9;
-  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+/* FAQ o bloques secundarios si los tienes */
+.faqItem,
+.pricingCard,
+.billingInfo {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-card);
+  color: var(--text-primary);
 }
 
 /* RESPONSIVE */
-@media (max-width: 980px){
-  .plansGrid{ grid-template-columns: 1fr; }
-  .faqGrid{ grid-template-columns: 1fr; }
-  .enterprise{ flex-direction: column; align-items: stretch; }
-  .planCard.highlight{ transform: none; }
+@media (max-width: 920px) {
+  .plansGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .planCard.highlight {
+    transform: none;
+  }
+
+  .enterprise {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

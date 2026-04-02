@@ -5,7 +5,7 @@
   font-family: 'Poppins', sans-serif;
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
-  background: #fff;
+  background: var(--bg-app);
   overflow: hidden;
 }
 
@@ -16,7 +16,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #0f6b73;
+  background: var(--primary-color);
   min-height: 560px;
   overflow: hidden;
 }
@@ -37,8 +37,8 @@
       165deg,
       transparent 0%,
       transparent 72%,
-      #e57a1f 72%,
-      #e57a1f 100%
+      var(--secondary-color) 72%,
+      var(--secondary-color) 100%
     );
 }
 
@@ -46,20 +46,18 @@
   position: relative;
   z-index: 5;
   padding: 4rem 3rem;
-
   display: flex;
   flex-direction: column;
-  align-items: center;   /* 🔥 centra horizontal */
+  align-items: center;
   justify-content: center;
   text-align: center;
-
   gap: 2rem;
 }
 
 .left-content h1 {
   font-size: clamp(44px, 5vw, 64px);
   font-weight: 800;
-  color: white;
+  color: #fff;
   text-shadow: 0 3px 0 rgba(0,0,0,0.25);
 }
 
@@ -67,16 +65,25 @@
   width: 140px;
   height: 140px;
   border-radius: 50%;
-  background: #007b7f;
+  background: color-mix(in srgb, var(--primary-color) 88%, white 12%);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 2rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.logo-circle img {
+  width: 90%;
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
 
 /* ===== LADO DERECHO ===== */
 .right {
-  background: #fff;
+  background: var(--bg-surface);
   padding: 48px 56px;
   display: flex;
   align-items: center;
@@ -92,7 +99,7 @@
 .carta h2 {
   font-size: 24px;
   font-weight: 800;
-  color: #0b0b0b;
+  color: var(--text-primary);
   margin-bottom: 22px;
 }
 
@@ -107,7 +114,7 @@ label {
   font-size: 13px;
   font-weight: 700;
   margin-bottom: 6px;
-  color: #444;
+  color: var(--text-secondary);
 }
 
 input {
@@ -115,14 +122,22 @@ input {
   height: 48px;
   padding: 0 16px;
   border-radius: 999px;
-  border: 1.5px solid #999;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-surface-2);
+  color: var(--text-primary);
   font-size: 15px;
   font-family: 'Poppins', sans-serif;
   transition: 0.2s ease;
+  outline: none;
+}
+
+input::placeholder {
+  color: var(--text-muted);
 }
 
 input:focus {
-  border-color: #0f6b73;
+  border-color: var(--primary-color);
+  background: var(--bg-surface);
   box-shadow: 0 0 0 3px rgba(15,107,115,0.15);
 }
 
@@ -141,9 +156,9 @@ input:focus {
 }
 
 .btn-primary {
-  background: #e57a1f;
-  color: white;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+  background: var(--secondary-color);
+  color: #fff;
+  box-shadow: var(--shadow-card);
 }
 
 .btn-primary:hover {
@@ -155,11 +170,11 @@ input:focus {
 .account {
   margin-top: 16px;
   font-size: 14px;
-  color: #777;
+  color: var(--text-muted);
 }
 
 .account a {
-  color: #0f6b73;
+  color: var(--primary-color);
   font-weight: 700;
   text-decoration: none;
 }
@@ -168,27 +183,32 @@ input:focus {
   text-decoration: underline;
 }
 
-/* ✅ FIX: logo igual al register */
-.logo-circle {
-  overflow: hidden; /* evita que se salga el logo */
+.recuperar-contraseña {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
 }
 
-.logo-circle img {
-  width: 90%;
-  height: auto;
-  object-fit: contain;
-  display: block;
+.recuperar-contraseña a {
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: none;
 }
+
+.recuperar-contraseña a:hover {
+  text-decoration: underline;
+}
+
 /* ===== TOAST ===== */
-
-.toast{
+.toast {
   position: fixed;
-  top: 90px; /* debajo del nav */
+  top: 90px;
   right: 20px;
   padding: 14px 18px;
   border-radius: 14px;
-  background: white;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-card);
   font-weight: 600;
   font-size: 14px;
   z-index: 5000;
@@ -198,44 +218,29 @@ input:focus {
   animation: slideToast 0.3s ease;
 }
 
-.toast-success{
+.toast-success {
   border-left: 6px solid #22c55e;
-  color: #166534;
+  color: #16a34a;
 }
 
-.toast-error{
+.toast-error {
   border-left: 6px solid #ef4444;
-  color: #991b1b;
+  color: #dc2626;
 }
-
-.recuperar-contraseña{
-  margin-top: 12px;
-  font-size: 13px;
-  color: #0f6b73;  
-}
-
-.recuperar-contraseña a{
-  color: #0f6b73;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-
 
 /* animación suave */
-@keyframes slideToast{
-  from{
+@keyframes slideToast {
+  from {
     transform: translateY(-10px);
     opacity: 0;
   }
-  to{
+  to {
     transform: translateY(0);
     opacity: 1;
   }
 }
 
-
-
+/* ===== PASSWORD ===== */
 .password-field .input-wrapper {
   position: relative;
   display: flex;
@@ -244,7 +249,7 @@ input:focus {
 
 .password-field input {
   width: 100%;
-  padding-right: 40px; /* espacio para el ojito */
+  padding-right: 40px;
 }
 
 .toggle-password {
@@ -254,23 +259,19 @@ input:focus {
   border: none;
   cursor: pointer;
   font-size: 16px;
-  color: #667085;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .toggle-password:hover {
-  color: #0E6973;
+  color: var(--primary-color);
 }
-
-
 
 /* ===========================
    RESPONSIVE (LOGIN)
    =========================== */
-
-/* ✅ Tablet: reduce paddings y evita que el panel izquierdo domine */
 @media (max-width: 1024px) {
   .ppal {
     grid-template-columns: 1fr 1fr;
@@ -298,12 +299,11 @@ input:focus {
   }
 }
 
-/* ✅ Móvil: 1 columna, sin recortes, todo centrado y cómodo */
 @media (max-width: 768px) {
   .ppal {
-    grid-template-columns: 1fr; /* 🔥 1 sola columna */
+    grid-template-columns: 1fr;
     min-height: calc(100vh - var(--nav-offset, 120px));
-    overflow: visible; /* evita cortes raros */
+    overflow: visible;
   }
 
   .left {
@@ -321,7 +321,7 @@ input:focus {
   }
 
   .left-content h1 {
-    font-size: clamp(28px, 7vw, 44px); /* 🔥 baja el tamaño en móvil */
+    font-size: clamp(28px, 7vw, 44px);
     line-height: 1.05;
   }
 
@@ -332,12 +332,11 @@ input:focus {
   }
 
   .carta {
-    max-width: 420px; /* un poco más ancho en móvil */
+    max-width: 420px;
     width: 100%;
   }
 }
 
-/* ✅ Móvil pequeño: aún más compacto (ej. 360px) */
 @media (max-width: 420px) {
   .left {
     padding: 40px 16px;

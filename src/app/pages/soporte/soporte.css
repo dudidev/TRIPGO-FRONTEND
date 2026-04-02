@@ -1,17 +1,17 @@
-
 .content {
   display: grid;
   place-items: center;
   padding: var(--padding-lg);
-  background: linear-gradient(180deg, #f0fafb, #ffffff);
+  background: var(--bg-app);
 }
 
 .contact-section {
   width: 100%;
   max-width: 660px;
-  background: #fff;
+  background: var(--bg-surface);
   border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-color);
   padding: 2.5rem;
   animation: fadeIn 0.4s ease;
 }
@@ -24,8 +24,8 @@
 
 .contact-header .badge {
   display: inline-block;
-  background: rgba(14, 105, 115, 0.1);
-  color: var(--primary-color, #0e6973);
+  background: color-mix(in srgb, var(--primary-color) 12%, transparent);
+  color: var(--primary-color);
   padding: 0.3rem 0.8rem;
   border-radius: 20px;
   font-size: 0.85rem;
@@ -36,11 +36,11 @@
 .contact-header h2 {
   font-size: 2rem;
   margin-bottom: 0.5rem;
-  color: var(--primary-color, #0e6973);
+  color: var(--primary-color);
 }
 
 .contact-header p {
-  color: #6c757d;
+  color: var(--text-secondary);
   font-size: 1rem;
 }
 
@@ -59,25 +59,25 @@
   gap: 6px;
   padding: 0.45rem 1rem;
   border-radius: 50px;
-  border: 1.5px solid #e0e0e0;
-  background: #fafafa;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-surface-2);
   font-size: 0.88rem;
   font-weight: 500;
-  color: #555;
+  color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .chip:hover {
-  border-color: var(--primary-color, #0e6973);
-  color: var(--primary-color, #0e6973);
-  background: rgba(14, 105, 115, 0.05);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  background: color-mix(in srgb, var(--primary-color) 8%, var(--bg-surface) 92%);
 }
 
 .chip.active {
-  border-color: var(--primary-color, #0e6973);
-  background: rgba(14, 105, 115, 0.1);
-  color: var(--primary-color, #0e6973);
+  border-color: var(--primary-color);
+  background: color-mix(in srgb, var(--primary-color) 12%, var(--bg-surface) 88%);
+  color: var(--primary-color);
   font-weight: 600;
 }
 
@@ -115,9 +115,10 @@
   width: 100%;
   padding: 1.1rem 0.9rem;
   border-radius: 12px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--border-color);
   font-size: 1rem;
-  background: #fafafa;
+  background: var(--bg-surface-2);
+  color: var(--text-primary);
   outline: none;
   transition: all 0.2s ease;
   box-sizing: border-box;
@@ -125,15 +126,15 @@
 
 /* Floating label */
 .form-group label {
-  /* position: absolute; */
+  position: absolute;
   top: 50%;
   left: 0.9rem;
   transform: translateY(-50%);
   font-size: 0.9rem;
-  color: black;
+  color: var(--text-muted);
   pointer-events: none;
   transition: all 0.2s ease;
-  background: #fff;
+  background: var(--bg-surface);
   padding: 0 0.4rem;
 }
 
@@ -144,9 +145,9 @@
 
 .form-group input:focus,
 .form-group textarea:focus {
-  border-color: var(--primary-color, #0e6973);
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(14, 105, 115, 0.08);
+  border-color: var(--primary-color);
+  background: var(--bg-surface);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 16%, transparent);
 }
 
 .form-group input:focus + label,
@@ -155,14 +156,14 @@
 .form-group textarea:not(:placeholder-shown) + label {
   top: -8px;
   font-size: 0.75rem;
-  color: var(--primary-color, #0e6973);
+  color: var(--primary-color);
 }
 
 /* Error state */
 .form-group.has-error input,
 .form-group.has-error textarea {
   border-color: #dc3545;
-  background: #fff8f8;
+  background: color-mix(in srgb, #dc3545 8%, var(--bg-surface) 92%);
 }
 
 .form-group.has-error label {
@@ -177,7 +178,6 @@
   color: #dc3545;
 }
 
-
 /* ── PRIORITY SELECTOR ── */
 .priority-group {
   display: flex;
@@ -187,7 +187,7 @@
 
 .static-label {
   font-size: 14px;
-  color: black;
+  color: var(--text-primary);
   font-weight: 500;
   padding-left: 2px;
 }
@@ -204,11 +204,11 @@
   gap: 6px;
   padding: 0.45rem 1.1rem;
   border-radius: 50px;
-  border: 1.5px solid #e0e0e0;
-  background: #fafafa;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-surface-2);
   font-size: 0.88rem;
   font-weight: 500;
-  color: #555;
+  color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s ease;
   user-select: none;
@@ -216,18 +216,18 @@
 }
 
 .priority-pill input[type="radio"] {
-  display: none;        /* ← esto oculta el radio nativo */
+  display: none;
 }
 
 .priority-pill:hover {
-  border-color: #aaa;
-  background: #f0f0f0;
+  border-color: var(--primary-color);
+  background: color-mix(in srgb, var(--primary-color) 8%, var(--bg-surface) 92%);
 }
 
 .priority-pill.selected {
-  border-color: var(--primary-color, #0e6973);
-  background: rgba(14, 105, 115, 0.08);
-  color: var(--primary-color, #0e6973);
+  border-color: var(--primary-color);
+  background: color-mix(in srgb, var(--primary-color) 10%, var(--bg-surface) 90%);
+  color: var(--primary-color);
   font-weight: 600;
 }
 
@@ -241,7 +241,11 @@
 /* ── BUTTON ── */
 .btn-primary {
   margin-top: 0.5rem;
-  background: linear-gradient(135deg, #0e6973, #0a8a99);
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    color-mix(in srgb, var(--primary-color) 78%, white 22%)
+  );
   color: #fff;
   border: none;
   border-radius: 14px;
@@ -258,7 +262,7 @@
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(14, 105, 115, 0.3);
+  box-shadow: var(--shadow-card);
 }
 
 .btn-primary:disabled {
@@ -288,13 +292,13 @@
 }
 
 .feedback-box.success {
-  background: linear-gradient(135deg, #f0fdf8, #e6faf4);
-  border: 1px solid rgba(18, 145, 107, 0.25);
+  background: color-mix(in srgb, #22c55e 10%, var(--bg-surface) 90%);
+  border: 1px solid color-mix(in srgb, #22c55e 24%, var(--border-color) 76%);
 }
 
 .feedback-box.error {
-  background: linear-gradient(135deg, #fff8f8, #ffeeee);
-  border: 1px solid rgba(220, 53, 69, 0.20);
+  background: color-mix(in srgb, #ef4444 10%, var(--bg-surface) 90%);
+  border: 1px solid color-mix(in srgb, #ef4444 24%, var(--border-color) 76%);
 }
 
 .feedback-icon {
@@ -305,12 +309,12 @@
   font-size: 1.2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  color: #2b2d42;
+  color: var(--text-primary);
 }
 
 .feedback-box p {
   font-size: 0.9rem;
-  color: #555;
+  color: var(--text-secondary);
   line-height: 1.6;
   margin-bottom: 1.2rem;
 }
@@ -318,8 +322,8 @@
 .btn-feedback {
   display: inline-block;
   background: transparent;
-  border: 1.5px solid #0e6973;
-  color: #0e6973;
+  border: 1.5px solid var(--primary-color);
+  color: var(--primary-color);
   padding: 0.6rem 1.4rem;
   border-radius: 10px;
   font-size: 0.9rem;
@@ -329,7 +333,7 @@
 }
 
 .btn-feedback:hover {
-  background: #0e6973;
+  background: var(--primary-color);
   color: #fff;
 }
 
@@ -337,17 +341,17 @@
 .contact-info {
   margin-top: 2.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border-color);
 }
 
 .contact-info h3 {
   margin-bottom: 0.8rem;
-  color: var(--primary-color, #0e6973);
+  color: var(--primary-color);
 }
 
 .contact-info p {
   margin: 0.3rem 0;
-  color: #555;
+  color: var(--text-secondary);
   font-size: 0.95rem;
 }
 
