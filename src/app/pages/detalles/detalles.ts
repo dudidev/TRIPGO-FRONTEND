@@ -89,6 +89,8 @@ editComentario    = '';
   totalCOP       = 0;
   tasaCopUsd     = TASA_COP_USD;
 
+  mostrarLoginResena = false;
+
   // ✅ después — recalcula cuando cambia menuItems
 private buildMenu(): void {
   const map = new Map<string, ItemMenu[]>();
@@ -97,6 +99,13 @@ private buildMenu(): void {
     map.get(item.categoria)!.push(item);
   }
   this.menuAgrupado = Array.from(map.entries()).map(([cat, items]) => ({ cat, items }));
+}
+
+irALogin() {
+  this.mostrarLoginResena = false;
+  this.router.navigate(['/login'], {
+    queryParams: { returnUrl: this.router.url }
+  });
 }
 
 
@@ -501,13 +510,19 @@ cargarResenas(): void {
 }
 
 crearResena(): void {
+  // 🔐 VALIDACIÓN DE SESIÓN
+  if (!this.authService.isLoggedIn()) {
+    this.mostrarLoginResena = true;
+    return;
+  }
+
   const id = this.lugar?.id_establecimiento;
   if (!id || !this.nuevaCalificacion || !this.nuevoComentario.trim()) return;
 
-  const token = localStorage.getItem('token');  // ← toma el token directo
-  
+  const token = localStorage.getItem('token');
+
   this.http.post<any>(
-    `${this.apiUrl}/resenas`,                   // ← verifica que apiUrl tenga http://localhost:8080
+    `${this.apiUrl}/resenas`,
     {
       id_establecimiento: id,
       calificacion      : this.nuevaCalificacion,
@@ -529,7 +544,6 @@ crearResena(): void {
       setTimeout(() => (this.resenaMsg = ''), 2000);
     },
     error: (err) => {
-      console.error('Error reseña:', err); // ← agrega esto para ver el error real
       this.resenaMsg = err.error?.message || 'Error al publicar la reseña.';
     }
   });
