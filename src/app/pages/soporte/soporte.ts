@@ -24,7 +24,6 @@ export class Soporte {
   categories = [
     { value: 'tecnico', label: 'Técnico', icon: '🔧' },
     { value: 'cuenta', label: 'Cuenta', icon: '👤' },
-    { value: 'pagos', label: 'Pagos', icon: '💳' },
     { value: 'general', label: 'General', icon: '💬' },
     { value: 'sugerencia', label: 'Sugerencia', icon: '💡' }
   ];
