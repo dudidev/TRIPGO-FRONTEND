@@ -1,0 +1,91 @@
+{
+    "NAV": {
+        "HOME": "Inicio",
+        "PLACES": "Lugares",
+        "ABOUT": "Acerca de",
+        "CONTACT": "Contacto",
+        "LOGIN": "Iniciar Sesión",
+        "REGISTER": "Registrarse",
+        "LOGOUT": "Cerrar Sesión",
+        "MY_ACCOUNT": "Mi Cuenta",
+        "SUPPORT": "Soporte"
+    },
+    "HOME": {
+        "TITLE": "Descubre el Quindío",
+        "SUBTITLE": "Tu guía turística inteligente",
+        "SEARCH_PLACEHOLDER": "Busca hoteles, restaurantes, atracciones...",
+        "EXPLORE": "Explorar",
+        "RECOMMENDED": "Recomendado para ti"
+    },
+    "AUTH": {
+        "LOGIN_TITLE": "Iniciar Sesión",
+        "REGISTER_TITLE": "Crear Cuenta",
+        "EMAIL": "Correo Electrónico",
+        "PASSWORD": "Contraseña",
+        "CONFIRM_PASSWORD": "Confirmar Contraseña",
+        "NAME": "Nombre Completo",
+        "LOGIN_BUTTON": "Entrar",
+        "REGISTER_BUTTON": "Registrarse",
+        "FORGOT_PASSWORD": "¿Olvidaste tu contraseña?",
+        "HAVE_ACCOUNT": "¿Ya tienes cuenta?",
+        "NO_ACCOUNT": "¿No tienes cuenta?",
+        "RESET_PASSWORD_TITLE": "Restablecer Contraseña",
+        "NEW_PASSWORD": "Nueva Contraseña",
+        "RESET_BUTTON": "Restablecer",
+        "BACK_TO_LOGIN": "Volver al inicio de sesión"
+    },
+    "SUPPORT": {
+        "TITLE": "¿En qué te ayudamos?",
+        "SUBTITLE": "Describe tu problema y nuestro equipo te responderá en breve",
+        "CATEGORIES": {
+            "TECHNICAL": "Técnico",
+            "ACCOUNT": "Cuenta",
+            "PAYMENTS": "Pagos",
+            "GENERAL": "General",
+            "SUGGESTION": "Sugerencia"
+        },
+        "PRIORITY": {
+            "LOW": "Baja",
+            "MEDIUM": "Media",
+            "HIGH": "Alta",
+            "URGENT": "Urgente"
+        },
+        "FORM": {
+            "NAME": "Nombre completo",
+            "EMAIL": "Correo electrónico",
+            "SUBJECT": "Asunto del problema",
+            "DESCRIPTION": "Describe el problema con detalle",
+            "SEND": "Enviar ticket de soporte"
+        },
+        "SUCCESS": {
+            "TITLE": "¡Ticket creado!",
+            "MESSAGE": "Recibimos tu solicitud. Nuestro equipo te responderá en un plazo de 24 horas hábiles.",
+            "BUTTON": "Abrir otro ticket"
+        },
+        "ERROR": {
+            "TITLE": "Algo salió mal",
+            "MESSAGE": "No pudimos enviar tu solicitud. Intenta de nuevo.",
+            "BUTTON": "Intentar de nuevo"
+        }
+    },
+    "COMMON": {
+        "LOADING": "Cargando...",
+        "SAVE": "Guardar",
+        "CANCEL": "Cancelar",
+        "DELETE": "Eliminar",
+        "EDIT": "Editar",
+        "SEARCH": "Buscar",
+        "CLOSE": "Cerrar",
+        "YES": "Sí",
+        "NO": "No",
+        "SEND": "Enviar"
+    },
+    "ERRORS": {
+        "REQUIRED": "Este campo es requerido",
+        "INVALID_EMAIL": "Correo electrónico inválido",
+        "MIN_LENGTH": "Mínimo {{value}} caracteres",
+        "MAX_LENGTH": "Máximo {{value}} caracteres",
+        "PASSWORD_MISMATCH": "Las contraseñas no coinciden",
+        "NETWORK_ERROR": "Error de conexión. Verifica tu internet."
+    }
+}

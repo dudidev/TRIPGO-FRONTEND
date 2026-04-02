@@ -1,0 +1,91 @@
+{
+    "NAV": {
+        "HOME": "Home",
+        "PLACES": "Places",
+        "ABOUT": "About",
+        "CONTACT": "Contact",
+        "LOGIN": "Log In",
+        "REGISTER": "Sign Up",
+        "LOGOUT": "Log Out",
+        "MY_ACCOUNT": "My Account",
+        "SUPPORT": "Support"
+    },
+    "HOME": {
+        "TITLE": "Discover Quindío",
+        "SUBTITLE": "Your smart travel guide",
+        "SEARCH_PLACEHOLDER": "Search hotels, restaurants, attractions...",
+        "EXPLORE": "Explore",
+        "RECOMMENDED": "Recommended for you"
+    },
+    "AUTH": {
+        "LOGIN_TITLE": "Log In",
+        "REGISTER_TITLE": "Create Account",
+        "EMAIL": "Email Address",
+        "PASSWORD": "Password",
+        "CONFIRM_PASSWORD": "Confirm Password",
+        "NAME": "Full Name",
+        "LOGIN_BUTTON": "Sign In",
+        "REGISTER_BUTTON": "Sign Up",
+        "FORGOT_PASSWORD": "Forgot your password?",
+        "HAVE_ACCOUNT": "Already have an account?",
+        "NO_ACCOUNT": "Don't have an account?",
+        "RESET_PASSWORD_TITLE": "Reset Password",
+        "NEW_PASSWORD": "New Password",
+        "RESET_BUTTON": "Reset",
+        "BACK_TO_LOGIN": "Back to login"
+    },
+    "SUPPORT": {
+        "TITLE": "How can we help?",
+        "SUBTITLE": "Describe your issue and our team will respond shortly",
+        "CATEGORIES": {
+            "TECHNICAL": "Technical",
+            "ACCOUNT": "Account",
+            "PAYMENTS": "Payments",
+            "GENERAL": "General",
+            "SUGGESTION": "Suggestion"
+        },
+        "PRIORITY": {
+            "LOW": "Low",
+            "MEDIUM": "Medium",
+            "HIGH": "High",
+            "URGENT": "Urgent"
+        },
+        "FORM": {
+            "NAME": "Full name",
+            "EMAIL": "Email address",
+            "SUBJECT": "Issue subject",
+            "DESCRIPTION": "Describe the issue in detail",
+            "SEND": "Send support ticket"
+        },
+        "SUCCESS": {
+            "TITLE": "Ticket created!",
+            "MESSAGE": "We received your request. Our team will respond within 24 business hours.",
+            "BUTTON": "Open another ticket"
+        },
+        "ERROR": {
+            "TITLE": "Something went wrong",
+            "MESSAGE": "We couldn't send your request. Please try again.",
+            "BUTTON": "Try again"
+        }
+    },
+    "COMMON": {
+        "LOADING": "Loading...",
+        "SAVE": "Save",
+        "CANCEL": "Cancel",
+        "DELETE": "Delete",
+        "EDIT": "Edit",
+        "SEARCH": "Search",
+        "CLOSE": "Close",
+        "YES": "Yes",
+        "NO": "No",
+        "SEND": "Send"
+    },
+    "ERRORS": {
+        "REQUIRED": "This field is required",
+        "INVALID_EMAIL": "Invalid email address",
+        "MIN_LENGTH": "Minimum {{value}} characters",
+        "MAX_LENGTH": "Maximum {{value}} characters",
+        "PASSWORD_MISMATCH": "Passwords don't match",
+        "NETWORK_ERROR": "Connection error. Check your internet."
+    }
+}
