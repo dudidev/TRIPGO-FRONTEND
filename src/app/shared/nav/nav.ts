@@ -17,7 +17,7 @@ import { DarkModeService } from '../dark-mode/dark-mode';
 @Component({
   selector: 'app-nav',
   standalone: true,
-  imports: [RouterModule, CommonModule, ConfirmDialogComponent],
+  imports: [RouterModule, CommonModule, ConfirmDialogComponent, TranslateModule, LanguageSwitcher],
   templateUrl: './nav.html',
   styleUrl: './nav.css'
 })
