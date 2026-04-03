@@ -6,6 +6,7 @@ import { User } from '../../service/user';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ItinerarioService } from '../../service/itinerario.service';
 
 @Component({
   selector: 'app-login',
@@ -25,7 +26,9 @@ export class Login {
     private userService: User, 
     private router: Router,
     private route: ActivatedRoute,   
-    private authService : AuthService ) {}
+    private authService : AuthService,
+    private itinerarioService: ItinerarioService
+  ) {}
 
   showSuccess(message: string) {
     this.successMessage = message;
@@ -51,8 +54,9 @@ export class Login {
     next: (res) => {
 
       this.authService.setSession(res.token, res.user);
+      
+      this.itinerarioService.reload();
 
-      // 👇 Para que el chatbot desaparezca inmediatamente
       window.dispatchEvent(new Event('storage'));
       window.dispatchEvent(new Event('storage'));
 

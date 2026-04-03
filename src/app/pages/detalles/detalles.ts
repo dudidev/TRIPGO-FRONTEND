@@ -15,9 +15,15 @@ import { getServiciosByTipo } from '../../data/servicios-establecimiento.data';
 import { environment } from '../../../environments/environment';
 import { EstablecimientoService } from '../../services/establecimiento.service';
 import { AuthService } from '../../services/auth.service';
+
 import { StaggerDirective } from '../../shared/stagger.directive';
 import { HapticService } from '../../shared/haptic.service';
 import { EmptyStateComponent } from '../../shared/empty-state/empty-state';
+
+import { CalculadoraService } from '../../services/calculadora.service';
+import { MenuService } from '../../services/menu.service';
+
+
 
 type Opinion = { usuario: string; comentario: string; rating: number; };
 
@@ -52,6 +58,7 @@ export class Detalles implements OnInit {
   townSlug = '';
   idTipo   = 0;
   slug     = '';
+  idEstablecimiento = 0;
 
   lugar    : LugarDetalle | null = null;
   loading  = false;
@@ -84,22 +91,8 @@ editCalificacion  = 0;
 editComentario    = '';
 
 
-  // ── Calculadora ──────────────────────────────────────────────
-  menuItems      : ItemMenu[] = [];
-  totalCOP       = 0;
-  tasaCopUsd     = TASA_COP_USD;
 
   mostrarLoginResena = false;
-
-  // ✅ después — recalcula cuando cambia menuItems
-private buildMenu(): void {
-  const map = new Map<string, ItemMenu[]>();
-  for (const item of this.menuItems) {
-    if (!map.has(item.categoria)) map.set(item.categoria, []);
-    map.get(item.categoria)!.push(item);
-  }
-  this.menuAgrupado = Array.from(map.entries()).map(([cat, items]) => ({ cat, items }));
-}
 
 irALogin() {
   this.mostrarLoginResena = false;
@@ -107,35 +100,6 @@ irALogin() {
     queryParams: { returnUrl: this.router.url }
   });
 }
-
-
-menuAgrupado: { cat: string; items: ItemMenu[] }[] = [];
-
-  get totalUSD(): string { return copToUsd(this.totalCOP); }
-  get itemsSeleccionados(): number {
-  return this.menuItems.reduce((acc, i) => acc + (i.cantidad ?? 0), 0);
-  }
-
-  
-  incrementItem(item: ItemMenu): void {
-  const index = this.menuItems.indexOf(item);
-  if (index > -1) {
-    this.menuItems[index] = { ...item, cantidad: (item.cantidad ?? 0) + 1 };
-  }
-  this.calcularTotal();
-  this.buildMenu();
-}
-
-decrementItem(item: ItemMenu): void {
-  const index = this.menuItems.indexOf(item);
-  if (index > -1 && (item.cantidad ?? 0) > 0) {
-    this.menuItems[index] = { ...item, cantidad: (item.cantidad ?? 0) - 1 };
-  }
-  this.calcularTotal();
-  this.buildMenu();
-}
-
-
 
   constructor(
     private route           : ActivatedRoute,
@@ -146,23 +110,33 @@ decrementItem(item: ItemMenu): void {
     private http            : HttpClient, 
     private establecimientoService: EstablecimientoService,
     public authService     : AuthService ,
-    private haptic          : HapticService
+    private haptic          : HapticService,
+  
+
+    private calcService: CalculadoraService,
+    private menuService: MenuService
+
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParamMap.subscribe(q => {
-      this.townSlug = q.get('townSlug') || '';
-      this.idTipo   = Number(q.get('idTipo') || 0);
-    });
 
-    // ← Ahora sí carga el detalle, ya con idTipo listo
-    this.route.paramMap.pipe(take(1)).subscribe(params => {
-      this.slug = params.get('slug') || '';
-      if (!this.slug) return;
+  this.route.paramMap.subscribe(params => {
+    this.slug = params.get('slug') || '';
+    this.idEstablecimiento = Number(this.slug);
+
+    if (this.slug) {
       this.cargarDetalle(this.slug);
-    });
+      this.cargarServicios(); 
+    }
+  });
 
-  }
+  
+  this.route.queryParamMap.subscribe(q => {
+    this.townSlug = q.get('townSlug') || '';
+    this.idTipo   = Number(q.get('idTipo') || 0);
+  });
+
+}
 
   onFavoritoClick(event: Event): void {
   event.preventDefault();
@@ -212,30 +186,42 @@ ngOnDestroy(): void {
 
   // ── Carga detalle ─────────────────────────────────────────────
   private cargarDetalle(idParam: string): void {
-    this.loading  = true;
-    this.errorMsg = '';
-    this.lugar    = null;
+  this.loading  = true;
+  this.errorMsg = '';
+  this.lugar    = null;
 
-    this.api.establecimientos$.pipe(take(1)).subscribe({
-      next: (listaEstado) => {
-        const found = this.findAllById(listaEstado, idParam);
-        if (found.length) { this.setLugar(found, idParam); return; }
+  this.api.establecimientos$.pipe(take(1)).subscribe({
+    next: (listaEstado) => {
+      const found = this.findAllById(listaEstado, idParam);
+      if (found.length) { 
+        this.setLugar(found, idParam); 
+        return; 
+      }
 
-        this.api.getEstablecimientos().pipe(take(1)).subscribe({
-          next: (listaBackend) => {
-            const found2 = this.findAllById(listaBackend, idParam);
-            if (!found2.length) {
-              this.errorMsg = 'No encontramos este lugar.';
-              this.loading  = false; return;
-            }
-            this.setLugar(found2, idParam);
-          },
-          error: () => { this.errorMsg = 'Error cargando detalle.'; this.loading = false; }
-        });
-      },
-      error: () => { this.errorMsg = 'Error de conexión.'; this.loading = false; }
-    });
-  }
+      this.api.getEstablecimientos().pipe(take(1)).subscribe({
+        next: (listaBackend) => {
+          const found2 = this.findAllById(listaBackend, idParam);
+
+          if (!found2.length) {
+            this.errorMsg = 'No encontramos este lugar.';
+            this.loading  = false;
+            return;
+          }
+
+          this.setLugar(found2, idParam);
+        },
+        error: () => { 
+          this.errorMsg = 'Error cargando detalle.'; 
+          this.loading = false; 
+        }
+      });
+    },
+    error: () => { 
+      this.errorMsg = 'Error de conexión.'; 
+      this.loading = false; 
+    }
+  });
+}
 
 
   private registrarVisualizacion(idEstablecimiento: number): void {
@@ -261,7 +247,7 @@ ngOnDestroy(): void {
     this.lugar.servicios = getServiciosByTipo(this.idTipo);
   }
 
-  this.initMenu(rows[0]);
+  //this.initMenu(rows[0]);
   this.cargarResenas();
   this.registrarVisualizacion(Number(idParam));
 
@@ -269,6 +255,28 @@ ngOnDestroy(): void {
   this.cargarImagenesLugar(idLugar);
 
   this.loading = false;
+}
+
+cargarServicios(): void {
+
+  if (!this.idEstablecimiento) {
+    console.log("No hay idEstablecimiento aún");
+    return;
+  }
+
+  console.log("Cargando servicios para ID:", this.idEstablecimiento);
+
+  this.http.get(`https://tripgo-backend-arehbhbubshxdpg7.chilecentral-01.azurewebsites.net/servicios/${this.idEstablecimiento}`)
+    .subscribe({
+      next: (res: any) => {
+        console.log("SERVICIOS BACKEND:", res);
+
+        this.initMenu(res.servicios); 
+      },
+      error: (err) => {
+        console.error("Error cargando servicios", err);
+      }
+    });
 }
 
  private cargarImagenesLugar(id: number): void {
@@ -314,40 +322,80 @@ ngOnDestroy(): void {
     }
   });
 }
+// ── Calculadora ──────────────────────────────────────────────
 
-  // ── Calculadora ───────────────────────────────────────────────
-  private initMenu(raw: any): void {
-  console.log('>>> idTipo:', this.idTipo); // ← agrega esto
-  const backendProductos = raw?.productos ?? raw?.menu ?? null;
-  if (Array.isArray(backendProductos) && backendProductos.length) {
-    this.menuItems = backendProductos.map((p: any) => ({
+menuItems: ItemMenu[] = [];
+menuAgrupado: { cat: string; items: ItemMenu[] }[] = [];
+totalCOP = 0;
+tasaCopUsd = TASA_COP_USD;
+
+get totalUSD(): string {
+  return copToUsd(this.totalCOP);
+}
+
+get itemsSeleccionados(): number {
+  return this.menuItems.reduce((acc, i) => acc + (i.cantidad ?? 0), 0);
+}
+
+
+private buildMenu(): void {
+  this.menuAgrupado = this.menuService.agruparMenu(this.menuItems);
+}
+
+
+incrementItem(item: ItemMenu): void {
+  this.menuItems = this.menuItems.map(i =>
+    i === item ? { ...i, cantidad: (i.cantidad ?? 0) + 1 } : i
+  );
+  this.actualizarCalculo();
+}
+
+decrementItem(item: ItemMenu): void {
+  this.menuItems = this.menuItems.map(i =>
+    i === item
+      ? { ...i, cantidad: Math.max((i.cantidad ?? 0) - 1, 0) }
+      : i
+  );
+  this.actualizarCalculo();
+}
+
+toggleItem(item: ItemMenu): void {
+  this.menuItems = this.menuItems.map(i =>
+    i === item ? { ...i, selected: !i.selected } : i
+  );
+  this.actualizarCalculo();
+}
+
+private actualizarCalculo(): void {
+  this.totalCOP = this.menuItems.reduce(
+    (acc, i) => acc + (i.precio * (i.cantidad ?? 0)),
+    0
+  );
+
+  this.buildMenu();
+}
+
+
+private initMenu(raw: any): void {
+
+
+  if (Array.isArray(raw) && raw.length) {
+
+    this.menuItems = raw.map((p: any) => ({
       categoria: String(p.categoria ?? '📋 Servicios'),
-      nombre   : String(p.nombre ?? p.name ?? 'Servicio'),
-      precio   : Number(p.precio ?? p.price ?? 0),
-      selected : false,
-      cantidad : 0,
-
+      nombre: String(p.nombre ?? 'Servicio'),
+      precio: Number(p.precio ?? 0),
+      selected: false,
+      cantidad: 0,
     }));
+
   } else {
+    console.log("Está entrando a datos quemados");
     this.menuItems = getMenuByTipo(this.idTipo);
   }
-  this.calcularTotal();
-  this.buildMenu();
-}
+  
 
-  // ✅ después — reemplaza el objeto, Angular detecta el cambio
-toggleItem(item: ItemMenu): void {
-  const index = this.menuItems.indexOf(item);
-  if (index > -1) {
-    this.menuItems[index] = { ...item, selected: !item.selected };
-  }
-  this.calcularTotal();
-  this.buildMenu();
-}
-
- private calcularTotal(): void {
-  this.totalCOP = this.menuItems
-    .reduce((acc, i) => acc + i.precio * (i.cantidad ?? 0), 0);
+  this.actualizarCalculo();
 }
 
   // ── Favoritos ─────────────────────────────────────────────────
@@ -389,6 +437,7 @@ toggleItem(item: ItemMenu): void {
 
   this.itinerario.add({
     id       : this.lugar.slug,
+    id_establecimiento: this.lugar.id_establecimiento,
     nombre   : this.lugar.nombre,
     direccion: this.lugar.direccion,
     imagenUrl: this.lugar.imagenes?.[0] || undefined,
@@ -627,9 +676,6 @@ setCalificacion(valor: number): void {
 setEditCalificacion(valor: number): void {
   this.editCalificacion = valor;
 }
-
-
-
 
 
 }
