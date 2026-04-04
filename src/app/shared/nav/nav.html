@@ -193,14 +193,14 @@
   @if (!isEmpresaPage) {
     <div class="nav-bar">
       @if (!isLoggedIn) {
-        <a href="/#Nosotros">¿Quienes somos?</a>
-        <a href="/#comoFunciona">Como funciona</a>
-        <a routerLink="/prices">Algunos planes</a>
-        <a routerLink="/contact">Contacto</a>
+        <a href="/#Nosotros">{{ 'NAV.ABOUT_US_TITLE' | translate }}</a>
+        <a href="/#comoFunciona">{{ 'NAV.HOW_WORKS_TITLE' | translate }}</a>
+        <a routerLink="/prices">{{ 'NAV.PRICES' | translate }}</a>
+        <a routerLink="/contact">{{ 'NAV.CONTACT' | translate }}</a>
       } @else {
-        <a routerLink="/principal">Inicio</a>
-        <a routerLink="/recomendaciones">Recomendaciones</a>
-        <a routerLink="/soporte">Soporte</a>
+        <a routerLink="/principal">{{ 'NAV.HOME' | translate }}</a>
+        <a routerLink="/recomendaciones">{{ 'NAV.SUGGEST' | translate }}</a>
+        <a routerLink="/soporte">{{ 'NAV.SUPPORT' | translate }}</a>
       }
     </div>
   }

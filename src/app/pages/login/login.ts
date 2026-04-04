@@ -7,11 +7,12 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ItinerarioService } from '../../service/itinerario.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [Nav, Footer, FormsModule, RouterLink],
+  imports: [Nav, Footer, FormsModule, RouterLink, TranslateModule],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })

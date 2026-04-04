@@ -10,14 +10,13 @@ import { HttpClient } from '@angular/common/http';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog';
 import { ConfirmService } from '../../service/confirm.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { LanguageSwitcher } from '../language-switcher/language-switcher';
 import { AuthService } from '../../services/auth.service';
 import { DarkModeService } from '../dark-mode/dark-mode';
 
 @Component({
   selector: 'app-nav',
   standalone: true,
-  imports: [RouterModule, CommonModule, ConfirmDialogComponent, TranslateModule, LanguageSwitcher],
+  imports: [RouterModule, CommonModule, ConfirmDialogComponent, TranslateModule],
   templateUrl: './nav.html',
   styleUrl: './nav.css'
 })
