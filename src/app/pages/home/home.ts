@@ -2,11 +2,12 @@ import { Component, signal, AfterViewInit } from '@angular/core';
 import { Footer } from '../../shared/footer/footer';
 import { RouterLink } from '@angular/router';
 import { Nav } from '../../shared/nav/nav';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [Footer, RouterLink, Nav],
+  imports: [Footer, RouterLink, Nav, TranslateModule],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })

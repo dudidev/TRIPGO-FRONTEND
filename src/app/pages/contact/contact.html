@@ -4,106 +4,85 @@
   <section class="contact-section">
 
     <header class="contact-header">
-      <span class="badge">Contacto</span>
-      <h2>Hablemos</h2>
-      <p>Cuéntanos sobre tu negocio y nos pondremos en contacto contigo</p>
+      <span class="badge">{{ 'CONTACT.TITLE' | translate }}</span>
+      <h2>{{ 'CONTACT.TITLE' | translate }}</h2>
+      <p>{{ 'CONTACT.SUBTITLE' | translate }}</p>
     </header>
 
     <!-- ── SUCCESS STATE ── -->
     @if (status() === 'success') {
-      <div class="feedback-box success">
-        <div class="feedback-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="10" stroke="#12916B" stroke-width="1.5"/>
-            <path d="M8 12l3 3 5-5" stroke="#12916B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <h3>¡Mensaje enviado!</h3>
-        <p>Recibimos tu solicitud. Nuestro equipo revisará la información y se pondrá en contacto contigo pronto.</p>
-        <button class="btn-feedback" (click)="resetStatus()">Enviar otra solicitud</button>
+    <div class="feedback-box success">
+      <div class="feedback-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="#12916B" stroke-width="1.5" />
+          <path d="M8 12l3 3 5-5" stroke="#12916B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
       </div>
+      <h3>{{ 'CONTACT.SUCCESS.TITLE' | translate }}</h3>
+      <p>{{ 'CONTACT.SUCCESS.MESSAGE' | translate }}</p>
+      <button class="btn-feedback" (click)="resetStatus()">{{ 'CONTACT.SUCCESS.BUTTON' | translate }}</button>
+    </div>
     }
 
     <!-- ── ERROR STATE ── -->
     @if (status() === 'error') {
-      <div class="feedback-box error">
-        <div class="feedback-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="10" stroke="#DC3545" stroke-width="1.5"/>
-            <path d="M12 8v4M12 16h.01" stroke="#DC3545" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <h3>Algo salió mal</h3>
-        <p>No pudimos enviar tu mensaje. Por favor intenta de nuevo o escríbenos directamente a <strong>contact&#64;tripgo.com</strong></p>
-        <button class="btn-feedback" (click)="resetStatus()">Intentar de nuevo</button>
+    <div class="feedback-box error">
+      <div class="feedback-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="#DC3545" stroke-width="1.5" />
+          <path d="M12 8v4M12 16h.01" stroke="#DC3545" stroke-width="2" stroke-linecap="round" />
+        </svg>
       </div>
+      <h3>{{ 'CONTACT.ERROR.TITLE' | translate }}</h3>
+      <p>{{ 'CONTACT.ERROR.MESSAGE' | translate }}</p>
+      <button class="btn-feedback" (click)="resetStatus()">{{ 'CONTACT.ERROR.BUTTON' | translate }}</button>
+    </div>
     }
 
     <!-- ── FORM ── -->
     @if (status() !== 'success') {
-      <form class="contact-form" [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+    <form class="contact-form" [formGroup]="contactForm" (ngSubmit)="onSubmit()">
 
-        <div class="form-group" [class.has-error]="name.invalid && name.touched">
-          <input
-            type="text"
-            id="name"
-            formControlName="name"
-            placeholder=" "
-            autocomplete="organization"
-          >
-          <label for="name">Nombre del negocio</label>
-          @if (name.invalid && name.touched) {
-            <span class="field-error">Ingresa el nombre de tu negocio</span>
-          }
-        </div>
+      <div class="form-group" [class.has-error]="name.invalid && name.touched">
+        <input type="text" id="name" formControlName="name" placeholder=" " autocomplete="organization">
+        <label for="name">{{ 'CONTACT.FORM.NAME_BS' | translate }}</label>
+        @if (name.invalid && name.touched) {
+        <span class="field-error">{{ 'CONTACT.FORM.NAME_BS_INVALID' | translate }}</span>
+        }
+      </div>
 
-        <div class="form-group" [class.has-error]="email.invalid && email.touched">
-          <input
-            type="email"
-            id="email"
-            formControlName="email"
-            placeholder=" "
-            autocomplete="email"
-          >
-          <label for="email">Correo electrónico</label>
-          @if (email.invalid && email.touched) {
-            <span class="field-error">Ingresa un correo electrónico válido</span>
-          }
-        </div>
+      <div class="form-group" [class.has-error]="email.invalid && email.touched">
+        <input type="email" id="email" formControlName="email" placeholder=" " autocomplete="email">
+        <label for="email">{{ 'CONTACT.FORM.EMAIL_BS' | translate }}</label>
+        @if (email.invalid && email.touched) {
+        <span class="field-error">{{ 'CONTACT.FORM.EMAIL_BS_INVALID' | translate }}</span>
+        }
+      </div>
 
-        <div class="form-group" [class.has-error]="message.invalid && message.touched">
-          <textarea
-            id="message"
-            rows="4"
-            formControlName="message"
-            placeholder=" "
-          ></textarea>
-          <label for="message">Cuéntanos sobre tu negocio</label>
-          @if (message.invalid && message.touched) {
-            <span class="field-error">Cuéntanos un poco sobre tu negocio (mínimo 10 caracteres)</span>
-          }
-        </div>
+      <div class="form-group" [class.has-error]="message.invalid && message.touched">
+        <textarea id="message" rows="4" formControlName="message" placeholder=" "></textarea>
+        <label for="message">{{ 'CONTACT.FORM.MESSAGE_BS' | translate }}</label>
+        @if (message.invalid && message.touched) {
+        <span class="field-error">{{ 'CONTACT.FORM.MESSAGE_BS_INVALID' | translate }}</span>
+        }
+      </div>
 
-        <button
-          type="submit"
-          class="btn-primary"
-          [disabled]="contactForm.invalid || status() === 'loading'"
-          [class.loading]="status() === 'loading'"
-        >
-          @if (status() === 'loading') {
-            <span class="spinner"></span>
-            Enviando...
-          } @else {
-            Enviar mensaje
-          }
-        </button>
+      <button type="submit" class="btn-primary" [disabled]="contactForm.invalid || status() === 'loading'"
+        [class.loading]="status() === 'loading'">
+        @if (status() === 'loading') {
+        <span class="spinner"></span>
+          {{ 'COMMON.SENDING' | translate }}
+        } @else {
+        {{ 'COMMON.SEND' | translate }}
+        }
+      </button>
 
-      </form>
+    </form>
     }
 
     <div class="contact-info">
-      <h3>Información de contacto</h3>
-      <p>contact&#64;tripgo.com</p>
+      <h3>{{ 'CONTACT.CONTACT_INFO_TITLE' | translate }}</h3>
+      <p>&#64;tripgo.com</p>
       <p>+57 300 123 4567</p>
       <p>Armenia, Colombia</p>
     </div>
