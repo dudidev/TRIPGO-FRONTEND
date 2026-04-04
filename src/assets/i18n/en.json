@@ -2,29 +2,55 @@
     "NAV": {
         "HOME": "Home",
         "PLACES": "Places",
-        "ABOUT": "About",
+        "PRICES": "Some Plans",
+        "ABOUT_US_TITLE": "About Us",
+        "HOW_WORKS_TITLE": "How Does It Work?",
         "CONTACT": "Contact",
         "LOGIN": "Log In",
         "REGISTER": "Sign Up",
         "LOGOUT": "Log Out",
         "MY_ACCOUNT": "My Account",
-        "SUPPORT": "Support"
+        "SUPPORT": "Support",
+        "WELCOME": "Welcome",
+        "SUGGEST": "Recommendations"
     },
     "HOME": {
-        "TITLE": "Discover Quindío",
-        "SUBTITLE": "Your smart travel guide",
+        "TITLE": "DISCOVER THE BEST TOURIST DESTINATIONS",
+        "SUBTITLE": "Explore, plan, and enjoy unique experiences in Quindío with TripGO.",
+        "PRINCIPAL_BUTTON": "Let's Start Discovering",
+        "BANNER": "ENJOY THE COMFORT OF TRAVELING WITH US!",
+        "ABOUT_US": {
+            "DESC": "At TripGO, we want traveling to be as easy as dreaming about your next destination. That’s why we created an app designed to help you organize your entire trip in one place: from choosing where to go, to planning your activities, managing your budget, and discovering unique experiences tailored to you. Our goal is for you to enjoy every moment without worrying about the planning. You just travel, and we’ll help with the rest.",
+            "INFO1": "Plan your trip easily in one place.",
+            "INFO2": "Create personalized itineraries based on your preferences.",
+            "INFO3": "Manage your budget and avoid unexpected expenses.",
+            "INFO4": "Choose the services you want without leaving home.",
+            "INFO5": "Discover unique recommendations at every destination."
+        },
+        "HOW_WORKS": {
+            "TITLE1": "Choose Your Destination",
+            "TITLE2": "Customize Your Trip",
+            "TITLE3": "Enjoy Your Adventure",
+            "DESC1": "Explore our options and choose the place that excites you the most.",
+            "DESC2": "Add activities, adjust your budget, and organize your itinerary.",
+            "DESC3": "Keep everything in the app: itinerary, bookings, and tips for your experience."
+        },
+        "FINAL_CTA_TITLE": "Ready for Your Next Adventure?",
+        "FINAL_CTA": "Sign up for free and unlock itineraries, personalized recommendations, and much more. Your dream trip is just one click away!",
+        "FINAL_CTA_BUTTON": "Create Free Account",
         "SEARCH_PLACEHOLDER": "Search hotels, restaurants, attractions...",
         "EXPLORE": "Explore",
-        "RECOMMENDED": "Recommended for you"
+        "RECOMMENDED": "Recommended for You"
     },
+    "PRINCIPAL": {},
     "AUTH": {
         "LOGIN_TITLE": "Log In",
         "REGISTER_TITLE": "Create Account",
         "EMAIL": "Email Address",
         "PASSWORD": "Password",
         "CONFIRM_PASSWORD": "Confirm Password",
-        "NAME": "Full Name",
-        "LOGIN_BUTTON": "Sign In",
+        "NAME": "Name",
+        "LOGIN_BUTTON": "Log In",
         "REGISTER_BUTTON": "Sign Up",
         "FORGOT_PASSWORD": "Forgot your password?",
         "HAVE_ACCOUNT": "Already have an account?",
@@ -32,10 +58,33 @@
         "RESET_PASSWORD_TITLE": "Reset Password",
         "NEW_PASSWORD": "New Password",
         "RESET_BUTTON": "Reset",
-        "BACK_TO_LOGIN": "Back to login"
+        "BACK_TO_LOGIN": "Back to Login"
+    },
+    "CONTACT": {
+        "TITLE": "Let's Talk",
+        "SUBTITLE": "Tell us about your business and we will get in touch with you",
+        "FORM": {
+            "NAME_BS": "Business Name",
+            "NAME_BS_INVALID": "Enter your business name",
+            "EMAIL_BS": "Email Address",
+            "EMAIL_BS_INVALID": "Enter an email address you use",
+            "MESSAGE_BS": "Tell us about your business",
+            "MESSAGE_BS_INVALID": "Tell us a little about your business (minimum 10 characters)"
+        },
+        "SUCCESS": {
+            "TITLE": "Message Sent!",
+            "MESSAGE": "We received your request. Our team will review the information and contact you soon.",
+            "BUTTON": "Send Another Request"
+        },
+        "ERROR": {
+            "TITLE": "Something Went Wrong",
+            "MESSAGE": "We couldn't send your message. Please try again or contact us directly at ",
+            "BUTTON": "Try Again"
+        },
+        "CONTACT_INFO_TITLE": "Contact Information"
     },
     "SUPPORT": {
-        "TITLE": "How can we help?",
+        "TITLE": "How Can We Help You?",
         "SUBTITLE": "Describe your issue and our team will respond shortly",
         "CATEGORIES": {
             "TECHNICAL": "Technical",
@@ -51,21 +100,21 @@
             "URGENT": "Urgent"
         },
         "FORM": {
-            "NAME": "Full name",
-            "EMAIL": "Email address",
-            "SUBJECT": "Issue subject",
+            "NAME": "Full Name",
+            "EMAIL": "Email Address",
+            "SUBJECT": "Issue Subject",
             "DESCRIPTION": "Describe the issue in detail",
-            "SEND": "Send support ticket"
+            "SEND": "Send Support Ticket"
         },
         "SUCCESS": {
-            "TITLE": "Ticket created!",
+            "TITLE": "Ticket Created!",
             "MESSAGE": "We received your request. Our team will respond within 24 business hours.",
-            "BUTTON": "Open another ticket"
+            "BUTTON": "Open Another Ticket"
         },
         "ERROR": {
-            "TITLE": "Something went wrong",
+            "TITLE": "Something Went Wrong",
             "MESSAGE": "We couldn't send your request. Please try again.",
-            "BUTTON": "Try again"
+            "BUTTON": "Try Again"
         }
     },
     "COMMON": {
@@ -78,14 +127,17 @@
         "CLOSE": "Close",
         "YES": "Yes",
         "NO": "No",
-        "SEND": "Send"
+        "SEND": "Send",
+        "SENDING": "Sending..."
     },
     "ERRORS": {
         "REQUIRED": "This field is required",
         "INVALID_EMAIL": "Invalid email address",
         "MIN_LENGTH": "Minimum {{value}} characters",
         "MAX_LENGTH": "Maximum {{value}} characters",
-        "PASSWORD_MISMATCH": "Passwords don't match",
-        "NETWORK_ERROR": "Connection error. Check your internet."
+        "PASSWORD_INVALID_FORMAT": "The password must be at least 8 characters long and include letters and numbers",
+        "CONFIRM_PASSWORD": "Please confirm your password",
+        "PASSWORD_MISMATCH": "Passwords do not match. Please check again",
+        "NETWORK_ERROR": "Connection error. Please check your internet."
     }
 }
