@@ -1,5 +1,6 @@
 <app-nav></app-nav>
 
+<!-- ══ LOADING ══ -->
 <div class="det__loading" *ngIf="loading">
   <div class="det__spinner"></div>
   <p>Cargando lugar...</p>
@@ -16,471 +17,529 @@
 
 <div *ngIf="!loading && lugar as l; else notFound">
 
+  <!-- ══════════════════════════════════════════
+       HERO FULLSCREEN — GALERÍA SWIPEABLE
+  ══════════════════════════════════════════ -->
   <section class="det__hero">
 
-  <ng-container *ngIf="l.imagenes?.length; else heroSinImagenes">
-  <div class="det__heroSingle det__heroSlider">
-    <img
-      *ngFor="let img of l.imagenes; let i = index"
-      [src]="img"
-      [alt]="l.nombre"
-      [class.det__slide--active]="i === imagenActiva"
-      class="det__slide"
-    />
-  </div>
-</ng-container>
+    <!-- Slides -->
+    <ng-container *ngIf="l.imagenes?.length; else heroSinImagenes">
+      <div class="det__heroSingle det__heroSlider">
+        <img
+          *ngFor="let img of l.imagenes; let i = index"
+          [src]="img"
+          [alt]="l.nombre"
+          [class.det__slide--active]="i === imagenActiva"
+          class="det__slide"
+        />
+      </div>
+    </ng-container>
 
-  <ng-template #heroSinImagenes>
-    <div class="det__heroEmpty">
-      <span>📷</span>
-      <p>Sin imágenes disponibles</p>
-    </div>
-  </ng-template>
+    <ng-template #heroSinImagenes>
+      <div class="det__heroEmpty">
+        <span><i class="fa-solid fa-image"></i></span>
+        <p>Sin imágenes disponibles</p>
+      </div>
+    </ng-template>
 
-  <div class="det__heroOverlay">
-    <div class="det__heroInfo">
+    <!-- Gradient -->
+    <div class="det__heroGrad"></div>
+
+    <!-- Top bar -->
+    <div class="det__heroTopbar">
       <a
-        class="back-btn"
+        class="det__btnBack"
         *ngIf="townSlug && idTipo"
         [routerLink]="['/lugares', townSlug, 'tipo', idTipo]"
       >
-        ← Volver a Lugares
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+      </a>
+      <a class="det__btnBack" *ngIf="!townSlug || !idTipo" routerLink="/">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
       </a>
 
-      <div class="det__heroBadge">{{ townSlug | titlecase }} · Quindío</div>
-      <h1 class="det__heroTitle">{{ l.nombre }}</h1>
-      <p class="det__heroAddr">📍 {{ l.direccion }}</p>
+      <!-- dots centrados -->
+      <div class="det__heroDots" *ngIf="l.imagenes?.length > 1">
+        <span
+          *ngFor="let img of l.imagenes; let i = index"
+          class="det__heroDot"
+          [class.det__heroDot--active]="i === imagenActiva"
+        ></span>
+      </div>
+
+      <!-- acciones derecha -->
+      <div class="det__heroActions">
+        <button
+          class="det__btnIcon"
+          [class.det__btnIcon--liked]="esFavorito"
+          type="button"
+          (click)="onFavoritoClick($event); haptic.success()"
+          aria-label="Favorito"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </button>
+      </div>
     </div>
 
-    <button class="det__heroFav" type="button"
-  (click)="onFavoritoClick($event); haptic.success()">
-  {{ esFavorito ? '♥' : '♡' }}
-</button>
-  </div>
+    <!-- Hero content bottom -->
+    <div class="det__heroContent">
+      <div class="det__heroBreadcrumb">{{ townSlug | titlecase }} · Quindío · Colombia</div>
+      <h1 class="det__heroTitle">{{ l.nombre }}</h1>
+      <div class="det__heroMeta">
+        <div class="det__heroRating" *ngIf="estadisticas">
+          <span class="det__heroStars">★★★★★</span>
+          <span class="det__heroRatingNum">{{ estadisticas.promedio | number:'1.1-1' }}</span>
+          <span class="det__heroRatingCnt">· {{ estadisticas.total }} opiniones</span>
+        </div>
+        <div class="det__heroPill" *ngIf="l.direccion">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          {{ l.direccion }}
+        </div>
+      </div>
+    </div>
 
   </section>
 
+  <!-- fav msg -->
   <p class="det__favMsg" *ngIf="favMsg">{{ favMsg }}</p>
 
-  <div class="det__body">
+  <!-- ══════════════════════════════════════════
+       CONTENT CARD
+  ══════════════════════════════════════════ -->
+  <div class="det__contentCard">
+    <div class="det__dragHandle"></div>
 
-    <main class="det__main">
-
-      <section class="det__section">
-        <h2 class="det__sectionTitle"><span class="det__sectionIcon"><i class="fa-solid fa-book-open"></i></span>Descripción general</h2>
-        <p class="det__desc">{{ l.descripcion }}</p>
-      </section>
-
-      <section class="det__section">
-        <h2 class="det__sectionTitle"><span class="det__sectionIcon"><i class="fa-solid fa-star"></i></span>Servicios y amenidades</h2>
-        <!-- Amenidades — agrega staggerList -->
-      <div class="det__amenities" 
-          *ngIf="l.servicios?.length; else noServicios"
-          staggerList
-          [staggerDelay]="60"
-          staggerFrom="fade">
-        <div class="det__amenity" *ngFor="let s of l.servicios">
-          <span class="det__amenityDot"></span>{{ s }}
-        </div>
+    <!-- ── QUICK INFO STRIP ── -->
+    <div class="det__quickInfo">
+      <div class="det__quickItem" *ngIf="l.horarios?.length">
+        <span class="det__quickIcon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </span>
+        <span class="det__quickVal">{{ l.horarios[0] }}</span>
+        <span class="det__quickLbl">Horario</span>
       </div>
+      <div class="det__quickItem det__quickItem--mid">
+        <span class="det__quickIcon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </span>
+        <span class="det__quickVal">Todas</span>
+        <span class="det__quickLbl">Audiencia</span>
+      </div>
+      <div class="det__quickItem">
+        <span class="det__quickIcon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/></svg>
+        </span>
+        <span class="det__quickVal">4 – 6 hrs</span>
+        <span class="det__quickLbl">Duración</span>
+      </div>
+    </div>
 
-      <!-- Reseñas — agrega staggerList -->
-      <ng-container *ngIf="!resenaLoading">
-        <div staggerList [staggerDelay]="80" staggerFrom="bottom">
-          <div class="det__opinion" *ngFor="let r of resenas">
-            <!-- igual que antes -->
+    <div class="det__body">
+      <main class="det__main">
+
+        <!-- ── DESCRIPCIÓN ── -->
+        <section class="det__section">
+          <h2 class="det__sectionTitle">
+            <span class="det__sectionIcon"><i class="fa-solid fa-book-open"></i></span>
+            Descripción
+          </h2>
+          <p class="det__desc">{{ l.descripcion }}</p>
+        </section>
+
+        <!-- ── SERVICIOS ── -->
+        <section class="det__section">
+          <h2 class="det__sectionTitle">
+            <span class="det__sectionIcon"><i class="fa-solid fa-star"></i></span>
+            Servicios y amenidades
+          </h2>
+
+          <div class="det__amenities"
+               *ngIf="l.servicios?.length; else noServicios"
+               staggerList
+               [staggerDelay]="60"
+               staggerFrom="fade">
+            <div class="det__amenity" *ngFor="let s of l.servicios">
+              <span class="det__amenityDot"></span>{{ s }}
+            </div>
           </div>
-        </div>
-      </ng-container>
-        <ng-template #noServicios>
-          <p class="det__emptyText">Los servicios de este lugar estarán disponibles pronto.</p>
-        </ng-template>
-      </section>
 
-      <section class="det__section">
-<h2 class="det__sectionTitle"><span class="det__sectionIcon"><i class="fa-solid fa-clock"></i></span>Horarios y ubicación</h2>        <div class="det__hoursGrid" *ngIf="l.horarios?.length; else noHorarios">
-          <div class="det__hourItem" *ngFor="let h of l.horarios">
-            <span class="det__hourLabel">Horario</span>
-            <span class="det__hourVal">{{ h }}</span>
-          </div>
-        </div>
-        <ng-template #noHorarios>
-          <p class="det__emptyText" style="margin-bottom:1rem">Horarios no disponibles.</p>
-        </ng-template>
+          <ng-template #noServicios>
+            <p class="det__emptyText">Los servicios estarán disponibles pronto.</p>
+          </ng-template>
+        </section>
 
-        <div class="det__mapWrap" *ngIf="l.lat != null && l.lng != null; else noMapa">
-          <app-mapa
-            [lat]="l.lat"
-            [lng]="l.lng"
-            [zoom]="15"
-            [label]="l.nombre"
-            [openOnClick]="true">
-          </app-mapa>
-        </div>
+        <!-- ── HORARIOS Y UBICACIÓN ── -->
+        <section class="det__section">
+          <h2 class="det__sectionTitle">
+            <span class="det__sectionIcon"><i class="fa-solid fa-clock"></i></span>
+            Horarios y ubicación
+          </h2>
 
-        <ng-template #noMapa>
-          <div class="det__mapEmpty"><i class="fa-solid fa-map-marker-alt"></i> Ubicación no disponible por ahora.</div>
-        </ng-template>
-      </section>
-
-      <section class="det__section">
-        <h2 class="det__sectionTitle"><span class="det__sectionIcon"><i class="fa-solid fa-star"></i></span>Opiniones</h2>
-
-        <p class="det__resenaMsg" *ngIf="resenaMsg">{{ resenaMsg }}</p>
-
-        <div class="det__loading" *ngIf="resenaLoading">
-          <div class="det__spinner"></div>
-        </div>
-
-        <p class="det__emptyText" *ngIf="resenaError">{{ resenaError }}</p>
-
-        <div class="det__resenaStats" *ngIf="estadisticas && !resenaLoading">
-          <div class="det__resenaStatMain">
-            <span class="det__resenaPromedio">{{ estadisticas.promedio | number:'1.1-1' }}</span>
+          <div class="det__horarioBox" *ngIf="l.horarios?.length; else noHorarios">
+            <div class="det__horarioIcon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0E6973" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
             <div>
-              <div class="det__stars">
-                <span *ngFor="let s of [1,2,3,4,5]">
-                  {{ s <= estadisticas.promedio ? '★' : '☆' }}
-                </span>
-              </div>
-              <span class="det__resenaTotalLabel">{{ estadisticas.total }} opiniones</span>
+              <div class="det__horarioVal">{{ l.horarios[0] }}</div>
+              <div class="det__horarioLbl">Lunes a domingo</div>
             </div>
+            <span class="det__openBadge">Abierto</span>
           </div>
 
-          <div class="det__resenaDistrib">
-            <div class="det__resenaDistribRow" *ngFor="let s of [5,4,3,2,1]">
-              <span class="det__resenaDistribNum">{{ s }}<i class="fa-solid fa-star"></i></span>
-              <div class="det__resenaBar">
-                <div
-                  class="det__resenaBarFill"
-                  [style.width.%]="estadisticas.total > 0 ? (estadisticas.distribucion[s] || 0) * 100 / estadisticas.total : 0">
-                </div>
-              </div>
-              <span class="det__resenaDistribCount">{{ estadisticas.distribucion[s] || 0 }}</span>
+          <ng-template #noHorarios>
+            <p class="det__emptyText" style="margin-bottom:1rem">Horarios no disponibles.</p>
+          </ng-template>
+
+          <div class="det__mapWrap" *ngIf="l.lat != null && l.lng != null; else noMapa">
+            <app-mapa
+              [lat]="l.lat"
+              [lng]="l.lng"
+              [zoom]="15"
+              [label]="l.nombre"
+              [openOnClick]="true">
+            </app-mapa>
+          </div>
+
+          <ng-template #noMapa>
+            <div class="det__mapEmpty">
+              <i class="fa-solid fa-map-marker-alt"></i> Ubicación no disponible por ahora.
             </div>
-          </div>
-        </div>
+          </ng-template>
+        </section>
 
-        <div class="det__miResena" *ngIf="miResena && !editando">
-          <div class="det__opinionHeader">
-            <div class="det__opinionAvatar">Yo</div>
-            <div>
-              <strong>Mi reseña</strong>
-              <div class="det__stars">
-                <span *ngFor="let s of [1,2,3,4,5]">{{ s <= miResena.calificacion ? '★' : '☆' }}</span>
-              </div>
-            </div>
-            <div class="det__miResenaBtns">
-              <button class="det__resenaEditBtn" (click)="iniciarEdicion()"><i class="fa-solid fa-pen-to-square det__btnIcon fa-icon"></i> Editar</button>
-          <button
-            type="button"
-            class="det__resenaDelBtn"
-            (click)="eliminarResena()">
-            <i class="fa-solid fa-trash det__btnIcon fa-icon"></i>
-            Eliminar
-          </button>        
-            </div>
-          </div>
-          <p class="det__opinionText">{{ miResena.comentario }}</p>
-        </div>
+        <!-- ── OPINIONES ── -->
+        <section class="det__section">
+          <h2 class="det__sectionTitle">
+            <span class="det__sectionIcon"><i class="fa-solid fa-star"></i></span>
+            Opiniones
+          </h2>
 
-        <div class="det__resenaForm" *ngIf="editando">
-          <h4>Editar mi reseña</h4>
-          <div class="det__starPicker">
-            <span
-              *ngFor="let s of [1,2,3,4,5]"
-              (click)="setEditCalificacion(s)"
-              [class.active]="s <= editCalificacion">★</span>
+          <p class="det__resenaMsg" *ngIf="resenaMsg">{{ resenaMsg }}</p>
+
+          <div class="det__loading" *ngIf="resenaLoading">
+            <div class="det__spinner"></div>
           </div>
 
-          <textarea
-            [(ngModel)]="editComentario"
-            rows="3"
-            placeholder="Actualiza tu comentario (mín. 10 caracteres)">
-          </textarea>
+          <p class="det__emptyText" *ngIf="resenaError">{{ resenaError }}</p>
 
-          <div class="det__resenaFormBtns">
-            <button
-              class="det__resenaSendBtn"
-              (click)="guardarEdicion()"
-              [disabled]="!editCalificacion || editComentario.trim().length < 10">
-              Guardar cambios
-            </button>
-            <button class="det__resenaCancelBtn" (click)="editando = false">Cancelar</button>
-          </div>
-        </div>
-
-        <button
-          class="det__resenaNewBtn"
-          *ngIf="!miResena && !mostrarFormulario"
-          (click)="authService.isLoggedIn() ? (mostrarFormulario = true) : (mostrarLoginResena = true)">
-          <i class="fa-solid fa-pen det__btnIcon fa-icon"></i>
-          Escribir una reseña
-        </button>
-
-
-
-
-        
-
-       <div class="det__resenaForm" *ngIf="authService.isLoggedIn() && mostrarFormulario && !miResena">
-  <h4>Tu opinión</h4>
-
-  <div class="det__starPicker">
-    <span
-      *ngFor="let s of [1,2,3,4,5]"
-      (click)="setCalificacion(s); haptic.light()"
-      [class.active]="s <= nuevaCalificacion">
-      ★
-    </span>
-  </div>
-
-  <small class="det__resenaHint" *ngIf="!nuevaCalificacion">
-    Selecciona una calificación para continuar
-  </small>
-
-  <textarea
-    [(ngModel)]="nuevoComentario"
-    rows="3"
-    placeholder="Cuéntanos tu experiencia (mín. 10 caracteres)">
-  </textarea>
-
-  <div class="det__resenaFormBtns">
-    <button
-      class="det__resenaSendBtn"
-      (click)="crearResena(); haptic.success()"
-      [disabled]="!nuevaCalificacion || nuevoComentario.trim().length < 10">
-      Publicar reseña
-    </button>
-
-    <button
-      class="det__resenaCancelBtn"
-      (click)="mostrarFormulario = false">
-      Cancelar
-    </button>
-  </div>
-</div>
-
-
-
-
-
-
-
-
-        <ng-container *ngIf="!resenaLoading">
-          <div class="det__opinion" *ngFor="let r of resenas">
-            <div class="det__opinionHeader">
-              <div class="det__opinionAvatar">
-                <span *ngIf="!r.usuario.foto_perfil">{{ r.usuario.nombre_usuario?.charAt(0) }}</span>
-              </div>
+          <!-- Stats de rating -->
+          <div class="det__resenaStats" *ngIf="estadisticas && !resenaLoading">
+            <div class="det__resenaStatMain">
+              <span class="det__resenaPromedio">{{ estadisticas.promedio | number:'1.1-1' }}</span>
               <div>
-                <strong>{{ r.usuario.nombre_usuario }}</strong>
                 <div class="det__stars">
-                  <span *ngFor="let s of [1,2,3,4,5]">{{ s <= r.calificacion ? '★' : '☆' }}</span>
+                  <span *ngFor="let s of [1,2,3,4,5]">
+                    {{ s <= estadisticas.promedio ? '★' : '☆' }}
+                  </span>
+                </div>
+                <span class="det__resenaTotalLabel">{{ estadisticas.total }} opiniones</span>
+              </div>
+            </div>
+            <div class="det__resenaDistrib">
+              <div class="det__resenaDistribRow" *ngFor="let s of [5,4,3,2,1]">
+                <span class="det__resenaDistribNum">{{ s }}<i class="fa-solid fa-star"></i></span>
+                <div class="det__resenaBar">
+                  <div class="det__resenaBarFill"
+                    [style.width.%]="estadisticas.total > 0 ? (estadisticas.distribucion[s] || 0) * 100 / estadisticas.total : 0">
+                  </div>
+                </div>
+                <span class="det__resenaDistribCount">{{ estadisticas.distribucion[s] || 0 }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mi reseña -->
+          <div class="det__miResena" *ngIf="miResena && !editando">
+            <div class="det__opinionHeader">
+              <div class="det__opinionAvatar det__opinionAvatar--me">Yo</div>
+              <div>
+                <strong>Mi reseña</strong>
+                <div class="det__stars">
+                  <span *ngFor="let s of [1,2,3,4,5]">{{ s <= miResena.calificacion ? '★' : '☆' }}</span>
                 </div>
               </div>
-              <span class="det__resenaFecha">{{ r.fecha_creacion | date:'mediumDate' }}</span>
+              <div class="det__miResenaBtns">
+                <button class="det__resenaEditBtn" (click)="iniciarEdicion()">
+                  <i class="fa-solid fa-pen-to-square det__btnIcon fa-icon"></i> Editar
+                </button>
+                <button type="button" class="det__resenaDelBtn" (click)="eliminarResena()">
+                  <i class="fa-solid fa-trash det__btnIcon fa-icon"></i> Eliminar
+                </button>
+              </div>
             </div>
-            <p class="det__opinionText">{{ r.comentario }}</p>
+            <p class="det__opinionText">{{ miResena.comentario }}</p>
           </div>
 
-          <app-empty
-            *ngIf="resenas.length === 0 && !resenaError && !resenaLoading"
-            type="resena"
-            title="Sin opiniones aún"
-            description="Sé el primero en compartir tu experiencia en este lugar.">
-          </app-empty>
-        </ng-container>
-      </section>
+          <!-- Form edición -->
+          <div class="det__resenaForm" *ngIf="editando">
+            <h4>Editar mi reseña</h4>
+            <div class="det__starPicker">
+              <span *ngFor="let s of [1,2,3,4,5]"
+                (click)="setEditCalificacion(s)"
+                [class.active]="s <= editCalificacion">★</span>
+            </div>
+            <textarea [(ngModel)]="editComentario" rows="3"
+              placeholder="Actualiza tu comentario (mín. 10 caracteres)"></textarea>
+            <div class="det__resenaFormBtns">
+              <button class="det__resenaSendBtn"
+                (click)="guardarEdicion()"
+                [disabled]="!editCalificacion || editComentario.trim().length < 10">
+                Guardar cambios
+              </button>
+              <button class="det__resenaCancelBtn" (click)="editando = false">Cancelar</button>
+            </div>
+          </div>
 
-    </main>
+          <!-- Botón nueva reseña -->
+          <button class="det__resenaNewBtn"
+            *ngIf="!miResena && !mostrarFormulario"
+            (click)="authService.isLoggedIn() ? (mostrarFormulario = true) : (mostrarLoginResena = true)">
+            <i class="fa-solid fa-pen det__btnIcon fa-icon"></i>
+            Escribir una reseña
+          </button>
 
-    <aside class="det__side">
+          <!-- Form nueva reseña -->
+          <div class="det__resenaForm" *ngIf="authService.isLoggedIn() && mostrarFormulario && !miResena">
+            <h4>Tu opinión</h4>
+            <div class="det__starPicker">
+              <span *ngFor="let s of [1,2,3,4,5]"
+                (click)="setCalificacion(s); haptic.light()"
+                [class.active]="s <= nuevaCalificacion">★</span>
+            </div>
+            <small class="det__resenaHint" *ngIf="!nuevaCalificacion">
+              Selecciona una calificación para continuar
+            </small>
+            <textarea [(ngModel)]="nuevoComentario" rows="3"
+              placeholder="Cuéntanos tu experiencia (mín. 10 caracteres)"></textarea>
+            <div class="det__resenaFormBtns">
+              <button class="det__resenaSendBtn"
+                (click)="crearResena(); haptic.success()"
+                [disabled]="!nuevaCalificacion || nuevoComentario.trim().length < 10">
+                Publicar reseña
+              </button>
+              <button class="det__resenaCancelBtn" (click)="mostrarFormulario = false">Cancelar</button>
+            </div>
+          </div>
 
-      <div class="det__card">
-        <h3 class="det__cardTitle"><i class="fa-solid fa-phone"></i> Información de contacto</h3>
+          <!-- Lista de reseñas -->
+          <ng-container *ngIf="!resenaLoading">
+            <div class="det__opinion" *ngFor="let r of resenas" staggerList [staggerDelay]="80" staggerFrom="bottom">
+              <div class="det__opinionHeader">
+                <div class="det__opinionAvatar">
+                  <span *ngIf="!r.usuario.foto_perfil">{{ r.usuario.nombre_usuario?.charAt(0) }}</span>
+                </div>
+                <div>
+                  <strong>{{ r.usuario.nombre_usuario }}</strong>
+                  <div class="det__stars">
+                    <span *ngFor="let s of [1,2,3,4,5]">{{ s <= r.calificacion ? '★' : '☆' }}</span>
+                  </div>
+                </div>
+                <span class="det__resenaFecha">{{ r.fecha_creacion | date:'mediumDate' }}</span>
+              </div>
+              <p class="det__opinionText">{{ r.comentario }}</p>
+            </div>
 
-        <div class="det__infoList" *ngIf="l.datosGenerales?.length">
-        <div class="det__infoRow" *ngFor="let d of l.datosGenerales">
-          <span class="det__infoIcon">
-            <i
-              class="fa-icon"
-              [ngClass]="
-                d.startsWith('Teléfono')
-                  ? 'fa-solid fa-phone'
-                  : d.startsWith('Correo')
-                  ? 'fa-solid fa-envelope'
-                  : 'fa-solid fa-circle-check' 
-              "
-            ></i>
-          </span>
+            <app-empty
+              *ngIf="resenas.length === 0 && !miResena && !resenaError && !resenaLoading"
+              type="resena"
+              title="Sin opiniones aún"
+              description="Sé el primero en compartir tu experiencia en este lugar.">
+            </app-empty>
+          </ng-container>
+        </section>
 
-          <div>
-            <div class="det__infoLabel">{{ d.split(':')[0] }}</div>
-            <div class="det__infoVal">{{ d.split(':').slice(1).join(':').trim() }}</div>
+      </main>
+
+      <!-- ══ ASIDE ══ -->
+      <aside class="det__side">
+
+        <!-- Contacto -->
+        <div class="det__card">
+          <h3 class="det__cardTitle"><i class="fa-solid fa-phone"></i> Información de contacto</h3>
+
+          <div class="det__infoList" *ngIf="l.datosGenerales?.length">
+            <div class="det__infoRow" *ngFor="let d of l.datosGenerales">
+              <span class="det__infoIcon">
+                <i class="fa-icon"
+                  [ngClass]="
+                    d.startsWith('Teléfono') ? 'fa-solid fa-phone' :
+                    d.startsWith('Correo')   ? 'fa-solid fa-envelope' :
+                    'fa-solid fa-circle-check'
+                  "></i>
+              </span>
+              <div>
+                <div class="det__infoLabel">{{ d.split(':')[0] }}</div>
+                <div class="det__infoVal">{{ d.split(':').slice(1).join(':').trim() }}</div>
+              </div>
+            </div>
+          </div>
+
+          <p class="det__emptyText" *ngIf="!l.datosGenerales?.length">Sin información de contacto aún.</p>
+
+          <div class="det__promo" *ngIf="l.promociones">
+            <span class="det__promoIcon"><i class="fa-solid fa-gift"></i></span>
+            <div>
+              <div class="det__promoLabel">Promoción activa</div>
+              <div class="det__promoText">{{ l.promociones }}</div>
+            </div>
           </div>
         </div>
-      </div>
 
-        <p class="det__emptyText" *ngIf="!l.datosGenerales?.length">Sin información de contacto aún.</p>
+        <!-- Calculadora presupuesto -->
+        <div class="det__card det__card--menu"
+          [class.det__card--menuLocked]="!authService.isLoggedIn()"
+          [class.det__card--highlight]="presupuestoDestacado">
+          <div class="det__menuLock" *ngIf="!authService.isLoggedIn()">
+            <div class="det__menuLockBox">
+              <span class="det__menuLockIcon"><i class="fa-solid fa-lock"></i></span>
+              <h4>DEBES INICIAR SESIÓN</h4>
+              <p>PARA AJUSTAR TU PRESUPUESTO</p>
+              <a class="det__menuLockBtn"
+                [routerLink]="['/login']"
+                [queryParams]="{ returnUrl: router.url }">
+                Iniciar sesión
+              </a>
+            </div>
+          </div>
 
-        <div class="det__promo" *ngIf="l.promociones">
-            <span class="det__promoIcon"><i class="fa-solid fa-gift"></i></span>          <div>
-            <div class="det__promoLabel">Promoción activa</div>
-            <div class="det__promoText">{{ l.promociones }}</div>
+          <div class="det__menuHeader">
+            <div>
+              <h3 class="det__cardTitle" style="margin-bottom:2px">
+                <i class="fa-solid fa-coins"></i> Saquemos cuentas
+              </h3>
+              <p class="det__menuSub">Selecciona lo que quieres disfrutar</p>
+            </div>
+            <div class="det__menuRate">
+              <span class="det__menuRateLabel">Tasa</span>
+              <span class="det__menuRateVal">1 USD = ${{ tasaCopUsd | number:'1.0-0' }}</span>
+            </div>
+          </div>
+
+          <div class="det__menuBody">
+            <ng-container *ngFor="let grupo of menuAgrupado">
+              <div class="det__menuCatLabel">{{ grupo.cat }}</div>
+              <div class="det__menuItem"
+                *ngFor="let item of grupo.items"
+                [class.det__menuItem--on]="item.cantidad > 0">
+                <div class="det__menuCounter">
+                  <button class="det__menuCountBtn det__menuCountMinus" type="button"
+                    (click)="decrementItem(item); $event.stopPropagation()"
+                    [disabled]="item.cantidad === 0 || !authService.isLoggedIn()">−</button>
+                  <span class="det__menuCountNum" [class.det__menuCountNum--on]="item.cantidad > 0">
+                    {{ item.cantidad }}
+                  </span>
+                  <button class="det__menuCountBtn det__menuCountPlus" type="button"
+                    (click)="incrementItem(item); $event.stopPropagation()"
+                    [disabled]="!authService.isLoggedIn()">+</button>
+                </div>
+                <span class="det__menuName">{{ item.nombre }}</span>
+                <div class="det__menuPrices">
+                  <span class="det__menuCOP">${{ item.precio | number:'1.0-0' }}</span>
+                  <span class="det__menuUSD">≈ ${{ item.precio / tasaCopUsd | number:'1.2-2' }} USD</span>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="det__menuTotal" [class.det__menuTotal--active]="totalCOP > 0">
+            <div class="det__menuTotalLeft">
+              <span class="det__menuTotalLabel">Total estimado</span>
+              <span class="det__menuTotalCount" *ngIf="itemsSeleccionados > 0">
+                {{ itemsSeleccionados }} ítem{{ itemsSeleccionados !== 1 ? 's' : '' }}
+              </span>
+              <span class="det__menuTotalCount" *ngIf="itemsSeleccionados === 0">
+                Selecciona productos para ver el total
+              </span>
+            </div>
+            <div class="det__menuTotalRight">
+              <span class="det__menuTotalCOP">${{ totalCOP | number:'1.0-0' }}</span>
+              <span class="det__menuTotalUSD">≈ ${{ totalCOP / tasaCopUsd | number:'1.2-2' }} USD</span>
+            </div>
           </div>
         </div>
 
-       
-      </div>
-
-    <div class="det__card det__card--menu" [class.det__card--menuLocked]="!authService.isLoggedIn()">
-  <div class="det__menuLock" *ngIf="!authService.isLoggedIn()">
-    <div class="det__menuLockBox">
-      <span class="det__menuLockIcon"><i class="fa-solid fa-lock"></i></span>
-      <h4>DEBES INICIAR SESIÓN</h4>
-      <p>PARA AJUSTAR TU PRESUPUESTO</p>
-      <a
-        class="det__menuLockBtn"
-        [routerLink]="['/login']"
-        [queryParams]="{ returnUrl: router.url }">
-        Iniciar sesión
-      </a>
+      </aside>
     </div>
   </div>
 
-  <div class="det__menuHeader">
-    <div>
-      <h3 class="det__cardTitle" style="margin-bottom:2px">
-        <i class="fa-solid fa-coins"></i> Saquemos cuentas
-      </h3>
-      <p class="det__menuSub">Selecciona lo que quieres disfrutar</p>
-    </div>
-    <div class="det__menuRate">
-      <span class="det__menuRateLabel">Tasa</span>
-      <span class="det__menuRateVal">1 USD = ${{ tasaCopUsd | number:'1.0-0' }}</span>
-    </div>
-  </div>
+</div>
 
-  <div class="det__menuBody">
-    <ng-container *ngFor="let grupo of menuAgrupado">
-      <div class="det__menuCatLabel">{{ grupo.cat }}</div>
+<!-- ══════════════════════════════════════════
+     FAB FLOTANTE — SIEMPRE VISIBLE
+══════════════════════════════════════════ -->
+<div class="det__fabContainer" *ngIf="!loading && lugar">
+  <div class="det__fabRow">
 
-      <div
-        class="det__menuItem"
-        *ngFor="let item of grupo.items"
-        [class.det__menuItem--on]="item.cantidad > 0">
+    <!-- Favorito -->
+    <button class="det__fabSecondary" type="button"
+      (click)="onFavoritoClick($event); haptic.success()"
+      [class.det__fabSecondary--liked]="esFavorito"
+      aria-label="Favorito">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+    </button>
 
-        <div class="det__menuCounter">
-          <button
-            class="det__menuCountBtn det__menuCountMinus"
-            type="button"
-           
-            (click)="decrementItem(item); $event.stopPropagation()"
-            [disabled]="item.cantidad === 0 || !authService.isLoggedIn()">−</button>
+    <!-- Ajustar presupuesto -->
+    <button class="det__fabBudget" type="button"
+      (click)="scrollToPresupuesto(); haptic.light()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="1" x2="12" y2="23"/>
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+      </svg>
+      <span class="det__fabBudgetText">Saquemos cuentas</span>
+    </button>
 
-          <span
-            class="det__menuCountNum"
-            [class.det__menuCountNum--on]="item.cantidad > 0">
-            {{ item.cantidad }}
-          </span>
+    <!-- Agregar a itinerario -->
+    <button class="det__fabPrimary" type="button"
+      (click)="agregarItinerario(); haptic.medium()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+        <line x1="12" y1="14" x2="12" y2="18"/>
+        <line x1="9" y1="16" x2="15" y2="16"/>
+      </svg>
+      Agregar al viaje
+    </button>
 
-          <button
-            class="det__menuCountBtn det__menuCountPlus"
-            type="button"
-            (click)="incrementItem(item); $event.stopPropagation()"
-            [disabled]="!authService.isLoggedIn()">+</button>
-        </div>
-
-        <span class="det__menuName">{{ item.nombre }}</span>
-
-        <div class="det__menuPrices">
-          <span class="det__menuCOP">${{ item.precio | number:'1.0-0' }}</span>
-          <span class="det__menuUSD">≈ ${{ item.precio / tasaCopUsd | number:'1.2-2' }} USD</span>
-        </div>
-      </div>
-    </ng-container>
-  </div>
-
-  <div class="det__menuTotal" [class.det__menuTotal--active]="totalCOP > 0">
-    <div class="det__menuTotalLeft">
-      <span class="det__menuTotalLabel">Total estimado</span>
-      <span class="det__menuTotalCount" *ngIf="itemsSeleccionados > 0">
-        {{ itemsSeleccionados }} ítem{{ itemsSeleccionados !== 1 ? 's' : '' }}
-      </span>
-      <span class="det__menuTotalCount" *ngIf="itemsSeleccionados === 0">
-        Selecciona productos para ver el total
-      </span>
-    </div>
-
-    <div class="det__menuTotalRight">
-      <span class="det__menuTotalCOP">${{ totalCOP | number:'1.0-0' }}</span>
-      <span class="det__menuTotalUSD">≈ ${{ totalCOP / tasaCopUsd | number:'1.2-2' }} USD</span>
-    </div>
   </div>
 </div>
 
-<button class="det__ctaMain" type="button" 
-  (click)="agregarItinerario(); haptic.medium()">
-        <span><i class="fa-solid fa-circle-check"></i></span>
-        <div>
-          <div class="det__ctaMainTitle">Agregar a mi itinerario</div>
-          <div class="det__ctaMainSub">Guarda este lugar para tu viaje</div>
-        </div>
-        <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
-          <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-
-     
-
-    </aside>
-  </div>
-</div>
-
-<!-- MODAL CONFIRMAR ELIMINAR RESEÑA -->
+<!-- ══ MODAL ELIMINAR RESEÑA ══ -->
 <div class="modal-overlay" *ngIf="mostrarConfirmacion">
   <div class="modal-box">
     <div class="modal-icon">🗑️</div>
     <h3>Eliminar reseña</h3>
     <p>¿Seguro que deseas eliminar tu reseña? Esta acción no se puede deshacer.</p>
-
     <div class="modal-actions">
-      <button type="button" class="btn-cancel" (click)="cancelarEliminacion()">
-        Cancelar
-      </button>
-      <button type="button" class="btn-delete" (click)="confirmarEliminacion()">
-        Eliminar
-      </button>
+      <button type="button" class="btn-cancel" (click)="cancelarEliminacion()">Cancelar</button>
+      <button type="button" class="btn-delete" (click)="confirmarEliminacion()">Eliminar</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL LOGIN RESEÑA -->
+<!-- ══ MODAL LOGIN RESEÑA ══ -->
 <div class="modal-overlay" *ngIf="mostrarLoginResena">
   <div class="modal-box">
-    <div class="modal-icon">
-      <i class="fa-solid fa-user"></i>
-    </div>
-
+    <div class="modal-icon"><i class="fa-solid fa-user"></i></div>
     <h3>DEBES INICIAR SESIÓN</h3>
     <p>PARA PUBLICAR TU RESEÑA</p>
-
     <div class="modal-actions">
-      <button class="btn-cancel" (click)="mostrarLoginResena = false">
-        Cancelar
-      </button>
-
-      <button
-        class="btn-delete"
+      <button class="btn-cancel" (click)="mostrarLoginResena = false">Cancelar</button>
+      <button class="btn-delete"
         (click)="router.navigate(['/login'], { queryParams: { returnUrl: router.url } })">
         Iniciar sesión
       </button>
     </div>
   </div>
 </div>
-
- 
 
 <app-footer></app-footer>
