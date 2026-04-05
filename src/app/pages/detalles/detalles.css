@@ -1148,3 +1148,18 @@
     padding-bottom: calc(64px + 8px + env(safe-area-inset-bottom));
   }
 }
+:host ::ng-deep .fa-solid,
+:host ::ng-deep .fa-regular,
+:host ::ng-deep .fa-brands,
+:host ::ng-deep [class^="fa-"],
+:host ::ng-deep [class*=" fa-"] {
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+:host ::ng-deep .fa-solid::before,
+:host ::ng-deep [class^="fa-"]::before {
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+  transition: none !important;
+}

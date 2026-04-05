@@ -8,6 +8,21 @@
   font-family: 'Open Sans', sans-serif;
 }
 
+/* Proteger Font Awesome */
+.fa, .fas, .far, .fal, .fab,
+.fa-solid, .fa-regular, .fa-brands,
+[class^="fa-"], [class*=" fa-"] {
+  font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
+}
+.fa-solid::before,
+.fa-regular::before,
+.fa-brands::before,
+[class^="fa-"]::before,
+[class*=" fa-"]::before {
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+  transition: none !important;
+}
 /* ══════════════════════════════════════
    VARIABLES — MODO CLARO (por defecto)
    ══════════════════════════════════════ */
