@@ -1,70 +1,227 @@
 <app-nav></app-nav>
 
+<!-- ── TOASTS ── -->
 @if (successMessage) {
-<div class="toast toast-success" role="status" aria-live="polite">
-  {{ successMessage }}
-</div>
+  <div class="toast toast-success" role="status" aria-live="polite">
+    <span class="toast__icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </span>
+    {{ successMessage }}
+  </div>
 }
 
 @if (errorMessage) {
-<div class="toast toast-error" role="alert" aria-live="assertive">
-  {{ errorMessage }}
-</div>
+  <div class="toast toast-error" role="alert" aria-live="assertive">
+    <span class="toast__icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+    </span>
+    {{ errorMessage }}
+  </div>
 }
 
+<!-- ══ WRAPPER FULLPAGE ══ -->
+<div class="lg__page" role="main">
 
-<div class="ppal" role="main" aria-label="Login">
+  <!-- ══ PANEL IZQUIERDO — Hero compacto ══ -->
+  <section class="lg__hero" aria-hidden="true">
 
-  <section class="left">
-    <div class="left-content">
-      <h1>{{ 'NAV.WELCOME' | translate }}<br>{{ 'AUTH.LOGIN_TITLE' | translate }}</h1>
+    <!-- patrón decorativo fondo -->
+    <div class="lg__heroBg">
+      <div class="lg__heroBgCircle lg__heroBgCircle--1"></div>
+      <div class="lg__heroBgCircle lg__heroBgCircle--2"></div>
+      <div class="lg__heroBgCircle lg__heroBgCircle--3"></div>
+    </div>
 
-      <div class="logo-circle">
+    <!-- contenido hero -->
+    <div class="lg__heroContent">
+
+      <!-- logo -->
+      <div class="lg__heroLogo">
         <img
           src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764678577/ChatGPT_Image_12_nov_2025_17_33_14_1_hj26hs.png"
-          alt="">
+          alt="TripGO logo"
+        />
       </div>
+
+      <div class="lg__heroText">
+        <h1 class="lg__heroTitle">TripGO</h1>
+        <p class="lg__heroSub">Descubre el Quindío como nunca antes</p>
+      </div>
+
+      <!-- pills de features -->
+      <div class="lg__heroPills">
+        <span class="lg__heroPill">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+          12 municipios
+        </span>
+        <span class="lg__heroPill">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          +200 lugares
+        </span>
+        <span class="lg__heroPill">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Itinerarios
+        </span>
+      </div>
+
+      <!-- stats -->
+      <div class="lg__heroStats">
+        <div class="lg__heroStat">
+          <span class="lg__heroStatNum">4.8★</span>
+          <span class="lg__heroStatLbl">Valoración</span>
+        </div>
+        <div class="lg__heroStatDiv"></div>
+        <div class="lg__heroStat">
+          <span class="lg__heroStatNum">5K+</span>
+          <span class="lg__heroStatLbl">Viajeros</span>
+        </div>
+        <div class="lg__heroStatDiv"></div>
+        <div class="lg__heroStat">
+          <span class="lg__heroStatNum">100%</span>
+          <span class="lg__heroStatLbl">Gratuito</span>
+        </div>
+      </div>
+
     </div>
   </section>
 
-  <aside class="right">
-    <div class="carta">
-      <h2>{{ 'AUTH.LOGIN_TITLE' | translate }}</h2>
+  <!-- ══ PANEL DERECHO — Formulario ══ -->
+  <aside class="lg__form">
+    <div class="lg__formCard">
 
-      <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" novalidate>
-        <div class="field">
-          <label for="email">{{ 'AUTH.EMAIL' | translate }}</label>
-          <input id="email" [(ngModel)]="email" name="email" type="email" required>
+      <!-- header del form -->
+      <div class="lg__formHeader">
+        <h2 class="lg__formTitle">Bienvenido de nuevo</h2>
+        <p class="lg__formSub">Ingresa tus datos para continuar</p>
+      </div>
+
+      <!-- form -->
+      <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" novalidate class="lg__formFields">
+
+        <!-- Email -->
+        <div class="lg__field"
+          [class.lg__field--error]="emailInput.invalid && emailInput.touched"
+          [class.lg__field--valid]="emailInput.valid && emailInput.touched">
+          <label class="lg__label" for="email">Correo electrónico</label>
+          <div class="lg__inputWrap">
+            <span class="lg__inputIcon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </span>
+            <input
+              id="email"
+              class="lg__input"
+              [(ngModel)]="email"
+              name="email"
+              type="email"
+              placeholder="tu@correo.com"
+              required
+              email
+              #emailInput="ngModel"
+            />
+            <span class="lg__inputStatus">
+              <svg class="lg__statusOk" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg class="lg__statusErr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </span>
+          </div>
+          <span class="lg__fieldMsg" *ngIf="emailInput.invalid && emailInput.touched">
+            Ingresa un correo válido
+          </span>
         </div>
 
-        <div class="field password-field">
-          <label for="password">{{ 'AUTH.PASSWORD' | translate }}</label>
-
-          <div class="input-wrapper">
-            <input id="password" [(ngModel)]="password" name="password" [type]="showPassword ? 'text' : 'password'"
-              required>
-
-            <button type="button" class="toggle-password" (click)="togglePassword()"
-              [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'">
-              {{ showPassword ? '☉' : '◠' }}
+        <!-- Contraseña -->
+        <div class="lg__field"
+          [class.lg__field--error]="passInput.invalid && passInput.touched"
+          [class.lg__field--valid]="passInput.valid && passInput.touched">
+          <label class="lg__label" for="password">Contraseña</label>
+          <div class="lg__inputWrap">
+            <span class="lg__inputIcon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </span>
+            <input
+              id="password"
+              class="lg__input"
+              [(ngModel)]="password"
+              name="password"
+              [type]="showPassword ? 'text' : 'password'"
+              placeholder="••••••••"
+              required
+              minlength="6"
+              #passInput="ngModel"
+            />
+            <button
+              type="button"
+              class="lg__togglePass"
+              (click)="togglePassword()"
+              [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            >
+              <!-- ojo abierto -->
+              <svg *ngIf="!showPassword" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <!-- ojo cerrado -->
+              <svg *ngIf="showPassword" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
             </button>
           </div>
+          <span class="lg__fieldMsg" *ngIf="passInput.invalid && passInput.touched">
+            Mínimo 6 caracteres
+          </span>
         </div>
 
-        <button class="btn btn-primary" type="submit" [disabled]="loginForm.invalid">
-          {{ 'AUTH.LOGIN_TITLE' | translate }}
+        <!-- Recuperar -->
+        <div class="lg__forgotRow">
+          <a routerLink="/forgot-password" class="lg__forgotLink">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <!-- Botón principal -->
+        <button
+          class="lg__btnPrimary"
+          type="submit"
+          [disabled]="loginForm.invalid"
+        >
+          <span class="lg__btnLabel">Iniciar sesión</span>
+          <span class="lg__btnArrow">
+            
+          </span>
         </button>
 
-        <p class="recuperar-contraseña">
-          <a routerLink="/forgot-password">{{ 'AUTH.FORGOT_PASSWORD' | translate }}</a>
-        </p>
-        <p class="account">
-          {{ 'AUTH.NO_ACCOUNT' | translate }}
-          <a routerLink="/register">{{ 'AUTH.REGISTER_BUTTON' | translate }}</a>
-        </p>
+        <!-- Divider -->
+        <div class="lg__divider">
+          <span class="lg__dividerLine"></span>
+          <span class="lg__dividerTxt">o</span>
+          <span class="lg__dividerLine"></span>
+        </div>
+
+        <!-- Registrarse -->
+        <a routerLink="/register" class="lg__btnSecondary">
+          Crear cuenta nueva
+        </a>
+
       </form>
+
+      <!-- footer del form -->
+      <p class="lg__formFooter">
+        Al continuar aceptas nuestros
+        <a href="#" class="lg__footerLink">términos</a> y
+        <a href="#" class="lg__footerLink">privacidad</a>
+      </p>
+
     </div>
   </aside>
+
 </div>
 
 <app-footer></app-footer>
