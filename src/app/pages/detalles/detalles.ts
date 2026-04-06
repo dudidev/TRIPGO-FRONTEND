@@ -15,7 +15,7 @@ import { getServiciosByTipo } from '../../data/servicios-establecimiento.data';
 import { environment } from '../../../environments/environment';
 import { EstablecimientoService } from '../../services/establecimiento.service';
 import { AuthService } from '../../services/auth.service';
-
+import { Location } from '@angular/common';
 import { StaggerDirective } from '../../shared/stagger.directive';
 import { HapticService } from '../../shared/haptic.service';
 import { EmptyStateComponent } from '../../shared/empty-state/empty-state';
@@ -110,7 +110,7 @@ export class Detalles implements OnInit {
     private establecimientoService: EstablecimientoService,
     public authService     : AuthService,
     public haptic           : HapticService,
-
+    private location: Location,
     private calcService: CalculadoraService,
     private menuService: MenuService
 
@@ -182,6 +182,10 @@ export class Detalles implements OnInit {
   ngOnDestroy(): void {
     clearInterval(this.sliderTimer);
   }
+
+  volver(): void {
+  this.location.back();
+}
 
   // ── Carga detalle ─────────────────────────────────────────────
   private cargarDetalle(idParam: string): void {
