@@ -177,8 +177,8 @@ toggleItinerario(event?: Event) {
 
     this.enviandoEmail = true;
 
-    const usuario = this.userService.getCurrentUser();
-    const token   = localStorage.getItem('token');
+    // ✅ Usuario desde el signal del AuthService (memoria)
+      const usuario = this.authService.getCurrentUser();
 
     this.http.post(
       `${environment.apiBaseUrl}/itinerario/enviar-email`,
@@ -194,7 +194,7 @@ toggleItinerario(event?: Event) {
           subtotal : this.getSubtotal(i),
         }))
       },
-      { headers: { Authorization: `Bearer ${token}` } }
+       { withCredentials: true }  // ✅ la cookie va automáticamente, sin Bearer token
     ).subscribe({
       next: () => {
         this.enviandoEmail = false;

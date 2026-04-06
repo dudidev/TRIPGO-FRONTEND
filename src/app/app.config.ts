@@ -13,7 +13,7 @@ import { languageInterceptor } from './interceptors/language-interceptor';
 
 // Import service worker configuration
 import { provideServiceWorker } from '@angular/service-worker';
-
+import { credentialsInterceptor } from './interceptors/credentials.interceptor';
 // Define routes for the application
 import { routes } from './app.routes';
 
@@ -34,7 +34,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     
     // Configure HTTP client with interceptors
-    provideHttpClient(withInterceptors([authInterceptor, languageInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, languageInterceptor, credentialsInterceptor])),
     
     // Set up service worker for progressive web app support
     provideServiceWorker('ngsw-worker.js', {
