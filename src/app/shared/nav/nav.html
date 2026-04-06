@@ -228,7 +228,7 @@
           <a href="#" (click)="confirmLogout(); $event.preventDefault()">Salir</a>
         }
         <button type="button" class="langBtnMobile" (click)="lang.toggleLanguage(); closeMenu()">
-          Cambiar a {{ lang.getCurrentLanguage() === 'es' ? 'English' : 'Español' }}
+          Cambiar a {{ lang.getCurrentLanguage() === 'es' ? 'Ingles' : 'Español' }}
         </button>
         <button type="button" class="darkToggleMobile" (click)="darkMode.toggle(); closeMenu()">
           <span class="darkToggle__track" [class.darkToggle__track--on]="darkMode.isDark()">
