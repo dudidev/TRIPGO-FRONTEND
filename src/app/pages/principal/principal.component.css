@@ -127,6 +127,21 @@
 .carousel__track--slow { animation: scrollLeft 30s linear infinite; }
 .carousel__track--rev  { animation: scrollLeft 34s linear infinite reverse; }
 .carousel__track:hover { animation-play-state: paused; }
+.carousel__hint{        
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--primary-color);
+      }
+.carousel__hintIcon{
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 999px;
+        background: rgba(14, 105, 115, 0.10);
+        font-size: 12px;
+}      
 @keyframes scrollLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
 .dest__card { position: relative; width: 210px; height: 265px; border-radius: 22px; overflow: hidden; border: none; cursor: pointer; flex-shrink: 0; padding: 0; background: transparent; transition: transform 0.3s ease; }
