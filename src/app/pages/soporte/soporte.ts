@@ -21,12 +21,12 @@ export class Soporte {
   selectedCategory = signal<string>('tecnico');
   selectedPriority = signal<string>('media');
 
-  categories = [
-    { value: 'tecnico', label: 'Técnico', icon: '🔧' },
-    { value: 'cuenta', label: 'Cuenta', icon: '👤' },
-    { value: 'general', label: 'General', icon: '💬' },
-    { value: 'sugerencia', label: 'Sugerencia', icon: '💡' }
-  ];
+ categories = [
+  { value: 'tecnico', label: 'Técnico', icon: 'fas fa-tools' },
+  { value: 'cuenta', label: 'Cuenta', icon: 'fas fa-user' },
+  { value: 'general', label: 'General', icon: 'fas fa-comments' },
+  { value: 'sugerencia', label: 'Sugerencia', icon: 'fas fa-lightbulb' }
+];
 
   priorities = [
     { value: 'baja', label: 'Baja', color: '#10B981' },
