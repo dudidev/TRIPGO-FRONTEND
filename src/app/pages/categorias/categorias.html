@@ -2,21 +2,11 @@
 
 <section class="categorias">
 
-  <!-- ═══════════ HERO SPLIT ═══════════ -->
+  <!-- ═══════════ HERO CAROUSEL ═══════════ -->
   <header class="cat__hero">
-    <div class="cat__heroSplit">
-      <div class="cat__heroHalf">
-        <div class="cat__heroStack">
-          <img class="cat__heroImg" [class.active]="showA" [src]="leftA" alt="Hero izquierda A" />
-          <img class="cat__heroImg" [class.active]="!showA" [src]="leftB" alt="Hero izquierda B" />
-        </div>
-      </div>
-      <div class="cat__heroHalf">
-        <div class="cat__heroStack">
-          <img class="cat__heroImg" [class.active]="showA" [src]="rightA" alt="Hero derecha A" />
-          <img class="cat__heroImg" [class.active]="!showA" [src]="rightB" alt="Hero derecha B" />
-        </div>
-      </div>
+    <div class="cat__heroCarousel">
+      <img class="cat__heroImg" [class.active]="showA" [src]="leftA" alt="Hero A" />
+      <img class="cat__heroImg" [class.active]="!showA" [src]="leftB" alt="Hero B" />
     </div>
 
     <div class="cat__heroOverlay">
@@ -26,6 +16,12 @@
         <h1 class="cat__heroTitle">{{ data?.nombre || (townSlug | titlecase) }}</h1>
         <p class="cat__heroSub">{{ tipos.length }} categoría{{ tipos.length !== 1 ? 's' : '' }} disponible{{ tipos.length !== 1 ? 's' : '' }}</p>
       </div>
+    </div>
+
+    <!-- Dots indicadores -->
+    <div class="cat__heroDots">
+      <span class="cat__heroDot" [class.active]="showA"></span>
+      <span class="cat__heroDot" [class.active]="!showA"></span>
     </div>
   </header>
 
@@ -41,7 +37,8 @@
         placeholder="Busca en {{ data?.nombre || (townSlug | titlecase) }}..."
         autocomplete="off"
       />
-<button type="submit" (click)="haptic.medium()">Buscar</button>    </form>
+      <button type="submit" (click)="haptic.medium()">Buscar</button>
+    </form>
   </div>
 
   <!-- ═══════════ SEARCH PANEL ═══════════ -->
@@ -95,33 +92,30 @@
       </app-empty>
 
       <!-- Grid de categorías -->
-    <div class="cat__grid" 
-     *ngIf="!loadingTipos && tipos.length > 0"
-     staggerList
-     [staggerDelay]="70"
-     staggerFrom="bottom">
-       <button
-  class="cat__card"
-  type="button"
-  *ngFor="let t of tipos"
-  [sharedElement]="'/lugares/' + townSlug + '/tipo/' + t.id_tipo"
-  [sharedKey]="'tipo-' + t.id_tipo"
-  [sharedImage]="portadaTipo(t.id_tipo)"
->
-  <div class="cat__cardImgWrap">
-    <img [src]="portadaTipo(t.id_tipo)" [alt]="t.nombre_tipo" />
-  </div>
-  <div class="cat__cardBody">
-    <span class="cat__cardName">{{ t.nombre_tipo | titlecase }}</span>
-    <span class="cat__cardCta">Explorar →</span>
-  </div>
-</button>
+      <div class="cat__grid"
+        *ngIf="!loadingTipos && tipos.length > 0"
+        staggerList
+        [staggerDelay]="70"
+        staggerFrom="bottom">
+        <button
+          class="cat__card"
+          type="button"
+          *ngFor="let t of tipos"
+          [sharedElement]="'/lugares/' + townSlug + '/tipo/' + t.id_tipo"
+          [sharedKey]="'tipo-' + t.id_tipo"
+          [sharedImage]="portadaTipo(t.id_tipo)"
+        >
+          <div class="cat__cardImgWrap">
+            <img [src]="portadaTipo(t.id_tipo)" [alt]="t.nombre_tipo" />
+          </div>
+          <div class="cat__cardBody">
+            <span class="cat__cardName">{{ t.nombre_tipo | titlecase }}</span>
+            <span class="cat__cardCta">Explorar →</span>
+          </div>
+        </button>
       </div>
 
     </main>
-
-    
-
 
   </div>
 </section>
