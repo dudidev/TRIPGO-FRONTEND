@@ -2,7 +2,7 @@
 
 <div class="perfil-container">
 
-  <!-- ================== PERFIL ================== -->
+  <!-- ================== PERFIL CARD ================== -->
   <section class="perfil-card" [class.edit-mode]="editMode">
 
     <div class="perfil-banner"></div>
@@ -21,9 +21,7 @@
           [class.btn-cancelar-top]="editMode"
           (click)="editMode ? cancelarEdicion() : activarEdicion()"
         >
-          <i
-            [class]="editMode ? 'fa-solid fa-xmark btn-icon' : 'fa-solid fa-pen btn-icon'"
-          ></i>
+          <i [class]="editMode ? 'fa-solid fa-xmark btn-icon' : 'fa-solid fa-pen btn-icon'"></i>
           {{ editMode ? 'Cancelar' : 'Editar perfil' }}
         </button>
       </div>
@@ -33,8 +31,62 @@
 
       <div *ngIf="mensaje" class="alerta" [ngClass]="tipoMensaje">{{ mensaje }}</div>
 
-      <!-- MODO LECTURA -->
+      <!-- ── NIVEL / PROGRESO ── -->
+      <div class="nivel-wrap" *ngIf="!editMode">
+        <div class="nivel-top">
+          <div class="nivel-info">
+            <span class="nivel-tag">{{ nivelNombre }}</span>
+            <span class="nivel-pts">{{ puntosActuales }} / {{ puntosSiguiente }} pts</span>
+          </div>
+          <span class="nivel-badge">Nv. {{ nivelActual }}</span>
+        </div>
+        <div class="nivel-track">
+          <div class="nivel-fill" [style.width.%]="progresoPorc"></div>
+        </div>
+        <div class="nivel-next">{{ puntosRestantes }} pts para {{ nombreSiguienteNivel }}</div>
+      </div>
+
+      <!-- ── ESTADÍSTICAS ── -->
+      <div class="stats-grid" *ngIf="!editMode">
+        <div class="stat-card">
+          <span class="stat-num">{{ lugaresVisitados }}</span>
+          <span class="stat-label">Visitados</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">{{ resenasDadas }}</span>
+          <span class="stat-label">Reseñas</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">{{ municipiosExplorados }}</span>
+          <span class="stat-label">Municipios</span>
+        </div>
+      </div>
+
+      <!-- ── INSIGNIAS ── -->
       <ng-container *ngIf="!editMode">
+        <div class="section-label">
+          <i class="fa-solid fa-award"></i> Insignias obtenidas
+        </div>
+        <div class="badges-row">
+          <div
+            class="badge-item"
+            *ngFor="let b of badges"
+            [class.badge-locked]="!b.earned"
+            [title]="b.name"
+          >
+            <div class="badge-icon">
+              <i [class]="b.icon"></i>
+            </div>
+            <span class="badge-name">{{ b.name }}</span>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- ── MODO LECTURA ── -->
+      <ng-container *ngIf="!editMode">
+        <div class="section-label" style="margin-top: 20px;">
+          <i class="fa-solid fa-user"></i> Datos personales
+        </div>
         <div class="info-row">
           <label>Nombre</label>
           <span class="val">{{ form.value.nombre_usuario || '—' }}</span>
@@ -45,7 +97,7 @@
         </div>
       </ng-container>
 
-      <!-- MODO EDICIÓN -->
+      <!-- ── MODO EDICIÓN ── -->
       <form [formGroup]="form" (ngSubmit)="guardar()" *ngIf="editMode">
         <div class="campo">
           <label>Nombre</label>
@@ -89,6 +141,35 @@
     </div>
   </section>
 
+  <!-- ================== HISTORIAL ================== -->
+  <section class="hist-card" *ngIf="historial.length > 0">
+    <div class="fav-header">
+      <div class="fav-header-icon hist-icon">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+      </div>
+      <span class="fav-header-title">Últimos lugares visitados</span>
+    </div>
+    <div class="hist-list">
+      <div class="hist-item" *ngFor="let h of historial">
+        <div class="hist-thumb">
+          <img *ngIf="h.imagenUrl" [src]="h.imagenUrl" [alt]="h.nombre" />
+          <span *ngIf="!h.imagenUrl" class="hist-thumb__initial">{{ h.nombre[0] | uppercase }}</span>
+        </div>
+        <div class="hist-info">
+          <div class="hist-name">{{ h.nombre }}</div>
+          <div class="hist-meta">{{ h.municipio }} · {{ h.fechaTexto }}</div>
+        </div>
+        <div class="hist-stars">
+          <i
+            *ngFor="let s of [1,2,3,4,5]"
+            class="fa-star"
+            [class]="s <= h.estrellas ? 'fa-solid fa-star star-on' : 'fa-regular fa-star star-off'"
+          ></i>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ================== FAVORITOS ================== -->
   <section class="fav-card-outer">
 
@@ -112,38 +193,36 @@
         <small>Explora y guarda los que más te gusten.</small>
       </div>
 
-     <div
-          class="fav-item"
-          *ngFor="let fav of favoritos"
-          (click)="irADetalle(fav)"
+      <div
+        class="fav-item"
+        *ngFor="let fav of favoritos"
+        (click)="irADetalle(fav)"
+      >
+        <div class="fav-thumb">
+          <img *ngIf="fav.imagenUrl" [src]="fav.imagenUrl" [alt]="fav.nombre" />
+          <span *ngIf="!fav.imagenUrl" class="fav-thumb__initial">
+            {{ fav.nombre[0] | uppercase }}
+          </span>
+        </div>
+        <div class="fav-info">
+          <div class="fav-name">{{ fav.nombre }}</div>
+          <div class="fav-dir">
+            <i class="fa-solid fa-location-dot"></i> {{ fav.direccion || '—' }}
+          </div>
+        </div>
+        <button
+          class="btn-quitar"
+          type="button"
+          (click)="$event.stopPropagation(); eliminarFavorito(fav)"
+          [title]="'Quitar ' + fav.nombre + ' de favoritos'"
         >
-          <div class="fav-thumb">
-            <img *ngIf="fav.imagenUrl" [src]="fav.imagenUrl" [alt]="fav.nombre" />
-            <span *ngIf="!fav.imagenUrl" class="fav-thumb__initial">
-              {{ fav.nombre[0] | uppercase }}
-            </span>
-          </div>
+          <i class="fa-solid fa-heart"></i>
+        </button>
+      </div>
 
-          <div class="fav-info">
-            <div class="fav-name">{{ fav.nombre }}</div>
-            <div class="fav-dir">
-              <i class="fa-solid fa-location-dot"></i> {{ fav.direccion || '—' }}
-            </div>
-          </div>
+    </div>
+  </section>
 
-          <button
-            class="btn-quitar"
-            type="button"
-            (click)="$event.stopPropagation(); eliminarFavorito(fav)"
-            [title]="'Quitar ' + fav.nombre + ' de favoritos'"
-          >
-            <i class="fa-solid fa-heart"></i>
-          </button>
-        </div>
-
-            </div>
-          </section>
-
-        </div>
+</div>
 
 <app-footer></app-footer>

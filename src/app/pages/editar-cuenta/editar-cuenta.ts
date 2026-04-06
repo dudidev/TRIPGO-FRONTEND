@@ -7,6 +7,43 @@ import { UsuarioService } from '../../services/usuario.service';
 import { Router } from '@angular/router';
 import { FavoritosService, FavoritoItem } from '../../service/favoritos.service';
 
+// ── Tipos locales ────────────────────────────────────────────────────────────
+
+export interface Badge {
+  icon: string;
+  name: string;
+  earned: boolean;
+}
+
+export interface HistorialItem {
+  nombre: string;
+  municipio: string;
+  fechaTexto: string;
+  imagenUrl?: string;
+  estrellas: number;
+}
+
+// ── Configuración de niveles ─────────────────────────────────────────────────
+
+const NIVELES = [
+  { nombre: 'Curioso',     puntosMin: 0    },
+  { nombre: 'Explorador',  puntosMin: 200  },
+  { nombre: 'Aventurero',  puntosMin: 600  },
+  { nombre: 'Viajero',     puntosMin: 1200 },
+  { nombre: 'Experto',     puntosMin: 2000 },
+];
+
+// ── Insignias disponibles ────────────────────────────────────────────────────
+
+const BADGES_CONFIG: Badge[] = [
+  { icon: 'fa-solid fa-shoe-prints', name: 'Primer paso',    earned: false },
+  { icon: 'fa-solid fa-house',       name: 'Local',          earned: false },
+  { icon: 'fa-solid fa-globe',       name: 'Explorador',     earned: false },
+  { icon: 'fa-solid fa-lock',        name: 'Aventurero',     earned: false },
+  { icon: 'fa-solid fa-star',        name: 'Top reseñas',    earned: false },
+  { icon: 'fa-solid fa-camera',      name: 'Fotógrafo',      earned: false },
+];
+
 @Component({
   selector: 'app-editar-cuenta',
   imports: [Nav, CommonModule, Footer, ReactiveFormsModule],
@@ -27,11 +64,28 @@ export class EditarCuentaComponent implements OnInit {
   fotoPreview: string = '';
   fotoActual: string = '';
 
-  // Modo edición
   editMode = false;
   saving = false;
 
-  // Favoritos
+  // ── Gamificación ──────────────────────────────────────────────
+  lugaresVisitados    = 0;
+  resenasDadas        = 0;
+  municipiosExplorados = 0;
+  puntosActuales      = 0;
+
+  nivelActual         = 1;
+  nivelNombre         = 'Curioso';
+  puntosSiguiente     = 200;
+  puntosRestantes     = 200;
+  progresoPorc        = 0;
+  nombreSiguienteNivel = 'Explorador';
+
+  badges: Badge[] = [...BADGES_CONFIG];
+
+  // ── Historial ────────────────────────────────────────────────
+  historial: HistorialItem[] = [];
+
+  // ── Favoritos ─────────────────────────────────────────────────
   favoritos: FavoritoItem[] = [];
   loadingFavoritos = false;
 
@@ -47,6 +101,8 @@ export class EditarCuentaComponent implements OnInit {
     if (!raw) return null;
     try { return Number(JSON.parse(raw).id) || null; } catch { return null; }
   }
+
+  
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -66,24 +122,167 @@ export class EditarCuentaComponent implements OnInit {
 
     this.idUsuario = id;
 
-    this.usuarioService.obtenerUsuario(this.idUsuario).subscribe({
-      next: (res) => {
-        this.form.patchValue({
-          nombre_usuario: res.data.nombre_usuario,
-          correo_usuario: res.data.correo_usuario,
-        });
-        this.correoOriginal = res.data.correo_usuario || '';
-        this.fotoActual     = res.data.foto_perfil || '';
-        this.form.markAsPristine();
-      },
-      error: (err) => {
-        this.mensaje = `❌ Error cargando usuario. Status: ${err.status}`;
-        this.tipoMensaje = 'error';
-      }
+   this.usuarioService.obtenerUsuario(this.idUsuario).subscribe({
+  next: (res) => {
+
+    // ── DATOS DEL USUARIO ─────────────────────────────
+    this.form.patchValue({
+      nombre_usuario: res.data.nombre_usuario,
+      correo_usuario: res.data.correo_usuario,
     });
 
-    this.cargarFavoritos();
+    this.correoOriginal = res.data.correo_usuario || '';
+    this.fotoActual     = res.data.foto_perfil || '';
+    this.form.markAsPristine();
+
+    // ── ESTADÍSTICAS (SIMULADAS POR AHORA) ────────────
+    this.lugaresVisitados = 2;
+    this.resenasDadas = 1;
+    this.municipiosExplorados = 1;
+
+    // ── HISTORIAL ─────────────────────────────────────
+    this.historial = res.data.historial ?? [
+      {
+        nombre: 'Salento',
+        municipio: 'Quindío',
+        fechaTexto: 'Hace 2 días',
+        estrellas: 4
+      }
+    ];
+
+    // ── CÁLCULO DE GAMIFICACIÓN ───────────────────────
+    this.actualizarGamificacion();
+
+    // ── SIMULACIÓN AUTOMÁTICA (solo pruebas) ──────────
+    setTimeout(() => {
+      this.simularVisita('Parque del Café', 'Montenegro');
+    }, 2000);
+
+    setTimeout(() => {
+      this.simularResena(5);
+    }, 4000);
+  },
+
+  error: (err) => {
+    this.mensaje = `❌ Error cargando usuario. Status: ${err.status}`;
+    this.tipoMensaje = 'error';
   }
+});
+
+// ── FAVORITOS ─────────────────────────────────────────
+this.cargarFavoritos();
+}
+  // ── Gamificación ──────────────────────────────────────────────
+
+  private calcularNivel(): void {
+    let nivelIdx = 0;
+    for (let i = 0; i < NIVELES.length; i++) {
+      if (this.puntosActuales >= NIVELES[i].puntosMin) nivelIdx = i;
+    }
+
+    const nivel    = NIVELES[nivelIdx];
+    const siguiente = NIVELES[nivelIdx + 1];
+
+    this.nivelActual  = nivelIdx + 1;
+    this.nivelNombre  = nivel.nombre;
+
+    if (siguiente) {
+      const rango = siguiente.puntosMin - nivel.puntosMin;
+      const avance = this.puntosActuales - nivel.puntosMin;
+      this.puntosSiguiente     = siguiente.puntosMin;
+      this.puntosRestantes     = siguiente.puntosMin - this.puntosActuales;
+      this.progresoPorc        = Math.min(100, Math.round((avance / rango) * 100));
+      this.nombreSiguienteNivel = siguiente.nombre;
+    } else {
+      this.puntosSiguiente     = this.puntosActuales;
+      this.puntosRestantes     = 0;
+      this.progresoPorc        = 100;
+      this.nombreSiguienteNivel = 'Máximo nivel';
+    }
+  }
+
+  private calcularBadges(): void {
+    this.badges = [
+      {
+        icon: 'fa-solid fa-shoe-prints',
+        name: 'Primer paso',
+        earned: this.lugaresVisitados >= 1
+      },
+      {
+        icon: 'fa-solid fa-house',
+        name: 'Local',
+        earned: this.lugaresVisitados >= 5
+      },
+      {
+        icon: 'fa-solid fa-globe',
+        name: 'Explorador',
+        earned: this.municipiosExplorados >= 2
+      },
+      {
+        icon: 'fa-solid fa-person-hiking',
+        name: 'Aventurero',
+        earned: this.nivelActual >= 3
+      },
+      {
+        icon: 'fa-solid fa-star',
+        name: 'Top reseñas',
+        earned: this.resenasDadas >= 5
+      },
+      {
+        icon: 'fa-solid fa-camera',
+        name: 'Fotógrafo',
+        earned: false // lógica futura
+      },
+    ];
+  }
+
+
+
+  // ── SIMULACIÓN DE ACCIONES ──────────────────────────────
+
+// Simular que el usuario visitó un lugar
+simularVisita(nombre: string, municipio: string): void {
+  this.lugaresVisitados++;
+
+  // Verificar si es nuevo municipio
+  const yaExiste = this.historial.some(h => h.municipio === municipio);
+  if (!yaExiste) {
+    this.municipiosExplorados++;
+  }
+
+  // Agregar al historial
+  this.historial.unshift({
+    nombre,
+    municipio,
+    fechaTexto: 'Hace un momento',
+    estrellas: 0
+  });
+
+  this.actualizarGamificacion();
+}
+
+// Simular que el usuario hizo una reseña
+simularResena(estrellas: number): void {
+  this.resenasDadas++;
+
+  // Actualizar última visita con estrellas
+  if (this.historial.length > 0) {
+    this.historial[0].estrellas = estrellas;
+  }
+
+  this.actualizarGamificacion();
+}
+
+// Recalcular TODO
+private actualizarGamificacion(): void {
+  this.puntosActuales =
+    this.lugaresVisitados * 10 +
+    this.resenasDadas * 15 +
+    this.municipiosExplorados * 20;
+
+  this.calcularNivel();
+  this.calcularBadges();
+}
 
   // ── Modo edición ──────────────────────────────────────────────
 
@@ -93,8 +292,8 @@ export class EditarCuentaComponent implements OnInit {
   }
 
   cancelarEdicion(): void {
-    this.editMode = false;
-    this.mensaje  = '';
+    this.editMode         = false;
+    this.mensaje          = '';
     this.fotoPreview      = '';
     this.fotoSeleccionada = null;
     this.form.get('password_actual')?.reset();
@@ -108,7 +307,7 @@ export class EditarCuentaComponent implements OnInit {
     this.loadingFavoritos = true;
     this.favoritosService.getFavoritosDesdeBackend().subscribe({
       next: (data) => { this.favoritos = data; this.loadingFavoritos = false; },
-      error: ()     => { this.favoritos = []; this.loadingFavoritos = false; }
+      error: ()    => { this.favoritos = []; this.loadingFavoritos = false; }
     });
   }
 
@@ -151,7 +350,7 @@ export class EditarCuentaComponent implements OnInit {
       this.tipoMensaje = 'error'; return;
     }
 
-    const datosPerfil  = {
+    const datosPerfil = {
       nombre_usuario: this.form.value.nombre_usuario,
       correo_usuario: this.form.value.correo_usuario,
     };
