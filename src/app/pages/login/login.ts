@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Nav } from '../../shared/nav/nav';
 import { Footer } from '../../shared/footer/footer';
 import { Router, RouterLink } from '@angular/router';
-import { User } from '../../service/user';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -22,14 +21,15 @@ export class Login {
   errorMessage = '';
   successMessage = '';
   showPassword = false;
+  isLoading = false; // ✅ para deshabilitar el botón mientras carga
 
   constructor(
-    private userService: User, 
     private router: Router,
-    private route: ActivatedRoute,   
-    private authService : AuthService,
+    private route: ActivatedRoute,
+    private authService: AuthService,
     private itinerarioService: ItinerarioService
   ) {}
+  // ✅ Se eliminó userService — el login ahora lo maneja AuthService directamente
 
   showSuccess(message: string) {
     this.successMessage = message;
@@ -38,49 +38,42 @@ export class Login {
   }
 
   togglePassword(): void {
-  this.showPassword = !this.showPassword;
-}
-
- onSubmit(form: NgForm) {
-
-  if (form.invalid) {
-    this.errorMessage = 'Completa todos los campos.';
-    return;
+    this.showPassword = !this.showPassword;
   }
 
-  this.userService.login({
-    correo_usuario: this.email,
-    password_u: this.password
-  }).subscribe({
-    next: (res) => {
+  onSubmit(form: NgForm) {
+    if (form.invalid) {
+      this.errorMessage = 'Completa todos los campos.';
+      return;
+    }
 
-      this.authService.setSession(res.token, res.user);
-      
-      this.itinerarioService.reload();
+    this.isLoading = true;
 
-      window.dispatchEvent(new Event('storage'));
-      window.dispatchEvent(new Event('storage'));
+    // ✅ Usar authService.login() directamente — ya no necesitas userService
+    this.authService.login(this.email, this.password).subscribe({
+      next: (res) => {
+        this.isLoading = false;
 
-      this.showSuccess('Inicio de sesión exitoso');
+        // ✅ Se eliminó setSession — ya no guarda nada en localStorage
+        // ✅ Se eliminaron los window.dispatchEvent('storage') — ya no aplican
 
-      setTimeout(() => {
+        this.itinerarioService.reload();
+        this.showSuccess('Inicio de sesión exitoso');
 
-        if (res.user.rol === 'empresa') {
-          this.router.navigate(['/empresa']);
-        } else {
+        setTimeout(() => {
+          if (res.user.rol === 'empresa') {
+            this.router.navigate(['/empresa']);
+          } else {
             const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/principal';
             this.router.navigateByUrl(returnUrl);
-
-        }
-
-      }, 900); 
-
-    },
-    error: () => {
-      this.errorMessage = 'Usuario o contraseña inválidos';
-      setTimeout(() => this.errorMessage = '', 1200);
-    }
-  });
-}
-
+          }
+        }, 900);
+      },
+      error: () => {
+        this.isLoading = false;
+        this.errorMessage = 'Usuario o contraseña inválidos';
+        setTimeout(() => this.errorMessage = '', 1200);
+      }
+    });
+  }
 }
