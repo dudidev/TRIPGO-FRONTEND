@@ -312,71 +312,88 @@ export class Detalles implements OnInit {
   }
 
   // ── Calculadora ──────────────────────────────────────────────
-  menuItems: ItemMenu[] = [];
-  menuAgrupado: { cat: string; items: ItemMenu[] }[] = [];
-  totalCOP = 0;
-  tasaCopUsd = TASA_COP_USD;
+menuItems: ItemMenu[] = [];
+menuAgrupado: { cat: string; items: ItemMenu[] }[] = [];
+totalCOP = 0;
+tasaCopUsd = TASA_COP_USD;
 
-  get totalUSD(): string {
-    return copToUsd(this.totalCOP);
+// ⚠️ bandera opcional (puedes moverla a environment si quieres)
+useMockData = true;
+
+get totalUSD(): string {
+  return copToUsd(this.totalCOP);
+}
+
+get itemsSeleccionados(): number {
+  return this.menuItems.reduce((acc, i) => acc + (i.cantidad ?? 0), 0);
+}
+
+private buildMenu(): void {
+  this.menuAgrupado = this.menuService.agruparMenu(this.menuItems);
+}
+
+incrementItem(item: ItemMenu): void {
+  this.menuItems = this.menuItems.map(i =>
+    i === item ? { ...i, cantidad: (i.cantidad ?? 0) + 1 } : i
+  );
+  this.actualizarCalculo();
+}
+
+decrementItem(item: ItemMenu): void {
+  this.menuItems = this.menuItems.map(i =>
+    i === item
+      ? { ...i, cantidad: Math.max((i.cantidad ?? 0) - 1, 0) }
+      : i
+  );
+  this.actualizarCalculo();
+}
+
+toggleItem(item: ItemMenu): void {
+  this.menuItems = this.menuItems.map(i =>
+    i === item ? { ...i, selected: !i.selected } : i
+  );
+  this.actualizarCalculo();
+}
+
+private actualizarCalculo(): void {
+  this.totalCOP = this.menuItems.reduce(
+    (acc, i) => acc + (i.precio * (i.cantidad ?? 0)),
+    0
+  );
+  this.buildMenu();
+}
+
+// calculadora ─────────────────────────────────────
+private initMenu(raw: any): void {
+  console.log("RAW DATA:", raw);
+
+ 
+  if (Array.isArray(raw) && raw.length > 0) {
+    
+
+    this.menuItems = raw.map((p: any) => ({
+      categoria: String(p.categoria ?? 'Servicios'),
+      nombre: String(p.nombre ?? 'Servicio'),
+      precio: Number(p.precio ?? 0),
+      selected: false,
+      cantidad: 0,
+    }));
+
+  } 
+  else if (this.useMockData) {
+
+
+    this.menuItems = getMenuByTipo(this.idTipo);
+
+  } 
+
+  else {
+    
+    this.menuItems = [];
   }
 
-  get itemsSeleccionados(): number {
-    return this.menuItems.reduce((acc, i) => acc + (i.cantidad ?? 0), 0);
-  }
-
-  private buildMenu(): void {
-    this.menuAgrupado = this.menuService.agruparMenu(this.menuItems);
-  }
-
-  incrementItem(item: ItemMenu): void {
-    this.menuItems = this.menuItems.map(i =>
-      i === item ? { ...i, cantidad: (i.cantidad ?? 0) + 1 } : i
-    );
-    this.actualizarCalculo();
-  }
-
-  decrementItem(item: ItemMenu): void {
-    this.menuItems = this.menuItems.map(i =>
-      i === item
-        ? { ...i, cantidad: Math.max((i.cantidad ?? 0) - 1, 0) }
-        : i
-    );
-    this.actualizarCalculo();
-  }
-
-  toggleItem(item: ItemMenu): void {
-    this.menuItems = this.menuItems.map(i =>
-      i === item ? { ...i, selected: !i.selected } : i
-    );
-    this.actualizarCalculo();
-  }
-
-  private actualizarCalculo(): void {
-    this.totalCOP = this.menuItems.reduce(
-      (acc, i) => acc + (i.precio * (i.cantidad ?? 0)),
-      0
-    );
-    this.buildMenu();
-  }
-
-  private initMenu(raw: any): void {
-    if (Array.isArray(raw) && raw.length) {
-      this.menuItems = raw.map((p: any) => ({
-        categoria: String(p.categoria ?? '📋 Servicios'),
-        nombre: String(p.nombre ?? 'Servicio'),
-        precio: Number(p.precio ?? 0),
-        selected: false,
-        cantidad: 0,
-      }));
-    } else {
-      console.log("Está entrando a datos quemados");
-      this.menuItems = getMenuByTipo(this.idTipo);
-    }
-
-    this.actualizarCalculo();
-  }
-
+  this.actualizarCalculo();
+}
   // ── Scroll al presupuesto ─────────────────────────────────────
   presupuestoDestacado = false;
 
