@@ -321,7 +321,6 @@ menuAgrupado: { cat: string; items: ItemMenu[] }[] = [];
 totalCOP = 0;
 tasaCopUsd = TASA_COP_USD;
 
-// ⚠️ bandera opcional (puedes moverla a environment si quieres)
 useMockData = true;
 
 get totalUSD(): string {
