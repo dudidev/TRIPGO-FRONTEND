@@ -13,12 +13,12 @@
     <div class="hero__overlay"></div>
 
     <div class="hero__content">
-      <p class="hero__eyebrow">Eje Cafetero · Colombia</p>
+      <p class="hero__eyebrow">{{ 'PRINCIPAL.HERO.LOCATION' | translate }}</p>
       <h1 class="hero__title">
-        Descubre lo que quieres<br>
-        <span class="hero__accent">hacer hoy</span>
+        {{ 'PRINCIPAL.HERO.TITLE_1' | translate }}<br>
+        <span class="hero__accent">{{ 'PRINCIPAL.HERO.TITLE_2' | translate }}</span>
       </h1>
-      <p class="hero__sub">Busca actividades, pueblos y experiencias únicas en el Quindío</p>
+      <p class="hero__sub">{{ 'PRINCIPAL.HERO.SUBTITLE' | translate }}</p>
 
       <!-- SEARCH BAR -->
       <form class="hero__search" (ngSubmit)="onSearch()">
@@ -30,7 +30,7 @@
           type="text"
           name="q"
           [(ngModel)]="query"
-          placeholder="¿Qué quieres hacer hoy?"
+          [placeholder]="'PRINCIPAL.HERO.PLACEHOLDER' | translate"
           class="hero__searchInput"
           autocomplete="off"
         />
@@ -39,23 +39,23 @@
             <circle cx="11" cy="11" r="7" stroke="#fff" stroke-width="2.2"/>
             <path d="M20 20l-3-3" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
           </svg>
-          Buscar
+           {{ 'PRINCIPAL.HERO.SEARCH' | translate }}
         </button>
-      </form>
+      </form> 
 
       <!-- QUICK TAGS -->
       <div class="hero__tags">
-        <button class="hero__tag" type="button" (click)="quickSearch('Naturaleza')"><i class="fa-solid fa-mountain"></i> Naturaleza</button>
-        <button class="hero__tag" type="button" (click)="quickSearch('Café')"><i class="fa-solid fa-mug-hot"></i> Café</button>
-        <button class="hero__tag" type="button" (click)="quickSearch('Senderismo')"><i class="fa-solid fa-person-hiking"></i> Senderismo</button>
-        <button class="hero__tag" type="button" (click)="quickSearch('Cultura')"><i class="fa-solid fa-theater-masks"></i> Cultura</button>
-        <button class="hero__tag" type="button" (click)="quickSearch('Gastronomía')"><i class="fa-solid fa-utensils"></i> Gastronomía</button>
+        <button class="hero__tag" type="button" (click)="quickSearch('Naturaleza')"><i class="fa-solid fa-mountain"></i> {{'PRINCIPAL.HERO.TAGS.NATURE' | translate}}</button>
+        <button class="hero__tag" type="button" (click)="quickSearch('Café')"><i class="fa-solid fa-mug-hot"></i> {{'PRINCIPAL.HERO.TAGS.COFFEE' | translate}}</button>
+        <button class="hero__tag" type="button" (click)="quickSearch('Senderismo')"><i class="fa-solid fa-person-hiking"></i> {{'PRINCIPAL.HERO.TAGS.HIKING' | translate}}</button>
+        <button class="hero__tag" type="button" (click)="quickSearch('Cultura')"><i class="fa-solid fa-theater-masks"></i> {{'PRINCIPAL.HERO.TAGS.CULTURE' | translate}}</button>
+        <button class="hero__tag" type="button" (click)="quickSearch('Gastronomía')"><i class="fa-solid fa-utensils"></i> {{'PRINCIPAL.HERO.TAGS.FOOD' | translate}}</button>
       </div>
     </div>
 
     <!-- PARTNERS STRIP (dentro del hero) -->
     <div class="hero__partners">
-      <span class="hero__partnersLabel">Compara en</span>
+      <span class="hero__partnersLabel">{{ 'PRINCIPAL.HERO.COMPARE' | translate }}</span>
       <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765716044/Logo-Parque-Del-Cafe_bh5hsr.png" alt="Parque del Café">
       <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765716023/Booking.com_Logo.svg_bshdta.png" alt="Booking.com">
       <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765716786/TripAdvisor_Logo.svg_hwg548.png" alt="TripAdvisor">
@@ -71,14 +71,14 @@
     <div class="searchOverlay" (click)="closePanel()"></div>
     <div class="searchPanel" (click)="$event.stopPropagation()">
       <div class="searchPanel__head">
-        <strong>Resultados para "{{ query }}"</strong>
+        <strong>{{ 'PRINCIPAL.SEARCH.RESULTS' | translate:{ query: query } }}</strong>
         <button type="button" (click)="closePanel()">✕</button>
       </div>
       @if (results.length === 0) {
         <app-empty
           type="search"
-          title='Sin resultados para "{{ query }}"'
-          description="Intenta con otro término o explora las categorías disponibles.">
+          [title]="'PRINCIPAL.SEARCH.NO_RESULTS' | translate:{query: query}"
+          [description]="'PRINCIPAL.SEARCH.TRY' | translate">
         </app-empty>
       } @else {
         <div class="searchList">
@@ -106,63 +106,63 @@
   ═══════════════════════════════════════ -->
   <section class="home__cats">
   <div class="home__catsInner">
-    <h2 class="home__sectionTitle">Explora por categoría</h2>
+    <h2 class="home__sectionTitle">{{ 'PRINCIPAL.CATEGORIES.TITLE' | translate }}</h2>
     <div class="home__catsGrid">
 
       <button class="cat__item" type="button" (click)="quickSearch('Glamping')">
         <div class="cat__icon cat__icon--img">
           <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1773602272/glamping_zbuipr.webp" alt="Glamping">
         </div>
-        <span>Glamping</span>
+        <span>{{ 'PRINCIPAL.CATEGORIES.GLAMPING' | translate }}</span>
       </button>
 
       <button class="cat__item" type="button" (click)="quickSearch('Restaurante')">
         <div class="cat__icon cat__icon--img">
           <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1773522135/restaurante_nu865m.webp" alt="Restaurante">
         </div>
-        <span>Restaurante</span>
+        <span>{{ 'PRINCIPAL.CATEGORIES.RESTAURANT' | translate }}</span>
       </button>
 
       <button class="cat__item" type="button" (click)="quickSearch('Cafe')">
         <div class="cat__icon cat__icon--img">
           <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1773601580/cafes_wisn4t.webp" alt="Café">
         </div>
-        <span>Café</span>
+        <span>{{ 'PRINCIPAL.CATEGORIES.CAFE' | translate }}</span>
       </button>
 
       <button class="cat__item" type="button" (click)="quickSearch('Actividad')">
         <div class="cat__icon cat__icon--img">
           <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1773603516/actividad1_cuhpny.webp" alt="Actividad">
         </div>
-        <span>Actividades</span>
+        <span>{{ 'PRINCIPAL.CATEGORIES.ACTIVITIES' | translate }}</span>
       </button>
 
       <button class="cat__item" type="button" (click)="quickSearch('Senderismo')">
         <div class="cat__icon cat__icon--img">
           <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1773601568/senderismo_ngirma.webp" alt="Senderismo">
         </div>
-        <span>Senderismo</span>
+        <span>{{ 'PRINCIPAL.CATEGORIES.HIKING' | translate }}</span>
       </button>
 
       <button class="cat__item" type="button" (click)="quickSearch('Finca')">
         <div class="cat__icon cat__icon--img">
           <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1773601589/finca-turistica_pzsjeu.webp" alt="Finca Turística">
         </div>
-        <span>Fincas</span>
+        <span>{{ 'PRINCIPAL.CATEGORIES.FARMS' | translate }}</span>
       </button>
 
       <button class="cat__item" type="button" (click)="quickSearch('Tour')">
         <div class="cat__icon cat__icon--img">
           <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1773603630/tours1_dfnqde.webp" alt="Tour Operador">
         </div>
-        <span>Tours</span>
+        <span>{{ 'PRINCIPAL.CATEGORIES.TOURS' | translate }}</span>
       </button>
 
       <button class="cat__item" type="button" (click)="quickSearch('Mirador')">
         <div class="cat__icon cat__icon--img">
           <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1773601569/mirador_ss0bel.webp" alt="Mirador">
         </div>
-        <span>Miradores</span>
+        <span>{{ 'PRINCIPAL.CATEGORIES.VIEWPOINTS' | translate }}</span>
       </button>
 
     </div>
@@ -174,17 +174,17 @@
   ═══════════════════════════════════════ -->
   <section class="home__start">
     <div class="home__startInner">
-      <h2 class="home__sectionTitle home__sectionTitle--left">Aquí empezamos · Eje Cafetero</h2>
+      <h2 class="home__sectionTitle home__sectionTitle--left">{{ 'PRINCIPAL.CAROUSEL.TITLE' | translate }}</h2>
 
       <!-- Carrusel 1 -->
       <div class="carousel__header">
-        <h4 class="home__subTitle">Naturaleza y Miradores</h4>
+        <h4 class="home__subTitle">{{ 'PRINCIPAL.CAROUSEL.NATURE' | translate }}</h4>
         <span class="carousel__seeAll" (click)="quickSearch('Naturaleza')"></span>
       </div>
 
       <div class="carousel__hint">
     <span class="carousel__hintIcon">↔</span>
-    <span>Desliza para ver más pueblos</span>
+    <span>{{ 'PRINCIPAL.CAROUSEL.SLIDE' | translate }}</span>
   </div>
 
       <div class="carousel__wrap">
@@ -198,7 +198,7 @@
               <span class="dest__name">Salento</span>
               <span class="dest__region">Quindío</span>
             </div>
-            <span class="dest__badge">Popular</span>
+            <span class="dest__badge">{{ 'PRINCIPAL.CAROUSEL.BADGES.POPULAR' | translate }}</span>
           </button>
           <button class="dest__card" type="button" (click)="goToTown('filandia')">
             <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722321/filandia_portada_-_carrucel_yvkncf.jpg" alt="Filandia">
@@ -219,7 +219,7 @@
           <button class="dest__card" type="button" (click)="goToTown('circasia')">
             <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722223/calarca_portada-_carrucel_oiqp2z.jpg" alt="Circasia">
             <div class="dest__overlay"><span class="dest__name">Circasia</span><span class="dest__region">Quindío</span></div>
-            <span class="dest__badge dest__badge--new">Nuevo</span>
+            <span class="dest__badge dest__badge--new">{{ 'PRINCIPAL.CAROUSEL.BADGES.NEW' | translate }}</span>
           </button>
           
          
@@ -228,13 +228,13 @@
 
       <!-- Carrusel 2 -->
       <div class="carousel__header">
-        <h4 class="home__subTitle">Café, Cultura y Pueblos Patrimonio</h4>
+        <h4 class="home__subTitle">{{ 'PRINCIPAL.CAROUSEL.CULTURE' | translate }}</h4>
         <span class="carousel__seeAll" (click)="quickSearch('Café')"></span>
       </div>
 
       <div class="carousel__hint">
     <span class="carousel__hintIcon">↔</span>
-    <span>Desliza para ver más pueblos</span>
+    <span>{{ 'PRINCIPAL.CAROUSEL.SLIDE' | translate }}</span>
   </div>
       <div class="carousel__wrap">
         <div class="carousel__fadeL"></div>
@@ -244,16 +244,17 @@
           <button class="dest__card" type="button" (click)="goToTown('armenia')">
             <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722373/armenia_ec3zfc.jpg" alt="Armenia">
             <div class="dest__overlay"><span class="dest__name">Armenia</span><span class="dest__region">Capital</span></div>
-            <span class="dest__badge">Ciudad</span>
+            <span class="dest__badge">{{ 'PRINCIPAL.CAROUSEL.BADGES.CITY' | translate }}</span>
           </button>
           <button class="dest__card" type="button" (click)="goToTown('buenavista')">
             <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722223/buenavista_-_carrucel_dvsnw4.jpg" alt="Buenavista">
             <div class="dest__overlay"><span class="dest__name">Buenavista</span><span class="dest__region">Quindío</span></div>
+            <span class="dest__badge">{{ 'PRINCIPAL.CAROUSEL.BADGES.POPULAR' | translate }}</span>
           </button>
           <button class="dest__card" type="button" (click)="goToTown('pijao')">
             <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722387/pijao_portada_-_carrucel_upbjcz.jpg" alt="Pijao">
             <div class="dest__overlay"><span class="dest__name">Pijao</span><span class="dest__region">Slow City</span></div>
-            <span class="dest__badge dest__badge--slow">Slow City</span>
+            <span class="dest__badge dest__badge--slow">{{ 'PRINCIPAL.CAROUSEL.BADGES.SLOW' | translate }}</span>
           </button>
           <button class="dest__card" type="button" (click)="goToTown('cordoba')">
             <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722406/cordoba_lj5xsx.jpg" alt="Córdoba">
@@ -266,7 +267,7 @@
           <button class="dest__card" type="button" (click)="goToTown('genova')">
             <img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765722432/genova_portada_-_carrucel_gg0fm4.jpg" alt="Génova">
             <div class="dest__overlay"><span class="dest__name">Génova</span><span class="dest__region">Quindío</span></div>
-            <span class="dest__badge dest__badge--new">Nuevo</span>
+            <span class="dest__badge dest__badge--new">{{ 'PRINCIPAL.CAROUSEL.BADGES.NEW' | translate }}</span>
           </button>
           
           
@@ -281,7 +282,7 @@
   <section class="home__reco">
     <div class="home__recoInner">
       <div class="home__recoHeader">
-        <h2 class="home__sectionTitle home__sectionTitle--left">Algunas recomendaciones del Quindío</h2>
+        <h2 class="home__sectionTitle home__sectionTitle--left">{{ 'PRINCIPAL.RECOMMENDATIONS.TITLE' | translate }}</h2>
       </div>
       <div class="home__recoGrid">
         <article class="home__card">
@@ -290,9 +291,9 @@
             <div class="home__cardImgOverlay"></div>
           </div>
           <div class="home__cardBody">
-            <span class="home__cardTag"><i class="fa-solid fa-mountain"></i>Naturaleza</span>
-            <h4>Valle del Cocora</h4>
-            <p>No te pierdas esta gran experiencia natural en Salento.</p>
+            <span class="home__cardTag"><i class="fa-solid fa-mountain"></i> {{ 'PRINCIPAL.HERO.TAGS.NATURE' | translate }}</span>
+            <h4>{{ 'PRINCIPAL.RECOMMENDATIONS.COCORA.TITLE' | translate }}</h4>
+            <p>{{ 'PRINCIPAL.RECOMMENDATIONS.COCORA.DESC' | translate }}</p>
           </div>
         </article>
         <article class="home__card">
@@ -301,9 +302,9 @@
             <div class="home__cardImgOverlay"></div>
           </div>
           <div class="home__cardBody">
-            <span class="home__cardTag"><i class="fa-solid fa-fan"></i> Atracciones turísticas</span>
-            <h4>Parque Nacional del Café</h4>
-            <p>Más aventuras, más sonrisas en Montenegro.</p>
+            <span class="home__cardTag"><i class="fa-solid fa-fan"></i> {{ 'PRINCIPAL.HERO.TAGS.TOURISM' | translate }}</span>
+            <h4>{{ 'PRINCIPAL.RECOMMENDATIONS.CAFE_PARK.TITLE' | translate }}</h4>
+            <p>{{ 'PRINCIPAL.RECOMMENDATIONS.CAFE_PARK.DESC' | translate }}</p>
           </div>
         </article>
         <article class="home__card">
@@ -312,9 +313,9 @@
             <div class="home__cardImgOverlay"></div>
           </div>
           <div class="home__cardBody">
-            <span class="home__cardTag"><i class="fa-solid fa-binoculars"></i> Miradores</span>
-            <h4>Mirador Encanto</h4>
-            <p>Una pizca de magia en Filandia, ven por tu brillo.</p>
+            <span class="home__cardTag"><i class="fa-solid fa-binoculars"></i> {{'PRINCIPAL.CATEGORIES.VIEWPOINTS' | translate}}</span>
+            <h4>{{ 'PRINCIPAL.RECOMMENDATIONS.ENCANTO.TITLE' | translate }}</h4>
+            <p>{{ 'PRINCIPAL.RECOMMENDATIONS.ENCANTO.DESC' | translate }}</p>
           </div>
         </article>
         <article class="home__card">
@@ -324,8 +325,8 @@
           </div>
           <div class="home__cardBody">
             <span class="home__cardTag"><i class="fa-solid fa-dove"></i> Fauna</span>
-            <h4>Avistamiento de aves</h4>
-            <p>Belleza en el movimiento silencioso en Salento.</p>
+            <h4>{{ 'PRINCIPAL.RECOMMENDATIONS.BIRDS.TITLE' | translate }}</h4>
+            <p>{{ 'PRINCIPAL.RECOMMENDATIONS.BIRDS.DESC' | translate }}</p>
           </div>
         </article>
       </div>
@@ -337,7 +338,7 @@
   ═══════════════════════════════════════ -->
   <section class="home__allies" id="planes">
     <div class="home__alliesInner">
-      <h2 class="home__sectionTitle">Nuestros aliados</h2>
+      <h2 class="home__sectionTitle">{{'PRINCIPAL.ALLIES.TITLE' | translate}}</h2>
       <div class="home__alliesGrid">
         <div class="home__ally"><img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765716044/Logo-Parque-Del-Cafe_bh5hsr.png" alt="Parque del Café"></div>
         <div class="home__ally"><img src="https://res.cloudinary.com/dshqbl8d1/image/upload/v1765716023/Booking.com_Logo.svg_bshdta.png" alt="Booking.com"></div>
