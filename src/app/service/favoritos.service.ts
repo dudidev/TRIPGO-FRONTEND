@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { User } from './user';
+import { AuthService } from '../services/auth.service';
 import { environment } from '../../environments/environment';
 
 export type FavoritoItem = {
@@ -17,12 +17,12 @@ export class FavoritosService {
   private baseUrl = environment.apiBaseUrl;
 
   constructor(
-    private userService: User,
+    private authService: AuthService,
     private http: HttpClient
   ) {}
 
   private getCurrentUserId(): string | null {
-    const user = this.userService.getCurrentUser();
+    const user = this.authService.getCurrentUser();
     if (!user) return null;
     return String(user.id);
   }
@@ -45,7 +45,6 @@ export class FavoritosService {
 
   // ── Verificar si un lugar es favorito ─────────────────────────
   isFavorito(lugarId: string): boolean {
-    // Como ahora es async, esto se usa solo como cache local en memoria
     return this._cacheFavoritos.has(String(lugarId));
   }
 
