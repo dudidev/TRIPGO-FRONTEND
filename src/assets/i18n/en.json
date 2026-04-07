@@ -57,7 +57,40 @@
         "RESET_PASSWORD_TITLE": "Reset Password",
         "NEW_PASSWORD": "New Password",
         "RESET_BUTTON": "Reset",
-        "BACK_TO_LOGIN": "Back to Login"
+        "BACK_TO_LOGIN": "Back to Login",
+
+        "WELCOME_BACK": "Welcome back",
+        "LOGIN_SUB": "Enter your details to continue",
+
+        "EMAIL_PLACEHOLDER": "you@email.com",
+        "PASSWORD_PLACEHOLDER": "••••••••",
+
+        "EMAIL_ERROR": "Enter a valid email",
+        "PASSWORD_ERROR": "Minimum 6 characters",
+
+        "SHOW_PASSWORD": "Show password",
+        "HIDE_PASSWORD": "Hide password",
+
+        "DIVIDER": "or",
+        "CREATE_ACCOUNT": "Create new account",
+
+        "TERMS_TEXT": "By continuing you accept our",
+        "TERMS": "terms",
+        "PRIVACY": "privacy",
+
+        "HERO_SUB": "Discover Quindío like never before",
+
+        "HERO_PILLS": {
+            "TOWNS": "12 towns",
+            "PLACES": "+200 places",
+            "PLANS": "Itineraries"
+        },
+
+        "HERO_STATS": {
+            "RATING": "Rating",
+            "TRAVELERS": "Travelers",
+            "FREE": "Free"
+        }
     },
     "CONTACT": {
         "TITLE": "Let's Talk",
