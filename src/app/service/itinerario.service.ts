@@ -21,8 +21,17 @@ export class ItinerarioService {
 
   private authService = inject(AuthService);
 
-  private subject = new BehaviorSubject<ItinerarioItem[]>(this.load());
+  private subject = new BehaviorSubject<ItinerarioItem[]>([]);
   items$ = this.subject.asObservable();
+
+  constructor() {
+    // ✅ Solo cargamos si hay usuario autenticado al iniciar
+    // Si no hay sesión aún (cookie pendiente de validar), esperamos al reload() del login
+    const user = this.authService.getCurrentUser();
+    if (user?.id) {
+      this.subject.next(this.load());
+    }
+  }
 
   get items(): ItinerarioItem[] {
     return this.subject.value;
@@ -34,14 +43,16 @@ export class ItinerarioService {
 
   private getStorageKey(): string {
     const user = this.authService.getCurrentUser();
-    return `tripgo_itinerario_${user?.id || 'anon'}`;
+    // ✅ Sin usuario autenticado no generamos key de anon — evita mezclar datos
+    if (!user?.id) return '';
+    return `tripgo_itinerario_${user.id}`;
   }
 
   add(item: ItinerarioItem) {
     const user = this.authService.getCurrentUser();
 
     if (!user?.id) {
-      console.log('Usuario no autenticado, no se guarda itinerario');
+      console.warn('[ItinerarioService] Usuario no autenticado, no se guarda itinerario');
       return;
     }
 
@@ -60,21 +71,29 @@ export class ItinerarioService {
   }
 
   clear() {
+    const key = this.getStorageKey();
     this.subject.next([]);
-    localStorage.removeItem(this.getStorageKey());
+    // ✅ Solo limpia si hay key válida (usuario autenticado)
+    if (key) localStorage.removeItem(key);
   }
 
+  // ✅ Llamado desde login — recarga con la key del usuario recién autenticado
   reload() {
     this.subject.next(this.load());
   }
 
   private save(items: ItinerarioItem[]) {
-    localStorage.setItem(this.getStorageKey(), JSON.stringify(items));
+    const key = this.getStorageKey();
+    // ✅ No guardar si no hay key válida
+    if (!key) return;
+    localStorage.setItem(key, JSON.stringify(items));
   }
 
   private load(): ItinerarioItem[] {
+    const key = this.getStorageKey();
+    if (!key) return [];
     try {
-      const raw = localStorage.getItem(this.getStorageKey());
+      const raw = localStorage.getItem(key);
       return raw ? JSON.parse(raw) : [];
     } catch {
       return [];
