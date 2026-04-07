@@ -9,6 +9,7 @@ import { Subject, takeUntil, forkJoin, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { Api } from '../../api';
 import { EstablecimientoService } from '../../services/establecimiento.service';
+import { AuthService } from '../../services/auth.service';
 
 type Recomendacion = {
   id_establecimiento: number;
@@ -72,7 +73,8 @@ export class Recomendaciones implements OnInit, OnDestroy {
     private http: HttpClient,
     private router: Router,
     private api: Api,
-    private establecimientoService: EstablecimientoService
+    private establecimientoService: EstablecimientoService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -87,13 +89,10 @@ export class Recomendaciones implements OnInit, OnDestroy {
 
   // ── GETTERS ─────────────────────────
 
-  get nombreUsuario(): string {
-    try {
-      return JSON.parse(localStorage.getItem('user') || '{}')?.nombre_usuario?.split(' ')[0] ?? 'Viajero';
-    } catch {
-      return 'Viajero';
-    }
-  }
+  // ✅ Reemplazar el getter nombreUsuario
+get nombreUsuario(): string {
+  return this.authService.getCurrentUser()?.nombre_usuario?.split(' ')[0] ?? 'Viajero';
+}
 
   get destacado(): Recomendacion | null {
     return this.recomendaciones[0] ?? null;
