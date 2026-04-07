@@ -31,26 +31,5 @@ export class User {
     return this.http.post(`${this.baseUrl}/login`, data)
   }
 
-  logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-  }
-
-  isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
-  }
-
-  getCurrentUser() {
-    return JSON.parse(localStorage.getItem('user') || 'null');
-  }
-
-  getRole(): Role | null {
-    const user = this.getCurrentUser();
-    return user?.rol ?? null;
-  }
-
-  isEmpresa(): boolean {
-    const user = this.getCurrentUser();
-    return user?.rol === 'empresa';
-  }
+  
 }
