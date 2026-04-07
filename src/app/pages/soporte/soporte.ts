@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { SoporteService } from '../../services/soporte.service';
 import { Nav } from '../../shared/nav/nav';
 import { Footer } from '../../shared/footer/footer';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-soporte',
@@ -21,13 +22,12 @@ export class Soporte {
   selectedCategory = signal<string>('tecnico');
   selectedPriority = signal<string>('media');
 
-  categories = [
-    { value: 'tecnico', label: 'Técnico', icon: '🔧' },
-    { value: 'cuenta', label: 'Cuenta', icon: '👤' },
-    { value: 'pagos', label: 'Pagos', icon: '💳' },
-    { value: 'general', label: 'General', icon: '💬' },
-    { value: 'sugerencia', label: 'Sugerencia', icon: '💡' }
-  ];
+ categories = [
+  { value: 'tecnico', label: 'Técnico', icon: 'fas fa-tools' },
+  { value: 'cuenta', label: 'Cuenta', icon: 'fas fa-user' },
+  { value: 'general', label: 'General', icon: 'fas fa-comments' },
+  { value: 'sugerencia', label: 'Sugerencia', icon: 'fas fa-lightbulb' }
+];
 
   priorities = [
     { value: 'baja', label: 'Baja', color: '#10B981' },
@@ -36,7 +36,9 @@ export class Soporte {
     { value: 'urgente', label: 'Urgente', color: '#DC2626' }
   ];
 
-  constructor() {
+  constructor(
+    private authService: AuthService
+  ) {
     this.supportForm = this.fb.group({
       fullName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -49,19 +51,14 @@ export class Soporte {
   }
 
   loadUserData(): void {
-    const userStr = localStorage.getItem('user');
-    if (userStr) {
-      try {
-        const user = JSON.parse(userStr);
-        this.supportForm.patchValue({
-          fullName: user.nombre_usuario || '',
-          email: user.correo_usuario || ''
-        });
-      } catch (error) {
-        console.error('Error parsing user data:', error);
-      }
-    }
+  const user = this.authService.getCurrentUser();
+  if (user) {
+    this.supportForm.patchValue({
+      fullName: user.nombre_usuario || '',
+      email: user.correo_usuario || ''
+    });
   }
+}
 
   get fullName() { return this.supportForm.get('fullName')!; }
   get email() { return this.supportForm.get('email')!; }

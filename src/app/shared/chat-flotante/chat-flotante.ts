@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
 
 type ChatMessage = { role: 'user' | 'ai'; text: string; };
 
@@ -17,42 +18,34 @@ export class ChatFlotante implements AfterViewChecked, OnInit, OnDestroy {
 
   @ViewChild('chatBox') chatBox!: ElementRef;
 
-  isLoggedIn = false;
+  // ✅ Se eliminó `isLoggedIn = false` — ahora es solo getter
   chatOpen = false;
   aiQuery = '';
   aiLoading = false;
   private shouldScrollChat = false;
   private routerSub!: Subscription;
-  private storageListener!: EventListener;
 
   chatMessages: ChatMessage[] = [
     { role: 'ai', text: '¡Hola! Soy tu asistente de viaje TripGo. ¿Qué tipo de experiencia buscas hoy? 🌿' }
   ];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
+
+  // ✅ Getter reactivo — lee el signal de AuthService directamente
+  get isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
 
   ngOnInit(): void {
-    // Re-verifica en cada cambio de ruta
     this.routerSub = this.router.events
       .pipe(filter(e => e instanceof NavigationEnd))
-      .subscribe(() => this.checkAuth());
-
-    // Re-verifica si cambia localStorage (login/logout)
-    this.storageListener = () => this.checkAuth();
-    window.addEventListener('storage', this.storageListener);
-
-    // Verificación inicial
-    this.checkAuth();
+      .subscribe(() => {
+        if (!this.isLoggedIn) this.chatOpen = false;
+      });
   }
 
   ngOnDestroy(): void {
     this.routerSub?.unsubscribe();
-    window.removeEventListener('storage', this.storageListener);
-  }
-
-  private checkAuth(): void {
-    this.isLoggedIn = !!localStorage.getItem('token');
-    if (!this.isLoggedIn) this.chatOpen = false;
   }
 
   ngAfterViewChecked(): void {

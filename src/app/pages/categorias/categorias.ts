@@ -45,8 +45,8 @@ export class Categorias implements OnInit, OnDestroy, AfterViewChecked {
   private timerId  : any = null;
   private slideIndex = 0;
   showA  = true;
-  leftA  = ''; leftB  = '';
-  rightA = ''; rightB = '';
+  leftA  = '';
+  leftB  = '';
 
   // ── AI Chat ───────────────────────────────────
   aiQuery   = '';
@@ -67,11 +67,9 @@ export class Categorias implements OnInit, OnDestroy, AfterViewChecked {
     private search : SearchService,
     private api    : Api,
     public haptic  : HapticService
-
   ) {}
 
   ngOnInit(): void {
-    
     this.route.paramMap.subscribe(params => {
       this.townSlug = params.get('townSlug') || '';
 
@@ -90,8 +88,6 @@ export class Categorias implements OnInit, OnDestroy, AfterViewChecked {
 
   ngOnDestroy(): void {
     this.stopAutoSlider();
-  // this.closeProModal(); // ← limpieza
- 
   }
 
   ngAfterViewChecked(): void {
@@ -156,97 +152,72 @@ export class Categorias implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   onAiInputFocus(): void {
-  const isProUser = false; // reemplaza con tu lógica de auth
-  if (!isProUser) {
-    this.showProModal = true;
-    //  document.body.style.overflow = 'hidden'; /    // ← bloquea scroll
-    // document.body.style.position = 'fixed';      // ← fija la página
-    document.body.style.width = '100%';   
+    const isProUser = false;
+    if (!isProUser) {
+      this.showProModal = true;
+      document.body.style.width = '100%';
+    }
   }
-}
 
-closeProModal(): void {
-  this.showProModal = false;
-  document.body.style.overflow = '';
-  document.body.style.position = '';
-  document.body.style.width = '';
-}
+  closeProModal(): void {
+    this.showProModal = false;
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.width = '';
+  }
 
-toggleChatMobile(): void {
-  this.chatOpen = !this.chatOpen;
-  document.body.style.overflow = this.chatOpen ? 'hidden' : '';
-}
+  toggleChatMobile(): void {
+    this.chatOpen = !this.chatOpen;
+    document.body.style.overflow = this.chatOpen ? 'hidden' : '';
+  }
 
-closeChatMobile(): void {
-  this.chatOpen = false;
-  document.body.style.overflow = '';
-}
+  closeChatMobile(): void {
+    this.chatOpen = false;
+    document.body.style.overflow = '';
+  }
 
-isMobile(): boolean {
-  return !this.isDesktop;
-}
-  // logica de llamado de backend para chatbot 
+  isMobile(): boolean {
+    return !this.isDesktop;
+  }
+
+  // logica de llamado de backend para chatbot
   async sendAIMessage(): Promise<void> {
+    const text = this.aiQuery.trim();
+    if (!text || this.aiLoading) return;
 
-  const text = this.aiQuery.trim();
-  if (!text || this.aiLoading) return;
+    this.chatMessages.push({ role: 'user', text });
+    this.aiQuery = '';
+    this.aiLoading = true;
+    this.shouldScrollChat = true;
 
-  this.chatMessages.push({ role: 'user', text });
-
-  this.aiQuery = '';
-  this.aiLoading = true;
-  this.shouldScrollChat = true;
-
-  try {
-
-    const response = await fetch('https://tripgo-backend-arehbhbubshxdpg7.chilecentral-01.azurewebsites.net/ia/chatbot', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        mensaje: text
-      })
-    });
-
-    const lugares = await response.json();
-
-    let aiText = '';
-
-    if (!lugares || lugares.length === 0) {
-
-      aiText = "No encontré lugares con esa búsqueda";
-
-    } else {
-
-      aiText = "Te recomiendo estos lugares:\n\n";
-
-      lugares.forEach((l:any) => {
-
-        aiText += `• ${l.nombre_establecimiento} (${l.nombre_tipo})\n`;
-
+    try {
+      const response = await fetch('https://tripgo-backend-arehbhbubshxdpg7.chilecentral-01.azurewebsites.net/ia/chatbot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mensaje: text })
       });
 
+      const lugares = await response.json();
+      let aiText = '';
+
+      if (!lugares || lugares.length === 0) {
+        aiText = "No encontré lugares con esa búsqueda";
+      } else {
+        aiText = "Te recomiendo estos lugares:\n\n";
+        lugares.forEach((l: any) => {
+          aiText += `• ${l.nombre_establecimiento} (${l.nombre_tipo})\n`;
+        });
+      }
+
+      this.chatMessages.push({ role: 'ai', text: aiText });
+
+    } catch {
+      this.chatMessages.push({ role: 'ai', text: 'Hubo un error conectando con la IA.' });
     }
 
-    this.chatMessages.push({
-      role: 'ai',
-      text: aiText
-    });
-
-  } catch {
-
-    this.chatMessages.push({
-      role: 'ai',
-      text: 'Hubo un error conectando con la IA.'
-    });
-
+    this.aiLoading = false;
+    this.shouldScrollChat = true;
   }
-
-  this.aiLoading = false;
-  this.shouldScrollChat = true;
-
-}
 
   private scrollChatToBottom(): void {
     try {
@@ -255,23 +226,21 @@ isMobile(): boolean {
     } catch {}
   }
 
-  // ── Hero slider ───────────────────────────────
+  // ── Hero slider (carrusel una imagen) ─────────
   private ensureFallbacks(): void {
     const imgs     = this.data?.sliderImgs ?? [];
     const fallback = 'https://via.placeholder.com/900x500?text=TRIPGO';
 
     if (!imgs.length) {
-      this.leftA = fallback; this.leftB  = fallback;
-      this.rightA= fallback; this.rightB = fallback;
+      this.leftA = fallback;
+      this.leftB = fallback;
       return;
     }
 
     this.slideIndex = 0;
     this.showA  = true;
     this.leftA  = imgs[0] ?? fallback;
-    this.rightA = imgs[1] ?? imgs[0] ?? fallback;
-    this.leftB  = imgs[2] ?? imgs[0] ?? fallback;
-    this.rightB = imgs[3] ?? imgs[1] ?? imgs[0] ?? fallback;
+    this.leftB  = imgs[1] ?? imgs[0] ?? fallback;
   }
 
   private startAutoSlider(): void {
@@ -280,12 +249,11 @@ isMobile(): boolean {
     if (imgs.length <= 1) return;
 
     this.timerId = setInterval(() => {
-      this.slideIndex = (this.slideIndex + 2) % imgs.length;
-      const nL = imgs[this.slideIndex] ?? imgs[0];
-      const nR = imgs[(this.slideIndex + 1) % imgs.length] ?? imgs[0];
+      this.slideIndex = (this.slideIndex + 1) % imgs.length;
+      const next = imgs[this.slideIndex] ?? imgs[0];
 
-      if (this.showA) { this.leftB  = nL; this.rightB = nR; }
-      else            { this.leftA  = nL; this.rightA = nR; }
+      if (this.showA) { this.leftB = next; }
+      else            { this.leftA = next; }
 
       this.showA = !this.showA;
     }, 3000);

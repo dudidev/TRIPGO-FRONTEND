@@ -123,7 +123,7 @@
 
       <!-- ERROR -->
       <div class="rec__error" *ngIf="error && !loading">
-        <span>😕</span>
+        <span><i class="fa-solid fa-exclamation-triangle"></i></span>
         <p>{{ error }}</p>
         <button (click)="refrescarPerfil()">Reintentar</button>
       </div>
@@ -132,7 +132,7 @@
 
         <!-- VACÍO -->
         <div class="rec__empty" *ngIf="recomendaciones.length === 0">
-          <div class="rec__emptyIcon">🗺️</div>
+          <div class="rec__emptyIcon"><i class="fa-solid fa-map-location-dot"></i></div>
           <h3>Aún no tenemos recomendaciones</h3>
           <p>Explora lugares, búscalos y deja reseñas para personalizar tu experiencia.</p>
           <a routerLink="/principal" class="rec__emptyBtn">Explorar lugares</a>

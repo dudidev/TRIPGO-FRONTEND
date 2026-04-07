@@ -1,37 +1,79 @@
-// src/app/services/auth.service.ts
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { tap, catchError, finalize, map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private currentUser = signal<any>(null);
+  private authChecked = signal(false);
 
-  isLoggedIn(): boolean {
-    const token = localStorage.getItem('token');
-    if (!token) return false;
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const now = Math.floor(Date.now() / 1000);
-      return payload.exp ? payload.exp > now : true;
-    } catch {
-      return false;
-    }
+  constructor(private http: HttpClient, private router: Router) {
+    this.restoreSession().subscribe();
   }
 
-  setSession(token: string, user: any): void {
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-  }
-
-
-   getCurrentUser(): any {
-    try {
-      return JSON.parse(localStorage.getItem('user') || 'null');
-    } catch {
-      return null;
-    }
+  login(correo_usuario: string, password_u: string): Observable<any> {
+    return this.http.post(
+      `${environment.apiBaseUrl}/auth/login`,
+      { correo_usuario, password_u },
+      { withCredentials: true }
+    ).pipe(
+      tap((res: any) => {
+        this.currentUser.set(res.user);
+        this.authChecked.set(true);
+      })
+    );
   }
 
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    this.http.post(
+      `${environment.apiBaseUrl}/auth/logout`,
+      {},
+      { withCredentials: true }
+    ).subscribe({
+      next: () => {
+        this.currentUser.set(null);
+        this.authChecked.set(true);
+        localStorage.removeItem('tripgo_itinerario_v1');
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        this.currentUser.set(null);
+        this.authChecked.set(true);
+        this.router.navigate(['/login']);
+      }
+    });
+  }
+
+  isLoggedIn(): boolean {
+    return this.currentUser() !== null;
+  }
+
+  getCurrentUser(): any {
+    return this.currentUser();
+  }
+
+  hasCheckedAuth(): boolean {
+    return this.authChecked();
+  }
+
+  restoreSession(): Observable<any> {
+    return this.http.get(
+      `${environment.apiBaseUrl}/auth/me`,
+      { withCredentials: true }
+    ).pipe(
+      tap((res: any) => {
+        this.currentUser.set(res.user ?? null);
+      }),
+      catchError(() => {
+        this.currentUser.set(null);
+        return of(null);
+      }),
+      finalize(() => {
+        this.authChecked.set(true);
+      })
+    );
   }
 }

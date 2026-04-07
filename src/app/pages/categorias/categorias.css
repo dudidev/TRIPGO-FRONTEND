@@ -13,7 +13,7 @@
 }
 
 /* ─────────────────────────────────────
-   HERO SPLIT
+   HERO CAROUSEL
 ───────────────────────────────────── */
 .cat__hero {
   position: relative;
@@ -22,18 +22,7 @@
   overflow: hidden;
 }
 
-.cat__heroSplit {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  width: 100%; height: 100%;
-}
-
-.cat__heroHalf {
-  width: 100%; height: 100%;
-  overflow: hidden; position: relative;
-}
-
-.cat__heroStack {
+.cat__heroCarousel {
   position: relative;
   width: 100%; height: 100%;
 }
@@ -91,6 +80,22 @@
 
 .cat__heroSub {
   font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 500;
+}
+
+/* Dots indicadores */
+.cat__heroDots {
+  position: absolute; bottom: 14px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 6px; z-index: 3;
+}
+.cat__heroDot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(255,255,255,0.4);
+  transition: background 0.3s, transform 0.3s;
+}
+.cat__heroDot.active {
+  background: #fff;
+  transform: scale(1.25);
 }
 
 /* ─────────────────────────────────────

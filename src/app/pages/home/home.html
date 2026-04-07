@@ -3,24 +3,26 @@
 <section class="home">
   <div class="contenido">
     <div class="carousel">
-      <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1759323111/PresentacionValle_y9sz48.jpg" class="carousel-img active">
+      <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1759323111/PresentacionValle_y9sz48.jpg"
+        class="carousel-img active">
       <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1765547958/comida2_g2tlvg.avif" class="carousel-img">
       <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1765547930/lugar3_zbqsc7.jpg" class="carousel-img">
       <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1765547956/comida_pisgdu.avif" class="carousel-img">
       <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1765547930/lugar2_d4mutv.webp" class="carousel-img">
       <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1765547957/comida3_np95d8.avif" class="carousel-img">
       <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1765547930/lugar1_k5auyf.webp" class="carousel-img">
-      <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764684142/Img_Parque_del_cafe_p5j2gi.jpg" class="carousel-img">
+      <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764684142/Img_Parque_del_cafe_p5j2gi.jpg"
+        class="carousel-img">
       <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1765548533/lugar4_jr19vo.jpg" class="carousel-img">
     </div>
 
     <div class="hero-overlay">
       <span class="hero-badge">EJE CAFETERO · COLOMBIA</span>
-      <h2>DESCUBRE LOS MEJORES LUGARES TURÍSTICOS</h2>
+      <h2>{{ 'HOME.TITLE' | translate }}</h2>
       <p class="hero-text">
-        Explora, planea y vive experiencias únicas en el Quindío con TripGO.
+        {{ 'HOME.SUBTITLE' | translate }}
       </p>
-      <a href="/principal" class="hero-btn">Empecemos a descubrir</a>
+      <a href="/principal" class="hero-btn">{{ 'HOME.PRINCIPAL_BUTTON' | translate }}</a>
 
       <div class="hero-dots">
         <span class="hero-dot active"></span>
@@ -31,60 +33,56 @@
   </div>
 
   <div class="aliados">
-    <h3>¡DISFRUTA LA COMODIDAD DE VIAJAR CON NOSOTROS!</h3>
+    <h3>{{ 'HOME.BANNER' | translate }}</h3>
   </div>
 
   <div id="Nosotros" class="Nosotros">
     <div class="info1">
-      <h2>¿QUIÉNES SOMOS?</h2>
+      <h2 style="text-transform: uppercase;">{{ 'NAV.ABOUT_US_TITLE' | translate }}</h2>
       <p>
-        En TripGO queremos que viajar sea tan fácil como soñar con tu próximo destino.
-        Por eso creamos una aplicación pensada para que organices todo tu viaje en un solo lugar:
-        desde elegir dónde ir, hasta planear tus actividades, controlar tu presupuesto y descubrir
-        experiencias únicas hechas a tu medida. Nuestro objetivo es que disfrutes al máximo sin
-        preocuparte por la organización. Tú solo viaja, que nosotros te ayudamos con el resto.
+        {{ 'HOME.ABOUT_US.DESC' | translate }}
       </p>
     </div>
 
     <div class="info2">
       <ul>
-        <li>Planifica tu viaje fácilmente en un solo lugar.</li>
-        <li>Crea itinerarios personalizados según tus gustos.</li>
-        <li>Controla tu presupuesto y evita gastos sorpresa.</li>
-        <li>Selecciona tus productos sin salir de casa.</li>
-        <li>Descubre recomendaciones únicas en cada destino.</li>
+        <li>{{ 'HOME.ABOUT_US.INFO1' | translate }}</li>
+        <li>{{ 'HOME.ABOUT_US.INFO2' | translate }}</li>
+        <li>{{ 'HOME.ABOUT_US.INFO3' | translate }}</li>
+        <li>{{ 'HOME.ABOUT_US.INFO4' | translate }}</li>
+        <li>{{ 'HOME.ABOUT_US.INFO5' | translate }}</li>
       </ul>
     </div>
   </div>
 
   <div id="comoFunciona" class="panel-funciona">
-    <h2>¿Cómo funciona?</h2>
+    <h2>{{ 'NAV.HOW_WORKS_TITLE' | translate }}</h2>
 
     <div class="funciona-grid">
       <div class="funciona-card">
         <div class="step-number">1</div>
-        <h3>Elige tu destino</h3>
-        <p>Explora nuestras opciones y selecciona el lugar que más te emocione.</p>
+        <h3>{{ 'HOME.HOW_WORKS.TITLE1' | translate }}</h3>
+        <p>{{ 'HOME.HOW_WORKS.DESC1' | translate }}</p>
       </div>
 
       <div class="funciona-card">
         <div class="step-number">2</div>
-        <h3>Personaliza tu viaje</h3>
-        <p>Añade actividades, ajusta el presupuesto y organiza tu itinerario.</p>
+        <h3>{{ 'HOME.HOW_WORKS.TITLE2' | translate }}</h3>
+        <p>{{ 'HOME.HOW_WORKS.DESC2' | translate }}</p>
       </div>
 
       <div class="funciona-card">
         <div class="step-number">3</div>
-        <h3>Disfruta tu aventura</h3>
-        <p>Lleva todo en la app: itinerario, reservas y tips para tu experiencia.</p>
+        <h3>{{ 'HOME.HOW_WORKS.TITLE3' | translate }}</h3>
+        <p>{{ 'HOME.HOW_WORKS.DESC3' | translate }}</p>
       </div>
     </div>
   </div>
 
   <div class="cta-final">
-    <h3>¿Listo para tu próxima aventura?</h3>
-    <p>Regístrate gratis y desbloquea itinerarios, recomendaciones personalizadas y mucho más.</p>
-    <a href="/register" class="cta-final-btn">Crear cuenta gratis</a>
+    <h3>{{ 'HOME.FINAL_CTA_TITLE' | translate }}</h3>
+    <p>{{ 'HOME.FINAL_CTA' | translate }}</p>
+    <a href="/register" class="cta-final-btn">{{ 'HOME.FINAL_CTA_BUTTON' | translate }}</a>
   </div>
 </section>
 

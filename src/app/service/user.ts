@@ -28,37 +28,8 @@ export class User {
     correo_usuario: string;
     password_u: string;
   }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login`, data).pipe(
-      tap((response: any) => {
-        // Guardar token y usuario cuando haga login
-        if (response?.token) {
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('user', JSON.stringify(response.user));
-        }
-      })
-    );
+    return this.http.post(`${this.baseUrl}/login`, data)
   }
 
-  logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-  }
-
-  isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
-  }
-
-  getCurrentUser() {
-    return JSON.parse(localStorage.getItem('user') || 'null');
-  }
-
-  getRole(): Role | null {
-    const user = this.getCurrentUser();
-    return user?.rol ?? null;
-  }
-
-  isEmpresa(): boolean {
-    const user = this.getCurrentUser();
-    return user?.rol === 'empresa';
-  }
+  
 }

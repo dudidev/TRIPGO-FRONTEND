@@ -1,0 +1,251 @@
+{
+    "NAV": {
+        "HOME": "Home",
+        "PLACES": "Places",
+        "PRICES": "Some Plans",
+        "ABOUT_US_TITLE": "About Us",
+        "HOW_WORKS_TITLE": "How Does It Work?",
+        "CONTACT": "Contact",
+        "LOGIN": "Log In",
+        "REGISTER": "Sign Up",
+        "LOGOUT": "Log Out",
+        "MY_ACCOUNT": "My Account",
+        "SUPPORT": "Support",
+        "WELCOME": "Welcome",
+        "SUGGEST": "Recommendations"
+    },
+    "HOME": {
+        "TITLE": "DISCOVER THE BEST TOURIST DESTINATIONS",
+        "SUBTITLE": "Explore, plan, and enjoy unique experiences in Quindío with TripGO.",
+        "PRINCIPAL_BUTTON": "Let's Start Discovering",
+        "BANNER": "ENJOY THE COMFORT OF TRAVELING WITH US!",
+        "ABOUT_US": {
+            "DESC": "At TripGO, we want traveling to be as easy as dreaming about your next destination. That’s why we created an app designed to help you organize your entire trip in one place: from choosing where to go, to planning your activities, managing your budget, and discovering unique experiences tailored to you. Our goal is for you to enjoy every moment without worrying about the planning. You just travel, and we’ll help with the rest.",
+            "INFO1": "Plan your trip easily in one place.",
+            "INFO2": "Create personalized itineraries based on your preferences.",
+            "INFO3": "Manage your budget and avoid unexpected expenses.",
+            "INFO4": "Choose the services you want without leaving home.",
+            "INFO5": "Discover unique recommendations at every destination."
+        },
+        "HOW_WORKS": {
+            "TITLE1": "Choose Your Destination",
+            "TITLE2": "Customize Your Trip",
+            "TITLE3": "Enjoy Your Adventure",
+            "DESC1": "Explore our options and choose the place that excites you the most.",
+            "DESC2": "Add activities, adjust your budget, and organize your itinerary.",
+            "DESC3": "Keep everything in the app: itinerary, bookings, and tips for your experience."
+        },
+        "FINAL_CTA_TITLE": "Ready for Your Next Adventure?",
+        "FINAL_CTA": "Sign up for free and unlock itineraries, personalized recommendations, and much more. Your dream trip is just one click away!",
+        "FINAL_CTA_BUTTON": "Create Free Account",
+        "SEARCH_PLACEHOLDER": "Search hotels, restaurants, attractions...",
+        "EXPLORE": "Explore",
+        "RECOMMENDED": "Recommended for You"
+    },
+    "AUTH": {
+        "LOGIN_TITLE": "Log In",
+        "REGISTER_TITLE": "Create Account",
+        "EMAIL": "Email Address",
+        "PASSWORD": "Password",
+        "CONFIRM_PASSWORD": "Confirm Password",
+        "NAME": "Name",
+        "LOGIN_BUTTON": "Log In",
+        "REGISTER_BUTTON": "Sign Up",
+        "FORGOT_PASSWORD": "Forgot your password?",
+        "HAVE_ACCOUNT": "Already have an account?",
+        "NO_ACCOUNT": "Don't have an account?",
+        "RESET_PASSWORD_TITLE": "Reset Password",
+        "NEW_PASSWORD": "New Password",
+        "RESET_BUTTON": "Reset",
+        "BACK_TO_LOGIN": "Back to Login",
+
+        "WELCOME_BACK": "Welcome back",
+        "LOGIN_SUB": "Enter your details to continue",
+
+        "EMAIL_PLACEHOLDER": "you@email.com",
+        "PASSWORD_PLACEHOLDER": "••••••••",
+
+        "EMAIL_ERROR": "Enter a valid email",
+        "PASSWORD_ERROR": "Minimum 6 characters",
+
+        "SHOW_PASSWORD": "Show password",
+        "HIDE_PASSWORD": "Hide password",
+
+        "DIVIDER": "or",
+        "CREATE_ACCOUNT": "Create new account",
+
+        "TERMS_TEXT": "By continuing you accept our",
+        "TERMS": "terms",
+        "PRIVACY": "privacy",
+
+        "HERO_SUB": "Discover Quindío like never before",
+
+        "HERO_PILLS": {
+            "TOWNS": "12 towns",
+            "PLACES": "+200 places",
+            "PLANS": "Itineraries"
+        },
+
+        "HERO_STATS": {
+            "RATING": "Rating",
+            "TRAVELERS": "Travelers",
+            "FREE": "Free"
+        }
+    },
+    "CONTACT": {
+        "TITLE": "Let's Talk",
+        "SUBTITLE": "Tell us about your business and we will get in touch with you",
+        "FORM": {
+            "NAME_BS": "Business Name",
+            "NAME_BS_INVALID": "Enter your business name",
+            "EMAIL_BS": "Email Address",
+            "EMAIL_BS_INVALID": "Enter an email address you use",
+            "MESSAGE_BS": "Tell us about your business",
+            "MESSAGE_BS_INVALID": "Tell us a little about your business (minimum 10 characters)"
+        },
+        "SUCCESS": {
+            "TITLE": "Message Sent!",
+            "MESSAGE": "We received your request. Our team will review the information and contact you soon.",
+            "BUTTON": "Send Another Request"
+        },
+        "ERROR": {
+            "TITLE": "Something Went Wrong",
+            "MESSAGE": "We couldn't send your message. Please try again or contact us directly at ",
+            "BUTTON": "Try Again"
+        },
+        "CONTACT_INFO_TITLE": "Contact Information"
+    },
+    "SUPPORT": {
+        "TITLE": "How Can We Help You?",
+        "SUBTITLE": "Describe your issue and our team will respond shortly",
+        "CATEGORIES": {
+            "TECHNICAL": "Technical",
+            "ACCOUNT": "Account",
+            "PAYMENTS": "Payments",
+            "GENERAL": "General",
+            "SUGGESTION": "Suggestion"
+        },
+        "PRIORITY": {
+            "LOW": "Low",
+            "MEDIUM": "Medium",
+            "HIGH": "High",
+            "URGENT": "Urgent"
+        },
+        "FORM": {
+            "NAME": "Full Name",
+            "EMAIL": "Email Address",
+            "SUBJECT": "Issue Subject",
+            "DESCRIPTION": "Describe the issue in detail",
+            "SEND": "Send Support Ticket"
+        },
+        "SUCCESS": {
+            "TITLE": "Ticket Created!",
+            "MESSAGE": "We received your request. Our team will respond within 24 business hours.",
+            "BUTTON": "Open Another Ticket"
+        },
+        "ERROR": {
+            "TITLE": "Something Went Wrong",
+            "MESSAGE": "We couldn't send your request. Please try again.",
+            "BUTTON": "Try Again"
+        }
+    },
+    "COMMON": {
+        "LOADING": "Loading...",
+        "SAVE": "Save",
+        "CANCEL": "Cancel",
+        "DELETE": "Delete",
+        "EDIT": "Edit",
+        "SEARCH": "Search",
+        "CLOSE": "Close",
+        "YES": "Yes",
+        "NO": "No",
+        "SEND": "Send",
+        "SENDING": "Sending..."
+    },
+    "ERRORS": {
+        "REQUIRED": "This field is required",
+        "INVALID_EMAIL": "Invalid email address",
+        "MIN_LENGTH": "Minimum {{value}} characters",
+        "MAX_LENGTH": "Maximum {{value}} characters",
+        "PASSWORD_INVALID_FORMAT": "The password must be at least 8 characters long and include letters and numbers",
+        "CONFIRM_PASSWORD": "Please confirm your password",
+        "PASSWORD_MISMATCH": "Passwords do not match. Please check again",
+        "NETWORK_ERROR": "Connection error. Please check your internet."
+    },
+    "PRINCIPAL": {
+        "HERO": {
+        "LOCATION": "Eje Cafetero · Colombia",
+        "TITLE_1": "Discover what you want",
+        "TITLE_2": "to do today",
+        "SUBTITLE": "Find activities, towns and unique experiences in Quindío",
+        "PLACEHOLDER": "What do you want to do today?",
+        "SEARCH": "Search",
+        "COMPARE": "Compare on",
+        "TAGS": {
+        "NATURE": "Nature",
+        "COFFEE": "Coffee",
+        "HIKING": "Hiking",
+        "CULTURE": "Culture",
+        "FOOD": "Food",
+        "TOURISM": "Tourist attractions"
+        }
+    },
+
+    "SEARCH": {
+        "RESULTS": "Results for \"{{query}}\"",
+        "NO_RESULTS": "No results for \"{{query}}\"",
+        "TRY": "Try another term or explore available categories.",
+        "CATEGORY": "Category",
+        "PLACE": "Place"
+    },
+
+    "CATEGORIES": {
+        "TITLE": "Explore by category",
+        "GLAMPING": "Glamping",
+        "RESTAURANT": "Restaurant",
+        "CAFE": "Coffee",
+        "ACTIVITIES": "Activities",
+        "HIKING": "Hiking",
+        "FARMS": "Farms",
+        "TOURS": "Tours",
+        "VIEWPOINTS": "Viewpoints"
+    },
+
+    "CAROUSEL": {
+        "TITLE": "Start here · Eje Cafetero",
+        "NATURE": "Nature & Viewpoints",
+        "CULTURE": "Coffee, Culture & Heritage Towns",
+        "SLIDE": "Swipe to see more towns",
+        "BADGES": {
+        "POPULAR": "Popular",
+        "NEW": "New",
+        "CITY": "City",
+        "SLOW": "Slow City"
+        }
+    },
+
+    "RECOMMENDATIONS": {
+        "TITLE": "Some recommendations from Quindío",
+        "COCORA": {
+        "TITLE": "Cocora Valley",
+        "DESC": "Don't miss this amazing natural experience in Salento."
+        },
+        "CAFE_PARK": {
+        "TITLE": "National Coffee Park",
+        "DESC": "More adventures, more smiles in Montenegro."
+        },
+        "ENCANTO": {
+        "TITLE": "Encanto Viewpoint",
+        "DESC": "A touch of magic in Filandia, come find your glow."
+        },
+        "BIRDS": {
+        "TITLE": "Bird Watching",
+        "DESC": "Beauty in silent movement in Salento."
+        }
+    },
+
+    "ALLIES": {
+        "TITLE": "Our partners"
+    }
+    }
+}

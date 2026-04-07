@@ -12,18 +12,18 @@
     <!-- ── CATEGORY CHIPS ── -->
     @if (status() !== 'success') {
       <div class="category-chips">
-        @for (cat of categories; track cat.value) {
-          <button
-            type="button"
-            class="chip"
-            [class.active]="selectedCategory() === cat.value"
-            (click)="selectCategory(cat.value)"
-          >
-            <span class="chip-icon">{{ cat.icon }}</span>
-            {{ cat.label }}
-          </button>
-        }
-      </div>
+  @for (cat of categories; track cat.value) {
+    <button
+      type="button"
+      class="chip"
+      [class.active]="selectedCategory() === cat.value"
+      (click)="selectCategory(cat.value)"
+    >
+      <i [class]="cat.icon"></i>
+      {{ cat.label }}
+    </button>
+  }
+</div>
     }
 
     <!-- ── SUCCESS STATE ── -->
@@ -158,9 +158,9 @@
 
     <div class="contact-info">
       <h3>Otros canales de soporte</h3>
-      <p>📧 X-code&#64;tripgo.com</p>
-      <p>💬 Chat en vivo: Lun–Vie, 8 am – 6 pm</p>
-      <p>📞 +57 3147212090</p>
+      <p> <i class="fa-solid fa-envelope"></i>tripgoservice&#64;gmail.com</p>
+      <p> <i class="fa-solid fa-comments"></i> Chat en vivo: Lun–Vie, 8 am – 6 pm</p>
+      <p> <i class="fa-solid fa-phone"></i>+57 3147212090</p>
     </div>
 
   </section>

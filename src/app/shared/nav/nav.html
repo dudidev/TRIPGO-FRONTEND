@@ -129,11 +129,11 @@
 
         <div class="OpLaterales">
           @if (!isLoggedIn) {
-            <a routerLink="/login" class="btnLogin desktopOnly">Iniciar sesión</a>
-            <a routerLink="/register" class="btnRegister desktopOnly">Registrarse</a>
+            <a routerLink="/login" class="btnLogin desktopOnly">{{ 'AUTH.LOGIN_TITLE' | translate }}</a>
+            <a routerLink="/register" class="btnRegister desktopOnly">{{ 'AUTH.REGISTER_TITLE' | translate }}</a>
             <div class="navControls desktopOnly">
-              <button type="button" class="langBtn" (click)="lang.toggle()">
-                {{ lang.current === 'es' ? 'EN' : 'ES' }}
+              <button type="button" class="langBtn" (click)="lang.toggleLanguage()">
+                {{ lang.getCurrentLanguage() === 'es' ? 'EN' : 'ES' }}
               </button>
               <button type="button" class="darkToggle" (click)="darkMode.toggle()"
                 [attr.aria-label]="darkMode.isDark() ? 'Activar modo claro' : 'Activar modo oscuro'">
@@ -157,8 +157,8 @@
             <a routerLink="/editar-cuenta" class="topActionLink desktopOnly">Perfil</a>
             <a href="#" class="topActionLink" (click)="confirmLogout(); $event.preventDefault()">Salir</a>
             <div class="navControls">
-              <button type="button" class="langBtn" (click)="lang.toggle()">
-                {{ lang.current === 'es' ? 'EN' : 'ES' }}
+              <button type="button" class="langBtn" (click)="lang.toggleLanguage()">
+                {{ lang.getCurrentLanguage() === 'es' ? 'EN' : 'ES' }}
               </button>
               <button type="button" class="darkToggle" (click)="darkMode.toggle()"
                 [attr.aria-label]="darkMode.isDark() ? 'Activar modo claro' : 'Activar modo oscuro'">
@@ -193,14 +193,14 @@
   @if (!isEmpresaPage) {
     <div class="nav-bar">
       @if (!isLoggedIn) {
-        <a href="/#Nosotros">¿Quienes somos?</a>
-        <a href="/#comoFunciona">Como funciona</a>
-        <a routerLink="/prices">Algunos planes</a>
-        <a routerLink="/contact">Contacto</a>
+        <a href="/#Nosotros">{{ 'NAV.ABOUT_US_TITLE' | translate }}</a>
+        <a href="/#comoFunciona">{{ 'NAV.HOW_WORKS_TITLE' | translate }}</a>
+        <a routerLink="/prices">{{ 'NAV.PRICES' | translate }}</a>
+        <a routerLink="/contact">{{ 'NAV.CONTACT' | translate }}</a>
       } @else {
-        <a routerLink="/principal">Inicio</a>
-        <a routerLink="/recomendaciones">Recomendaciones</a>
-        <a routerLink="/soporte">Soporte</a>
+        <a routerLink="/principal">{{ 'NAV.HOME' | translate }}</a>
+        <a routerLink="/recomendaciones">{{ 'NAV.SUGGEST' | translate }}</a>
+        <a routerLink="/soporte">{{ 'NAV.SUPPORT' | translate }}</a>
       }
     </div>
   }
@@ -214,12 +214,12 @@
       </div>
       <nav class="sideMenu__links">
         @if (!isLoggedIn) {
-          <a routerLink="/login" (click)="closeMenu()">Iniciar sesión</a>
+          <a routerLink="/login" (click)="closeMenu()">{{ 'AUTH.LOGIN_TITLE' | translate }}</a>
           <a routerLink="/register" (click)="closeMenu()">Registrarse</a>
           <a href="/#Nosotros" (click)="closeMenu()">¿Quienes somos?</a>
           <a href="/#comoFunciona" (click)="closeMenu()">Como funciona</a>
           <a routerLink="/prices" (click)="closeMenu()">Algunos planes</a>
-          <a routerLink="/contact" (click)="closeMenu()">Contacto</a>
+          <a routerLink="/contact" (click)="closeMenu()">Quieres ser parte de nosotros?</a>
         } @else {
           <a routerLink="/principal" (click)="closeMenu()">Lugares</a>
           <a routerLink="/recomendaciones" (click)="closeMenu()">Recomendaciones</a>
@@ -227,8 +227,8 @@
           <a routerLink="/editar-cuenta" (click)="closeMenu()">Perfil</a>
           <a href="#" (click)="confirmLogout(); $event.preventDefault()">Salir</a>
         }
-        <button type="button" class="langBtnMobile" (click)="lang.toggle(); closeMenu()">
-          Cambiar a {{ lang.current === 'es' ? 'English' : 'Español' }}
+        <button type="button" class="langBtnMobile" (click)="lang.toggleLanguage(); closeMenu()">
+          Cambiar a {{ lang.getCurrentLanguage() === 'es' ? 'Ingles' : 'Español' }}
         </button>
         <button type="button" class="darkToggleMobile" (click)="darkMode.toggle(); closeMenu()">
           <span class="darkToggle__track" [class.darkToggle__track--on]="darkMode.isDark()">
@@ -296,7 +296,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
         </svg>
-        <span>Destacados</span>
+        <span>Recomendaciones</span>
       </a>
 
       <button

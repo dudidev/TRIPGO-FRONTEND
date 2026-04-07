@@ -5,10 +5,11 @@ import { Router, RouterLink } from '@angular/router';
 import { User, Role } from '../../service/user';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-register',
-  imports: [Nav, Footer, FormsModule, RouterLink, CommonModule],
+  imports: [Nav, Footer, FormsModule, RouterLink, CommonModule, TranslateModule],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })

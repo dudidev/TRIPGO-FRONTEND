@@ -1,18 +1,18 @@
-import { inject } from '@angular/core';
 import { HttpInterceptorFn } from '@angular/common/http';
-import { LanguageService } from '../service/language.service';
 
 export const languageInterceptor: HttpInterceptorFn = (req, next) => {
-  const lang = inject(LanguageService).current;
+  // No tocar los archivos de traducción
+  if (req.url.includes('/assets/i18n/')) {
+    return next(req);
+  }
 
-  // No tocar assets del frontend
-  if (req.url.includes('/assets/')) return next(req);
+  const lang = localStorage.getItem('tripgo_language') || 'es';
 
-  const cloned = req.clone({
-    setHeaders: {
-      'Accept-Language': lang,
-    },
-  });
-
-  return next(cloned);
+  return next(
+    req.clone({
+      setHeaders: {
+        'Accept-Language': lang
+      }
+    })
+  );
 };

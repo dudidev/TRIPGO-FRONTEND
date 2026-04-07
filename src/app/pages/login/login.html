@@ -1,81 +1,187 @@
 <app-nav></app-nav>
 
+<!-- ── TOASTS ── -->
 @if (successMessage) {
-<div class="toast toast-success" role="status" aria-live="polite">
-  {{ successMessage }}
-</div>
+  <div class="toast toast-success" role="status" aria-live="polite">
+    <span class="toast__icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </span>
+    {{ successMessage }}
+  </div>
 }
 
 @if (errorMessage) {
-<div class="toast toast-error" role="alert" aria-live="assertive">
-  {{ errorMessage }}
-</div>
+  <div class="toast toast-error" role="alert" aria-live="assertive">
+    <span class="toast__icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+    </span>
+    {{ errorMessage }}
+  </div>
 }
 
+<div class="lg__page" role="main">
 
-<div class="ppal" role="main" aria-label="Login">
+  <!-- HERO -->
+  <section class="lg__hero" aria-hidden="true">
 
-  <section class="left">
-    <div class="left-content">
-      <h1>Bienvenido<br>Inicia sesión</h1>
+    <div class="lg__heroBg">
+      <div class="lg__heroBgCircle lg__heroBgCircle--1"></div>
+      <div class="lg__heroBgCircle lg__heroBgCircle--2"></div>
+      <div class="lg__heroBgCircle lg__heroBgCircle--3"></div>
+    </div>
 
-      <div class="logo-circle">
-        <img
-          src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764678577/ChatGPT_Image_12_nov_2025_17_33_14_1_hj26hs.png"
-          alt="">
+    <div class="lg__heroContent">
+
+      <div class="lg__heroLogo">
+        <img src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764678577/ChatGPT_Image_12_nov_2025_17_33_14_1_hj26hs.png" alt="TripGO logo"/>
       </div>
+
+      <div class="lg__heroText">
+        <h1 class="lg__heroTitle">TripGO</h1>
+        <p class="lg__heroSub">{{ 'AUTH.HERO_SUB' | translate }}</p>
+      </div>
+
+      <div class="lg__heroPills">
+        <span class="lg__heroPill">{{ 'AUTH.HERO_PILLS.TOWNS' | translate }}</span>
+        <span class="lg__heroPill">{{ 'AUTH.HERO_PILLS.PLACES' | translate }}</span>
+        <span class="lg__heroPill">{{ 'AUTH.HERO_PILLS.PLANS' | translate }}</span>
+      </div>
+
+      <div class="lg__heroStats">
+        <div class="lg__heroStat">
+          <span class="lg__heroStatNum">4.8★</span>
+          <span class="lg__heroStatLbl">{{ 'AUTH.HERO_STATS.RATING' | translate }}</span>
+        </div>
+        <div class="lg__heroStatDiv"></div>
+        <div class="lg__heroStat">
+          <span class="lg__heroStatNum">5K+</span>
+          <span class="lg__heroStatLbl">{{ 'AUTH.HERO_STATS.TRAVELERS' | translate }}</span>
+        </div>
+        <div class="lg__heroStatDiv"></div>
+        <div class="lg__heroStat">
+          <span class="lg__heroStatNum">100%</span>
+          <span class="lg__heroStatLbl">{{ 'AUTH.HERO_STATS.FREE' | translate }}</span>
+        </div>
+      </div>
+
     </div>
   </section>
 
-  <aside class="right">
-    <div class="carta">
-      <h2>Inicio sesión</h2>
+  <!-- FORM -->
+  <aside class="lg__form">
+    <div class="lg__formCard">
 
-      <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" novalidate>
-        <div class="field">
-          <label for="email">Correo electrónico</label>
-          <input id="email" [(ngModel)]="email" name="email" type="email" required>
+      <div class="lg__formHeader">
+        <h2 class="lg__formTitle">{{ 'AUTH.WELCOME_BACK' | translate }}</h2>
+        <p class="lg__formSub">{{ 'AUTH.LOGIN_SUB' | translate }}</p>
+      </div>
+
+      <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" novalidate class="lg__formFields">
+
+        <!-- EMAIL -->
+        <div class="lg__field"
+          [class.lg__field--error]="emailInput.invalid && emailInput.touched"
+          [class.lg__field--valid]="emailInput.valid && emailInput.touched">
+
+          <label class="lg__label" for="email">{{ 'AUTH.EMAIL' | translate }}</label>
+
+          <div class="lg__inputWrap">
+
+            <input
+              id="email"
+              class="lg__input"
+              [(ngModel)]="email"
+              name="email"
+              type="email"
+              [placeholder]="'AUTH.EMAIL_PLACEHOLDER' | translate"
+              required
+              email
+              #emailInput="ngModel"
+            />
+          </div>
+
+          <span class="lg__fieldMsg" *ngIf="emailInput.invalid && emailInput.touched">
+            {{ 'AUTH.EMAIL_ERROR' | translate }}
+          </span>
         </div>
 
-        <div class="field password-field">
-  <label for="password">Contraseña</label>
+        <!-- PASSWORD -->
+        <div class="lg__field"
+          [class.lg__field--error]="passInput.invalid && passInput.touched"
+          [class.lg__field--valid]="passInput.valid && passInput.touched">
 
-  <div class="input-wrapper">
-    <input
-      id="password"
-      [(ngModel)]="password"
-      name="password"
-      [type]="showPassword ? 'text' : 'password'"
-      required
-    >
+          <label class="lg__label" for="password">{{ 'AUTH.PASSWORD' | translate }}</label>
 
-    <button
-      type="button"
-      class="toggle-password"
-      (click)="togglePassword()"
-      [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
-    >
-      {{ showPassword ? '☉' : '◠' }}
-    </button>
-  </div>
-</div>
+          <div class="lg__inputWrap">
+            
 
-        <button class="btn btn-primary" type="submit" [disabled]="loginForm.invalid">
-          Iniciar sesión
+            <input
+              id="password"
+              class="lg__input"
+              [(ngModel)]="password"
+              name="password"
+              [type]="showPassword ? 'text' : 'password'"
+              [placeholder]="'AUTH.PASSWORD_PLACEHOLDER' | translate"
+              required
+              minlength="6"
+              #passInput="ngModel"
+            />
+
+            <button
+              type="button"
+              class="lg__togglePass"
+              (click)="togglePassword()"
+              [attr.aria-label]="showPassword 
+                ? ('AUTH.HIDE_PASSWORD' | translate) 
+                : ('AUTH.SHOW_PASSWORD' | translate)">
+            </button>
+          </div>
+
+          <span class="lg__fieldMsg" *ngIf="passInput.invalid && passInput.touched">
+            {{ 'AUTH.PASSWORD_ERROR' | translate }}
+          </span>
+        </div>
+
+        <!-- FORGOT -->
+        <div class="lg__forgotRow">
+          <a routerLink="/forgot-password" class="lg__forgotLink">
+            {{ 'AUTH.FORGOT_PASSWORD' | translate }}
+          </a>
+        </div>
+
+        <!-- BUTTON -->
+        <button class="lg__btnPrimary" type="submit" [disabled]="loginForm.invalid">
+          <span class="lg__btnLabel">{{ 'AUTH.LOGIN_BUTTON' | translate }}</span>
         </button>
 
-        <p class="recuperar-contraseña">
-          <a routerLink="/forgot-password">¿Olvidaste tu contraseña?</a>
-        </p>
-        <p class="account">
-          No tienes una cuenta con nosotros?
-          <a routerLink="/register">Registrarse</a>
-        </p>
+        <!-- DIVIDER -->
+        <div class="lg__divider">
+          <span class="lg__dividerLine"></span>
+          <span class="lg__dividerTxt">{{ 'AUTH.DIVIDER' | translate }}</span>
+          <span class="lg__dividerLine"></span>
+        </div>
+
+        <!-- REGISTER -->
+        <a routerLink="/register" class="lg__btnSecondary">
+          {{ 'AUTH.CREATE_ACCOUNT' | translate }}
+        </a>
+
       </form>
 
+      <!-- FOOTER -->
+      <p class="lg__formFooter">
+        {{ 'AUTH.TERMS_TEXT' | translate }}
+        <a href="#" class="lg__footerLink">{{ 'AUTH.TERMS' | translate }}</a> y
+        <a href="#" class="lg__footerLink">{{ 'AUTH.PRIVACY' | translate }}</a>
+      </p>
 
     </div>
   </aside>
+
 </div>
 
 <app-footer></app-footer>

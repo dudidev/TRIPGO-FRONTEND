@@ -2,43 +2,43 @@ import { Component, AfterViewInit, ElementRef, ViewChild, HostListener } from '@
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { User } from '../../service/user';
+// ✅ Se eliminó: import { User } from '../../service/user';
 import { LanguageService } from '../../service/language.service';
 import { ItinerarioService, ItinerarioItem } from '../../service/itinerario.service';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog';
 import { ConfirmService } from '../../service/confirm.service';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../services/auth.service';
 import { DarkModeService } from '../dark-mode/dark-mode';
 
 @Component({
   selector: 'app-nav',
   standalone: true,
-  imports: [RouterModule, CommonModule, ConfirmDialogComponent],
+  imports: [RouterModule, CommonModule, ConfirmDialogComponent, TranslateModule],
   templateUrl: './nav.html',
   styleUrl: './nav.css'
 })
 export class Nav implements AfterViewInit {
-  menuOpen       = false;
-  itinerarioOpen = false;
-  enviandoEmail  = false;
-  emailEnviado  = false;
+  menuOpen         = false;
+  itinerarioOpen   = false;
+  enviandoEmail    = false;
+  emailEnviado     = false;
   isMobileOrTablet = window.innerWidth <= 1024;
 
-  // Mapa de personas por item: { [itemId]: number }
   private personasMap: Record<string, number> = {};
 
   @ViewChild('headerRef') headerRef!: ElementRef<HTMLElement>;
 
   constructor(
-    private userService   : User,
+    // ✅ Se eliminó: private userService: User
     private router        : Router,
     private http          : HttpClient,
     public  lang          : LanguageService,
     public  itinerario    : ItinerarioService,
     private confirmService: ConfirmService,
-    public authService   : AuthService,
+    public  authService   : AuthService,
     public  darkMode      : DarkModeService
   ) {
     this.router.events
@@ -53,23 +53,21 @@ export class Nav implements AfterViewInit {
   }
 
   goToProtected(event: Event, route: string): void {
-  if (this.authService.isLoggedIn()) {
-    return;
+    if (this.authService.isLoggedIn()) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.router.navigate(['/login'], {
+      queryParams: { returnUrl: route }
+    });
   }
-
-  event.preventDefault();
-  event.stopPropagation();
-
-  this.router.navigate(['/login'], {
-    queryParams: { returnUrl: route }
-  });
-}
 
   @HostListener('window:resize')
   onResize() { this.setNavOffset(); this.updateViewportState(); }
 
   private updateViewportState(): void {
-  this.isMobileOrTablet = window.innerWidth <= 1024;
+    this.isMobileOrTablet = window.innerWidth <= 1024;
   }
 
   private setNavOffset() {
@@ -78,23 +76,25 @@ export class Nav implements AfterViewInit {
     document.documentElement.style.setProperty('--nav-offset', `${h}px`);
   }
 
-get isLoggedIn(): boolean  { return this.authService.isLoggedIn(); }
-get isEmpresaPage(): boolean { return this.router.url.includes('/empresa'); }
+  get isLoggedIn(): boolean    { return this.authService.isLoggedIn(); }
+  get isEmpresaPage(): boolean { return this.router.url.includes('/empresa'); }
 
   // ── Itinerario popover ────────────────────────────────────────
-toggleItinerario(event?: Event) {
-  if (event) event.stopPropagation();
 
-  // 🔐 Si no está logueado, redirige al login
-  if (!this.authService.isLoggedIn()) {
-    this.router.navigate(['/login'], {
-      queryParams: { returnUrl: '/principal' }
-    });
-    return;
+  toggleItinerario(event?: Event) {
+    if (event) event.stopPropagation();
+
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/login'], {
+        queryParams: { returnUrl: '/principal' }
+      });
+      return;
+    }
+
+    this.itinerarioOpen = !this.itinerarioOpen;
   }
 
-  this.itinerarioOpen = !this.itinerarioOpen;
-} closeItinerario()   { this.itinerarioOpen = false; }
+  closeItinerario() { this.itinerarioOpen = false; }
 
   @HostListener('document:keydown.escape')
   onEsc() { this.closeItinerario(); }
@@ -106,6 +106,7 @@ toggleItinerario(event?: Event) {
   }
 
   // ── Personas por lugar ────────────────────────────────────────
+
   getPersonas(id: string): number {
     return this.personasMap[id] ?? 1;
   }
@@ -121,23 +122,21 @@ toggleItinerario(event?: Event) {
 
   // ── Cálculos ──────────────────────────────────────────────────
 
-  /** Subtotal de un item = suma productos × personas */
   getSubtotal(item: ItinerarioItem): number {
-  if (!item.productos?.length) return 0;
-  return item.productos.reduce((acc, p) => acc + (p.precio * (p.cantidad ?? 1)), 0);
-}
+    if (!item.productos?.length) return 0;
+    return item.productos.reduce((acc, p) => acc + (p.precio * (p.cantidad ?? 1)), 0);
+  }
 
-  /** Total global = suma de todos los subtotales */
   getTotalGlobal(): number {
     return this.itinerario.items.reduce((acc, item) => acc + this.getSubtotal(item), 0);
   }
 
-  /** Total de personas únicas (suma de todas las entradas de personasMap) */
   getTotalPersonas(): number {
     return this.itinerario.items.reduce((acc, item) => acc + this.getPersonas(item.id), 0);
   }
 
   // ── Quitar item con confirmación ──────────────────────────────
+
   async confirmarQuitarItem(id: string): Promise<void> {
     const item = this.itinerario.items.find(i => i.id === id);
     const ok = await this.confirmService.open({
@@ -154,6 +153,7 @@ toggleItinerario(event?: Event) {
   }
 
   // ── Limpiar con confirmación ──────────────────────────────────
+
   async confirmarLimpiar(): Promise<void> {
     if (this.itinerario.count === 0) return;
     const ok = await this.confirmService.open({
@@ -171,13 +171,13 @@ toggleItinerario(event?: Event) {
   }
 
   // ── Enviar itinerario ─────────────────────────────────────────
+
   private enviarItinerario(): void {
     if (this.itinerario.count === 0 || this.enviandoEmail) return;
 
     this.enviandoEmail = true;
 
-    const usuario = this.userService.getCurrentUser();
-    const token   = localStorage.getItem('token');
+    const usuario = this.authService.getCurrentUser();
 
     this.http.post(
       `${environment.apiBaseUrl}/itinerario/enviar-email`,
@@ -193,21 +193,19 @@ toggleItinerario(event?: Event) {
           subtotal : this.getSubtotal(i),
         }))
       },
-      { headers: { Authorization: `Bearer ${token}` } }
+      { withCredentials: true }
     ).subscribe({
       next: () => {
         this.enviandoEmail = false;
-        this.emailEnviado  = true; 
+        this.emailEnviado  = true;
         this.itinerario.clear();
         this.personasMap = {};
-        setTimeout(()=> {
-        this.emailEnviado = false,
-        this.closeItinerario();
-      }, 2000)
-        
+        setTimeout(() => {
+          this.emailEnviado = false;
+          this.closeItinerario();
+        }, 2000);
       },
-      error: () => { 
-        this.enviandoEmail = false; }
+      error: () => { this.enviandoEmail = false; }
     });
   }
 
@@ -226,6 +224,7 @@ toggleItinerario(event?: Event) {
   }
 
   // ── Menú hamburguesa ──────────────────────────────────────────
+
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
     document.body.style.overflow = this.menuOpen ? 'hidden' : 'auto';
@@ -239,11 +238,12 @@ toggleItinerario(event?: Event) {
     setTimeout(() => this.setNavOffset(), 0);
   }
 
+  // ✅ logout() ahora usa authService — ya no llama userService.logout()
   logout(): void {
-    this.userService.logout();
+    this.authService.logout();
     this.closeMenu();
     this.closeItinerario();
-    this.router.navigate(['/login']);
+    // ✅ No hace falta router.navigate — authService.logout() ya redirige a /login
   }
 
   async confirmLogout(): Promise<void> {

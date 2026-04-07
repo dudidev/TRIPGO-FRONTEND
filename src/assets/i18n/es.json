@@ -1,0 +1,251 @@
+{
+    "NAV": {
+        "HOME": "Inicio",
+        "PLACES": "Lugares",
+        "PRICES": "Algunos planes",
+        "ABOUT_US_TITLE": "Sobre nosotros",
+        "HOW_WORKS_TITLE": "¿Cómo funciona?",
+        "CONTACT": "Contacto",
+        "LOGIN": "Iniciar Sesión",
+        "REGISTER": "Registrarse",
+        "LOGOUT": "Cerrar Sesión",
+        "MY_ACCOUNT": "Mi Cuenta",
+        "SUPPORT": "Soporte",
+        "WELCOME": "Bienvenido",
+        "SUGGEST": "Recomendaciones"
+    },
+    "HOME": {
+        "TITLE": "DESCUBRE LOS MEJORES LUGARES TURÍSTICOS",
+        "SUBTITLE": "Explora, planea y vive experiencias únicas en el Quindío con TripGO.",
+        "PRINCIPAL_BUTTON": "Empecemos a descubrir",
+        "BANNER": "¡DISFRUTA LA COMODIDAD DE VIAJAR CON NOSOTROS!",
+        "ABOUT_US": {
+            "DESC": "En TripGO queremos que viajar sea tan fácil como soñar con tu próximo destino. Por eso creamos una aplicación pensada para que organices todo tu viaje en un solo lugar: desde elegir dónde ir, hasta planear tus actividades, controlar tu presupuesto y descubrir experiencias únicas hechas a tu medida. Nuestro objetivo es que disfrutes al máximo sin preocuparte por la organización. Tú solo viaja, que nosotros te ayudamos con el resto.",
+            "INFO1": "Planifica tu viaje fácilmente en un solo lugar.",
+            "INFO2": "Crea itinerarios personalizados según tus gustos.",
+            "INFO3": "Controla tu presupuesto y evita gastos sorpresa.",
+            "INFO4": "Selecciona los servicios que desees sin salir de casa.",
+            "INFO5": "Descubre recomendaciones únicas en cada destino."
+        },
+        "HOW_WORKS": {
+            "TITLE1": "Elige tu destino",
+            "TITLE2": "Personaliza tu viaje",
+            "TITLE3": "Disfruta tu aventura",
+            "DESC1": "Explora nuestras opciones y selecciona el lugar que más te emocione.",
+            "DESC2": "Añade actividades, ajusta el presupuesto y organiza tu itinerario.",
+            "DESC3": "Lleva todo en la app: itinerario, reservas y tips para tu experiencia."
+        },
+        "FINAL_CTA_TITLE": "¿Listo para tu próxima aventura?",
+        "FINAL_CTA": "Regístrate gratis y desbloquea itinerarios, recomendaciones personalizadas y mucho más. ¡Tu viaje soñado está a un clic de distancia!",
+        "FINAL_CTA_BUTTON": "Crear cuenta gratis",
+        "SEARCH_PLACEHOLDER": "Busca hoteles, restaurantes, atracciones...",
+        "EXPLORE": "Explorar",
+        "RECOMMENDED": "Recomendado para ti"
+    },
+    "AUTH": {
+        "LOGIN_TITLE": "Iniciar Sesión",
+        "REGISTER_TITLE": "Crear Cuenta",
+        "EMAIL": "Correo Electrónico",
+        "PASSWORD": "Contraseña",
+        "CONFIRM_PASSWORD": "Confirmar Contraseña",
+        "NAME": "Nombre",
+        "LOGIN_BUTTON": "Inicia Sesión",
+        "REGISTER_BUTTON": "Registrarse",
+        "FORGOT_PASSWORD": "¿Olvidaste tu contraseña?",
+        "HAVE_ACCOUNT": "¿Ya tienes cuenta?",
+        "NO_ACCOUNT": "¿No tienes cuenta?",
+        "RESET_PASSWORD_TITLE": "Restablecer Contraseña",
+        "NEW_PASSWORD": "Nueva Contraseña",
+        "RESET_BUTTON": "Restablecer",
+        "BACK_TO_LOGIN": "Volver al inicio de sesión",
+
+        "WELCOME_BACK": "Bienvenido de nuevo",
+        "LOGIN_SUB": "Ingresa tus datos para continuar",
+
+        "EMAIL_PLACEHOLDER": "tu@correo.com",
+        "PASSWORD_PLACEHOLDER": "••••••••",
+
+        "EMAIL_ERROR": "Ingresa un correo válido",
+        "PASSWORD_ERROR": "Mínimo 6 caracteres",
+
+        "SHOW_PASSWORD": "Mostrar contraseña",
+        "HIDE_PASSWORD": "Ocultar contraseña",
+
+        "DIVIDER": "o",
+        "CREATE_ACCOUNT": "Crear cuenta nueva",
+
+        "TERMS_TEXT": "Al continuar aceptas nuestros",
+        "TERMS": "términos",
+        "PRIVACY": "privacidad",
+
+        "HERO_SUB": "Descubre el Quindío como nunca antes",
+
+        "HERO_PILLS": {
+            "TOWNS": "12 municipios",
+            "PLACES": "+200 lugares",
+            "PLANS": "Itinerarios"
+        },
+
+        "HERO_STATS": {
+            "RATING": "Valoración",
+            "TRAVELERS": "Viajeros",
+            "FREE": "Gratuito"
+        }
+    },
+    "CONTACT": {
+        "TITLE": "Hablemos",
+        "SUBTITLE": "Cuéntanos sobre tu negocio y nos pondremos en contacto contigo",
+        "FORM": {
+            "NAME_BS": "Nombre del negocio",
+            "NAME_BS_INVALID": "Ingresa el nombre de tu negocio",
+            "EMAIL_BS": "Correo electrónico",
+            "EMAIL_BS_INVALID": "Ingresa un coreo electrónico que uses",
+            "MESSAGE_BS": "Cuentanos sobre tu negocio",
+            "MESSAGE_BS_INVALID": "Cuéntanos un poco sobre tu negocio (mínimo 10 caracteres)"
+        },
+        "SUCCESS": {
+            "TITLE": "¡Mensaje enviado!",
+            "MESSAGE": "Recibimos tu solicitud. Nuestro equipo revisará la información y se pondrá en contacto contigo pronto.",
+            "BUTTON": "Enviar otra solicitud"
+        },
+        "ERROR": {
+            "TITLE": "Algo salió mal",
+            "MESSAGE": "No pudimos enviar tu mensaje. Por favor intenta de nuevo o escríbenos directamente a ",
+            "BUTTON": "Intentar de nuevo"
+        },
+        "CONTACT_INFO_TITLE": "Información de contacto"
+    },
+    "SUPPORT": {
+        "TITLE": "¿En qué te ayudamos?",
+        "SUBTITLE": "Describe tu problema y nuestro equipo te responderá en breve",
+        "CATEGORIES": {
+            "TECHNICAL": "Técnico",
+            "ACCOUNT": "Cuenta",
+            "PAYMENTS": "Pagos",
+            "GENERAL": "General",
+            "SUGGESTION": "Sugerencia"
+        },
+        "PRIORITY": {
+            "LOW": "Baja",
+            "MEDIUM": "Media",
+            "HIGH": "Alta",
+            "URGENT": "Urgente"
+        },
+        "FORM": {
+            "NAME": "Nombre completo",
+            "EMAIL": "Correo electrónico",
+            "SUBJECT": "Asunto del problema",
+            "DESCRIPTION": "Describe el problema con detalle",
+            "SEND": "Enviar ticket de soporte"
+        },
+        "SUCCESS": {
+            "TITLE": "¡Ticket creado!",
+            "MESSAGE": "Recibimos tu solicitud. Nuestro equipo te responderá en un plazo de 24 horas hábiles.",
+            "BUTTON": "Abrir otro ticket"
+        },
+        "ERROR": {
+            "TITLE": "Algo salió mal",
+            "MESSAGE": "No pudimos enviar tu solicitud. Intenta de nuevo.",
+            "BUTTON": "Intentar de nuevo"
+        }
+    },
+    "COMMON": {
+        "LOADING": "Cargando...",
+        "SAVE": "Guardar",
+        "CANCEL": "Cancelar",
+        "DELETE": "Eliminar",
+        "EDIT": "Editar",
+        "SEARCH": "Buscar",
+        "CLOSE": "Cerrar",
+        "YES": "Sí",
+        "NO": "No",
+        "SEND": "Enviar",
+        "SENDING": "Enviando..."
+    },
+    "ERRORS": {
+        "REQUIRED": "Este campo es requerido",
+        "INVALID_EMAIL": "Correo electrónico inválido",
+        "MIN_LENGTH": "Mínimo {{value}} caracteres",
+        "MAX_LENGTH": "Máximo {{value}} caracteres",
+        "PASSWORD_INVALID_FORMAT": "La contraseña debe tener mínimo 8 caracteres e incluir letras y números",
+        "CONFIRM_PASSWORD": "Confirma tu contraseña",
+        "PASSWORD_MISMATCH": "Las contraseñas no coinciden. Verifica por favor",
+        "NETWORK_ERROR": "Error de conexión. Verifica tu internet."
+    },
+    "PRINCIPAL": {
+        "HERO": {
+        "LOCATION": "Eje Cafetero · Colombia",
+        "TITLE_1": "Descubre lo que quieres",
+        "TITLE_2": "hacer hoy",
+        "SUBTITLE": "Busca actividades, pueblos y experiencias únicas en el Quindío",
+        "PLACEHOLDER": "¿Qué quieres hacer hoy?",
+        "SEARCH": "Buscar",
+        "COMPARE": "Compara en",
+        "TAGS": {
+        "NATURE": "Naturaleza",
+        "COFFEE": "Café",
+        "HIKING": "Senderismo",
+        "CULTURE": "Cultura",
+        "FOOD": "Gastronomía",
+        "TOURISM": "Atracciones turísticas"
+        }
+    },
+
+    "SEARCH": {
+        "RESULTS": "Resultados para \"{{query}}\"",
+        "NO_RESULTS": "Sin resultados para \"{{query}}\"",
+        "TRY": "Intenta con otro término o explora las categorías disponibles.",
+        "CATEGORY": "Categoría",
+        "PLACE": "Lugar"
+    },
+
+    "CATEGORIES": {
+        "TITLE": "Explora por categoría",
+        "GLAMPING": "Glamping",
+        "RESTAURANT": "Restaurante",
+        "CAFE": "Café",
+        "ACTIVITIES": "Actividades",
+        "HIKING": "Senderismo",
+        "FARMS": "Fincas",
+        "TOURS": "Tours",
+        "VIEWPOINTS": "Miradores"
+    },
+
+    "CAROUSEL": {
+        "TITLE": "Aquí empezamos · Eje Cafetero",
+        "NATURE": "Naturaleza y Miradores",
+        "CULTURE": "Café, Cultura y Pueblos Patrimonio",
+        "SLIDE": "Desliza para ver más pueblos",
+        "BADGES": {
+        "POPULAR": "Popular",
+        "NEW": "Nuevo",
+        "CITY": "Ciudad",
+        "SLOW": "Ciudad lenta"
+        }
+    },
+
+    "RECOMMENDATIONS": {
+        "TITLE": "Algunas recomendaciones del Quindío",
+        "COCORA": {
+        "TITLE": "Valle del Cocora",
+        "DESC": "No te pierdas esta gran experiencia natural en Salento."
+        },
+        "CAFE_PARK": {
+        "TITLE": "Parque Nacional del Café",
+        "DESC": "Más aventuras, más sonrisas en Montenegro."
+        },
+        "ENCANTO": {
+        "TITLE": "Mirador Encanto",
+        "DESC": "Una pizca de magia en Filandia, ven por tu brillo."
+        },
+        "BIRDS": {
+        "TITLE": "Avistamiento de aves",
+        "DESC": "Belleza en el movimiento silencioso en Salento."
+        }
+    },
+
+    "ALLIES": {
+        "TITLE": "Nuestros aliados"
+    }
+    }
+}

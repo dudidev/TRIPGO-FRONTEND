@@ -3,13 +3,14 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Nav } from '../../shared/nav/nav';
 import { Footer } from '../../shared/footer/footer';
 import { ContactService } from '../../services/contact.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [Nav, Footer, ReactiveFormsModule],
+  imports: [Nav, Footer, ReactiveFormsModule, TranslateModule],
   templateUrl: './contact.html',
   styleUrl: './contact.css'
 })
