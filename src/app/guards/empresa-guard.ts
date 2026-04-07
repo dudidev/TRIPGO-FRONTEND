@@ -1,19 +1,19 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { User } from '../service/user';
+import { AuthService } from '../services/auth.service';
 
 export const empresaGuard: CanActivateFn = () => {
-  const userService = inject(User);
+  const authService = inject(AuthService);
   const router = inject(Router);
 
   // 1) si no está logueado -> login
-  if (!userService.isLoggedIn()) {
+  if (!authService.isLoggedIn()) {
     router.navigate(['/login']);
     return false;
   }
 
   // 2) si está logueado pero NO es empresa -> principal
-  const role = userService.getRole(); // 'empresa' | 'usuario' | null
+  const role = authService.getCurrentUser()?.rol;
   if (role !== 'empresa') {
     router.navigate(['/principal']);
     return false;
