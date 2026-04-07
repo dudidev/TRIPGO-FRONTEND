@@ -7,11 +7,12 @@ import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ItinerarioService } from '../../service/itinerario.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [Nav, Footer, FormsModule, RouterLink, TranslateModule],
+  imports: [Nav, Footer, FormsModule, RouterLink, TranslateModule, CommonModule],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
