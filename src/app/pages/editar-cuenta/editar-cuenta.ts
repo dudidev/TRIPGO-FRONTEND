@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { UsuarioService } from '../../services/usuario.service';
 import { Router } from '@angular/router';
 import { FavoritosService, FavoritoItem } from '../../service/favoritos.service';
+import { AuthService } from '../../services/auth.service';
 
 // ── Tipos locales ────────────────────────────────────────────────────────────
 
@@ -93,15 +94,13 @@ export class EditarCuentaComponent implements OnInit {
     private fb: FormBuilder,
     private usuarioService: UsuarioService,
     private router: Router,
-    private favoritosService: FavoritosService
+    private favoritosService: FavoritosService,
+    private authService: AuthService
   ) {}
 
   private cargarIdUsuarioLogueado(): number | null {
-    const raw = localStorage.getItem('user');
-    if (!raw) return null;
-    try { return Number(JSON.parse(raw).id) || null; } catch { return null; }
-  }
-
+  return this.authService.getCurrentUser()?.id ?? null;
+}
   
 
   ngOnInit(): void {
@@ -376,8 +375,7 @@ private actualizarGamificacion(): void {
             if (requiereReLogin) {
               this.mensaje = '✅ Cambios guardados. Inicia sesión nuevamente.';
               this.tipoMensaje = 'exito';
-              localStorage.removeItem('token');
-              localStorage.removeItem('user');
+              this.authService.logout(); 
               setTimeout(() => this.router.navigate(['/login']), 800);
               return;
             }
@@ -398,25 +396,23 @@ private actualizarGamificacion(): void {
     });
   }
 
-  private subirFotoSiExiste(done: () => void) {
-    if (!this.fotoSeleccionada) return done();
-    const fd = new FormData();
-    fd.append('foto', this.fotoSeleccionada);
-    this.mensaje = 'Subiendo foto...';
-    this.tipoMensaje = 'cargando';
-    this.usuarioService.actualizarFotoPerfil(this.idUsuario, fd).subscribe({
-      next: (res: any) => {
-        this.fotoActual       = res.url;
-        this.fotoPreview      = '';
-        this.fotoSeleccionada = null;
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        user.foto_perfil = this.fotoActual;
-        localStorage.setItem('user', JSON.stringify(user));
-        done();
-      },
-      error: () => done()
-    });
-  }
+ private subirFotoSiExiste(done: () => void) {
+  if (!this.fotoSeleccionada) return done();
+  const fd = new FormData();
+  fd.append('foto', this.fotoSeleccionada);
+  this.mensaje = 'Subiendo foto...';
+  this.tipoMensaje = 'cargando';
+  this.usuarioService.actualizarFotoPerfil(this.idUsuario, fd).subscribe({
+    next: (res: any) => {
+      this.fotoActual       = res.url;
+      this.fotoPreview      = '';
+      this.fotoSeleccionada = null;
+      // ❌ eliminado: ya no actualizamos localStorage
+      done();
+    },
+    error: () => done()
+  });
+}
 
   private cambiarPasswordSiAplica(
     password_actual: string,
