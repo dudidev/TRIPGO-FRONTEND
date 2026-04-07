@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -227,14 +227,11 @@ export class Detalles implements OnInit {
   }
 
   private registrarVisualizacion(idEstablecimiento: number): void {
-    const token = localStorage.getItem('token');
-    if (!token) return;
-    this.http.post(
-      `${this.apiUrl}/recomendaciones/registrar-visualizacion`,
-      { id_establecimiento: idEstablecimiento, tiempo_visualizacion: 0 },
-      { headers: { Authorization: `Bearer ${token}` } }
-    ).subscribe();
-  }
+  this.http.post(
+    `${this.apiUrl}/recomendaciones/registrar-visualizacion`,
+    { id_establecimiento: idEstablecimiento, tiempo_visualizacion: 0 }
+  ).subscribe();
+}
 
   private setLugar(rows: any[], idParam: string): void {
     const lugarMapeado = this.mapToLugarDetalle(rows, idParam);
@@ -518,38 +515,23 @@ private initMenu(raw: any): void {
     };
   }
 
-  private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
-    console.log('TOKEN:', token ? token.substring(0, 20) + '...' : 'NULL');
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type' : 'application/json'
-    });
-  }
+  
 
   private get apiUrl(): string {
     return environment.apiBaseUrl;
   }
 
   cargarResenas(): void {
-    const id = this.lugar?.id_establecimiento;
-    if (!id) return;
+  const id = this.lugar?.id_establecimiento;
+  if (!id) return;
 
-    this.resenaLoading = true;
-    this.resenaError   = '';
+  this.resenaLoading = true;
+  this.resenaError   = '';
 
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders(
-      token ? { 'Authorization': `Bearer ${token}` } : {}
-    );
+  const miId = this.authService.getCurrentUser()?.id ?? null;
 
-    const usuarioGuardado = JSON.parse(localStorage.getItem('user') || '{}');
-    const miId = usuarioGuardado?.id ?? null;
-
-    this.http.get<any>(
-      `${this.apiUrl}/establecimientos/${id}/resenas`,
-      { headers }
-    ).subscribe({
+  this.http.get<any>(`${this.apiUrl}/establecimientos/${id}/resenas`)
+    .subscribe({
       next: (data) => {
         this.estadisticas = data.estadisticas;
         this.miResena = miId
@@ -558,8 +540,6 @@ private initMenu(raw: any): void {
         this.resenas = miId
           ? (data.resenas?.filter((r: any) => r.usuario?.id !== miId) ?? [])
           : (data.resenas ?? []);
-
-        console.log('miResena:', this.miResena);
         this.resenaLoading = false;
       },
       error: () => {
@@ -567,46 +547,38 @@ private initMenu(raw: any): void {
         this.resenaLoading = false;
       }
     });
-  }
+}
 
   crearResena(): void {
-    if (!this.authService.isLoggedIn()) {
-      this.mostrarLoginResena = true;
-      return;
-    }
-
-    const id = this.lugar?.id_establecimiento;
-    if (!id || !this.nuevaCalificacion || !this.nuevoComentario.trim()) return;
-
-    const token = localStorage.getItem('token');
-
-    this.http.post<any>(
-      `${this.apiUrl}/resenas`,
-      {
-        id_establecimiento: id,
-        calificacion      : this.nuevaCalificacion,
-        comentario        : this.nuevoComentario.trim()
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type' : 'application/json'
-        }
-      }
-    ).subscribe({
-      next: () => {
-        this.resenaMsg         = '¡Reseña publicada!';
-        this.mostrarFormulario = false;
-        this.nuevaCalificacion = 0;
-        this.nuevoComentario   = '';
-        this.cargarResenas();
-        setTimeout(() => (this.resenaMsg = ''), 2000);
-      },
-      error: (err) => {
-        this.resenaMsg = err.error?.message || 'Error al publicar la reseña.';
-      }
-    });
+  if (!this.authService.isLoggedIn()) {
+    this.mostrarLoginResena = true;
+    return;
   }
+
+  const id = this.lugar?.id_establecimiento;
+  if (!id || !this.nuevaCalificacion || !this.nuevoComentario.trim()) return;
+
+  this.http.post<any>(
+    `${this.apiUrl}/resenas`,
+    {
+      id_establecimiento: id,
+      calificacion      : this.nuevaCalificacion,
+      comentario        : this.nuevoComentario.trim()
+    }
+  ).subscribe({
+    next: () => {
+      this.resenaMsg         = '¡Reseña publicada!';
+      this.mostrarFormulario = false;
+      this.nuevaCalificacion = 0;
+      this.nuevoComentario   = '';
+      this.cargarResenas();
+      setTimeout(() => (this.resenaMsg = ''), 2000);
+    },
+    error: (err) => {
+      this.resenaMsg = err.error?.message || 'Error al publicar la reseña.';
+    }
+  });
+}
 
   eliminarResena(): void {
     if (!this.miResena) return;
@@ -618,13 +590,10 @@ private initMenu(raw: any): void {
   }
 
   confirmarEliminacion(): void {
-    if (!this.miResena) return;
+  if (!this.miResena) return;
 
-    const token = localStorage.getItem('token');
-
-    this.http.delete(`${this.apiUrl}/resenas/${this.miResena.id_resena}`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    }).subscribe({
+  this.http.delete(`${this.apiUrl}/resenas/${this.miResena.id_resena}`)
+    .subscribe({
       next: () => {
         this.miResena = null;
         this.resenaMsg = 'Reseña eliminada.';
@@ -633,43 +602,33 @@ private initMenu(raw: any): void {
         setTimeout(() => (this.resenaMsg = ''), 2000);
       },
       error: (err) => {
-        console.error('Error eliminar:', err);
         this.resenaMsg = err.error?.message || 'Error al eliminar.';
         this.mostrarConfirmacion = false;
       }
     });
-  }
+}
 
   guardarEdicion(): void {
-    if (!this.miResena) return;
+  if (!this.miResena) return;
 
-    const token = localStorage.getItem('token');
-
-    this.http.put<any>(
-      `${this.apiUrl}/resenas/${this.miResena.id_resena}`,
-      {
-        calificacion: this.editCalificacion,
-        comentario  : this.editComentario.trim()
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type' : 'application/json'
-        }
-      }
-    ).subscribe({
-      next: () => {
-        this.editando  = false;
-        this.resenaMsg = 'Reseña actualizada.';
-        this.cargarResenas();
-        setTimeout(() => (this.resenaMsg = ''), 2000);
-      },
-      error: (err) => {
-        console.error('Error editar:', err);
-        this.resenaMsg = err.error?.message || 'Error al actualizar.';
-      }
-    });
-  }
+  this.http.put<any>(
+    `${this.apiUrl}/resenas/${this.miResena.id_resena}`,
+    {
+      calificacion: this.editCalificacion,
+      comentario  : this.editComentario.trim()
+    }
+  ).subscribe({
+    next: () => {
+      this.editando  = false;
+      this.resenaMsg = 'Reseña actualizada.';
+      this.cargarResenas();
+      setTimeout(() => (this.resenaMsg = ''), 2000);
+    },
+    error: (err) => {
+      this.resenaMsg = err.error?.message || 'Error al actualizar.';
+    }
+  });
+}
 
   iniciarEdicion(): void {
     if (!this.miResena) return;
