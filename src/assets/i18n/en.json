@@ -42,7 +42,6 @@
         "EXPLORE": "Explore",
         "RECOMMENDED": "Recommended for You"
     },
-    "PRINCIPAL": {},
     "AUTH": {
         "LOGIN_TITLE": "Log In",
         "REGISTER_TITLE": "Create Account",
@@ -139,5 +138,81 @@
         "CONFIRM_PASSWORD": "Please confirm your password",
         "PASSWORD_MISMATCH": "Passwords do not match. Please check again",
         "NETWORK_ERROR": "Connection error. Please check your internet."
+    },
+    "PRINCIPAL": {
+        "HERO": {
+        "LOCATION": "Eje Cafetero · Colombia",
+        "TITLE_1": "Discover what you want",
+        "TITLE_2": "to do today",
+        "SUBTITLE": "Find activities, towns and unique experiences in Quindío",
+        "PLACEHOLDER": "What do you want to do today?",
+        "SEARCH": "Search",
+        "COMPARE": "Compare on",
+        "TAGS": {
+        "NATURE": "Nature",
+        "COFFEE": "Coffee",
+        "HIKING": "Hiking",
+        "CULTURE": "Culture",
+        "FOOD": "Food",
+        "TOURISM": "Tourist attractions"
+        }
+    },
+
+    "SEARCH": {
+        "RESULTS": "Results for \"{{query}}\"",
+        "NO_RESULTS": "No results for \"{{query}}\"",
+        "TRY": "Try another term or explore available categories.",
+        "CATEGORY": "Category",
+        "PLACE": "Place"
+    },
+
+    "CATEGORIES": {
+        "TITLE": "Explore by category",
+        "GLAMPING": "Glamping",
+        "RESTAURANT": "Restaurant",
+        "CAFE": "Coffee",
+        "ACTIVITIES": "Activities",
+        "HIKING": "Hiking",
+        "FARMS": "Farms",
+        "TOURS": "Tours",
+        "VIEWPOINTS": "Viewpoints"
+    },
+
+    "CAROUSEL": {
+        "TITLE": "Start here · Eje Cafetero",
+        "NATURE": "Nature & Viewpoints",
+        "CULTURE": "Coffee, Culture & Heritage Towns",
+        "SLIDE": "Swipe to see more towns",
+        "BADGES": {
+        "POPULAR": "Popular",
+        "NEW": "New",
+        "CITY": "City",
+        "SLOW": "Slow City"
+        }
+    },
+
+    "RECOMMENDATIONS": {
+        "TITLE": "Some recommendations from Quindío",
+        "COCORA": {
+        "TITLE": "Cocora Valley",
+        "DESC": "Don't miss this amazing natural experience in Salento."
+        },
+        "CAFE_PARK": {
+        "TITLE": "National Coffee Park",
+        "DESC": "More adventures, more smiles in Montenegro."
+        },
+        "ENCANTO": {
+        "TITLE": "Encanto Viewpoint",
+        "DESC": "A touch of magic in Filandia, come find your glow."
+        },
+        "BIRDS": {
+        "TITLE": "Bird Watching",
+        "DESC": "Beauty in silent movement in Salento."
+        }
+    },
+
+    "ALLIES": {
+        "TITLE": "Our partners"
+    }
     }
 }
