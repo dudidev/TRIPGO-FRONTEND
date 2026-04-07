@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 
 export type ItinerarioItem = {
   id: string;
@@ -7,7 +8,6 @@ export type ItinerarioItem = {
   direccion?: string;
   imagenUrl?: string;
   id_establecimiento?: number;
-
   productos?: {
     nombre: string;
     precio: number;
@@ -19,10 +19,10 @@ export type ItinerarioItem = {
 @Injectable({ providedIn: 'root' })
 export class ItinerarioService {
 
+  private authService = inject(AuthService);
 
   private subject = new BehaviorSubject<ItinerarioItem[]>(this.load());
   items$ = this.subject.asObservable();
-
 
   get items(): ItinerarioItem[] {
     return this.subject.value;
@@ -33,17 +33,15 @@ export class ItinerarioService {
   }
 
   private getStorageKey(): string {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const user = this.authService.getCurrentUser();
     return `tripgo_itinerario_${user?.id || 'anon'}`;
   }
 
-
   add(item: ItinerarioItem) {
-
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const user = this.authService.getCurrentUser();
 
     if (!user?.id) {
-      console.log(" Usuario no autenticado, no se guarda itinerario");
+      console.log('Usuario no autenticado, no se guarda itinerario');
       return;
     }
 
@@ -55,29 +53,24 @@ export class ItinerarioService {
     this.save(updated);
   }
 
-
   remove(id: string) {
     const updated = this.items.filter(x => x.id !== id);
     this.subject.next(updated);
     this.save(updated);
   }
 
-
   clear() {
     this.subject.next([]);
     localStorage.removeItem(this.getStorageKey());
   }
 
- 
   reload() {
     this.subject.next(this.load());
   }
 
-
   private save(items: ItinerarioItem[]) {
     localStorage.setItem(this.getStorageKey(), JSON.stringify(items));
   }
-
 
   private load(): ItinerarioItem[] {
     try {

@@ -28,15 +28,7 @@ export class User {
     correo_usuario: string;
     password_u: string;
   }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login`, data).pipe(
-      tap((response: any) => {
-        // Guardar token y usuario cuando haga login
-        if (response?.token) {
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('user', JSON.stringify(response.user));
-        }
-      })
-    );
+    return this.http.post(`${this.baseUrl}/login`, data)
   }
 
   logout() {
