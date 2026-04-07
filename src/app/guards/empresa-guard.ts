@@ -1,23 +1,41 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import { CanActivateFn, Router, UrlTree } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { catchError, map, of } from 'rxjs';
 
 export const empresaGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  // 1) si no está logueado -> login
-  if (!authService.isLoggedIn()) {
-    router.navigate(['/login']);
-    return false;
+  // Si ya terminó de verificar la sesión, decide normal
+  if (authService.hasCheckedAuth()) {
+    if (!authService.isLoggedIn()) {
+      return router.createUrlTree(['/login']);
+    }
+
+    const role = authService.getCurrentUser()?.rol;
+    if (role !== 'empresa') {
+      return router.createUrlTree(['/principal']);
+    }
+
+    return true;
   }
 
-  // 2) si está logueado pero NO es empresa -> principal
-  const role = authService.getCurrentUser()?.rol;
-  if (role !== 'empresa') {
-    router.navigate(['/principal']);
-    return false;
-  }
+  // Si aún no termina de restaurar, esperar /auth/me
+  return authService.restoreSession().pipe(
+    map((res: any): boolean | UrlTree => {
+      const user = res?.user ?? authService.getCurrentUser();
 
-  return true;
+      if (!user) {
+        return router.createUrlTree(['/login']);
+      }
+
+      if (user.rol !== 'empresa') {
+        return router.createUrlTree(['/principal']);
+      }
+
+      return true;
+    }),
+    catchError(() => of(router.createUrlTree(['/login'])))
+  );
 };
