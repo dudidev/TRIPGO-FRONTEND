@@ -1,0 +1,8 @@
+{
+    "rewrites": [
+        {
+            "source": "/api/:path*",
+            "destination": "https://tripgo-backend-arehbhbubshxdpg7.chilecentral-01.azurewebsites.net/:path*"
+        }
+    ]
+}
