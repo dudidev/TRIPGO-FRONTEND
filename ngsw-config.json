@@ -28,24 +28,19 @@
   ],
   "dataGroups": [
     {
-      "name": "api-trips",
-      "urls": ["https://tripgo-backend-arehbhbubshxdpg7.chilecentral-01.azurewebsites.net/api/lugares/**",
+      "name": "api-reads",
+      "urls": [
+        "https://tripgo-backend-arehbhbubshxdpg7.chilecentral-01.azurewebsites.net/api/lugares/**",
         "https://tripgo-backend-arehbhbubshxdpg7.chilecentral-01.azurewebsites.net/api/categorias/**",
-        "https://tripgo-backend-arehbhbubshxdpg7.chilecentral-01.azurewebsites.net/api/pueblos/**"],
+        "https://tripgo-backend-arehbhbubshxdpg7.chilecentral-01.azurewebsites.net/api/pueblos/**",
+        "https://tripgo-backend-arehbhbubshxdpg7.chilecentral-01.azurewebsites.net/api/recomendaciones/personalizadas",
+        "https://tripgo-backend-arehbhbubshxdpg7.chilecentral-01.azurewebsites.net/api/recomendaciones/mi-perfil",
+        "https://tripgo-backend-arehbhbubshxdpg7.chilecentral-01.azurewebsites.net/api/resenas/**"
+      ],
       "cacheConfig": {
         "maxSize": 50,
         "maxAge": "1h",
-        "timeout": "10s",
-        "strategy": "freshness"
-      }
-    },
-    {
-      "name": "api-auth",
-      "urls": ["/api/auth/**", "/api/usuarios/**"],
-      "cacheConfig": {
-        "maxSize": 10,
-        "maxAge": "1d",
-        "timeout": "10s",
+        "timeout": "30s",
         "strategy": "freshness"
       }
     }
