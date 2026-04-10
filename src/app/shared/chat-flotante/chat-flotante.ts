@@ -5,7 +5,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 
-type ChatMessage = { role: 'user' | 'ai'; text: string; };
+type ChatMessage = { role: 'user' | 'ai'; text: string;  lugares?: any[]; };
 
 @Component({
   selector: 'app-chat-flotante',
@@ -42,6 +42,11 @@ export class ChatFlotante implements AfterViewChecked, OnInit, OnDestroy {
       .subscribe(() => {
         if (!this.isLoggedIn) this.chatOpen = false;
       });
+  }
+
+  get isEmpresaPage(): boolean {
+    const url = this.router.url;
+    return url.includes('/empresa');
   }
 
   ngOnDestroy(): void {
@@ -86,18 +91,18 @@ export class ChatFlotante implements AfterViewChecked, OnInit, OnDestroy {
       });
 
       const lugares = await response.json();
-      let aiText = '';
-
       if (!lugares || lugares.length === 0) {
-        aiText = 'No encontré lugares con esa búsqueda. Intenta con otro término. 🗺️';
-      } else {
-        aiText = 'Te recomiendo estos lugares:\n\n';
-        lugares.forEach((l: any) => {
-          aiText += `• ${l.nombre_establecimiento} (${l.nombre_tipo})\n`;
-        });
-      }
-
-      this.chatMessages.push({ role: 'ai', text: aiText });
+      this.chatMessages.push({
+        role: 'ai',
+        text: 'No encontré lugares con esa búsqueda. Intenta con otro término. 🗺️'
+      });
+    } else {
+      this.chatMessages.push({
+        role: 'ai',
+        text: 'Te recomiendo estos lugares 👇',
+        lugares: lugares
+      });
+    }
     } catch {
       this.chatMessages.push({ role: 'ai', text: 'Hubo un error conectando con la IA. Intenta de nuevo. 😕' });
     }
@@ -105,6 +110,16 @@ export class ChatFlotante implements AfterViewChecked, OnInit, OnDestroy {
     this.aiLoading = false;
     this.shouldScrollChat = true;
   }
+  irALugar(lugar: any): void {
+  this.router.navigate(['/detalles', lugar.id_establecimiento], {
+    queryParams: {
+      idTipo: lugar.id_tipo,
+      townSlug: lugar.town_slug
+    }
+  });
+
+  this.closeChat(); // opcional
+}
 
   private scrollChatToBottom(): void {
     try {
