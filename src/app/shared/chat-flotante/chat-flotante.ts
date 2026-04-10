@@ -1,18 +1,9 @@
-import {
-  Component,
-  ViewChild,
-  ElementRef,
-  AfterViewChecked,
-  OnInit,
-  OnDestroy
-} from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewChecked, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
-
 import { AuthService } from '../../services/auth.service';
-import { AiService } from '../../services/ia.service';
 
 type ChatMessage = {
   role: 'user' | 'ai';
@@ -30,37 +21,29 @@ export class ChatFlotante implements AfterViewChecked, OnInit, OnDestroy {
 
   @ViewChild('chatBox') chatBox!: ElementRef;
 
+  // ✅ Se eliminó `isLoggedIn = false` — ahora es solo getter
   chatOpen = false;
   aiQuery = '';
   aiLoading = false;
-
   private shouldScrollChat = false;
   private routerSub!: Subscription;
 
   chatMessages: ChatMessage[] = [
-    {
-      role: 'ai',
-      text: '¡Hola! Soy TritanIA, tu asistente de viaje TripGo. ¿Qué tipo de experiencia buscas hoy? 🌿'
-    }
+    { role: 'ai', text: '¡Hola! Soy TritanIA, tu asistente de viaje TripGo. ¿Qué tipo de experiencia buscas hoy? 🌿' }
   ];
 
-  constructor(
-    private router: Router,
-    private authService: AuthService,
-    private aiService: AiService
-  ) { }
+  constructor(private router: Router, private authService: AuthService, private aiService: AiService) {}
 
+  // ✅ Getter reactivo — lee el signal de AuthService directamente
   get isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }
 
   ngOnInit(): void {
     this.routerSub = this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
+      .pipe(filter(e => e instanceof NavigationEnd))
       .subscribe(() => {
-        if (!this.isLoggedIn) {
-          this.chatOpen = false;
-        }
+        if (!this.isLoggedIn) this.chatOpen = false;
       });
   }
 
@@ -76,7 +59,7 @@ export class ChatFlotante implements AfterViewChecked, OnInit, OnDestroy {
   }
 
   toggleChat(event?: Event): void {
-    event?.stopPropagation();
+    if (event) event.stopPropagation();
     this.chatOpen = !this.chatOpen;
   }
 
@@ -89,16 +72,11 @@ export class ChatFlotante implements AfterViewChecked, OnInit, OnDestroy {
     this.sendMessage();
   }
 
-  sendMessage(): void {
+  async sendMessage(): Promise<void> {
     const text = this.aiQuery.trim();
-
     if (!text || this.aiLoading) return;
 
-    this.chatMessages.push({
-      role: 'user',
-      text
-    });
-
+    this.chatMessages.push({ role: 'user', text });
     this.aiQuery = '';
     this.aiLoading = true;
     this.shouldScrollChat = true;
@@ -153,10 +131,8 @@ export class ChatFlotante implements AfterViewChecked, OnInit, OnDestroy {
 
   private scrollChatToBottom(): void {
     try {
-      if (this.chatBox?.nativeElement) {
-        this.chatBox.nativeElement.scrollTop =
-          this.chatBox.nativeElement.scrollHeight;
-      }
-    } catch { }
+      if (this.chatBox?.nativeElement)
+        this.chatBox.nativeElement.scrollTop = this.chatBox.nativeElement.scrollHeight;
+    } catch {}
   }
 }

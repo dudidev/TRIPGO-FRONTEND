@@ -1,5 +1,5 @@
 
-<ng-container *ngIf="isLoggedIn">
+<ng-container *ngIf="isLoggedIn && !isEmpresaPage">
 <!-- Backdrop -->
 <div class="chatF__backdrop" *ngIf="chatOpen" (click)="closeChat()"></div>
 
@@ -15,7 +15,7 @@
         </svg>
       </div>
       <div>
-        <div class="chatF__name">Asistente TripGo</div>
+        <div class="chatF__name">Asistente TritanIA</div>
         <div class="chatF__status">
           <span class="chatF__dot"></span>
           En línea · IA activa
@@ -47,7 +47,25 @@
           <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="#fff"/>
         </svg>
       </div>
-      <div class="chatF__bubble" [class.chatF__bubble--user]="msg.role==='user'">{{ msg.text }}</div>
+      <div class="chatF__bubble" [class.chatF__bubble--user]="msg.role==='user'">
+  {{ msg.text }}
+  <div *ngIf="msg.lugares?.length" class="chatF__lugares">
+    
+    <div 
+      class="chatF__lugarCard"
+      *ngFor="let lugar of msg.lugares"
+      (click)="irALugar(lugar)"
+    >
+      <div class="chatF__lugarNombre">
+        <span class="chatF__iconLugar"></span><i class="fa-solid fa-location-dot"></i>  {{ lugar.nombre_establecimiento }}
+      </div>
+      <div class="chatF__lugarTipo">
+        <i class="fa-solid fa-tag"></i>{{ lugar.nombre_tipo }}
+      </div>
+    </div>
+
+  </div>
+</div>
     </div>
     <div *ngIf="aiLoading" class="chatF__msg chatF__msg--ai">
       <div class="chatF__msgAvatar">

@@ -328,19 +328,86 @@
 .chatF__input button:hover { background: #0a5a63; transform: scale(1.08); }
 .chatF__input button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
+
+.chatF__lugarCard {
+  animation: fadeInUp 0.3s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.chatF__iconLugar {
+  margin-right: 6px;
+  opacity: 0.7;
+}
+.chatF__lugarCard:active {
+  transform: scale(0.97);
+}
+.chatF__lugares {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chatF__lugarCard::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background: linear-gradient(180deg, #0e6973, #1a8a6e);
+  border-radius: 4px 0 0 4px;
+}
+.chatF__lugarCard {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 10px 12px;
+  cursor: pointer;
+  border: 1px solid rgba(14, 105, 115, 0.12);
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.chatF__lugarCard:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+  border-color: #0e6973;
+}
+
+.chatF__lugarNombre {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0e6973;
+}
+
+.chatF__lugarTipo {
+  font-size: 10px;
+  color: #888;
+}
 /* =========================
    RESPONSIVE MÓVIL
    ========================= */
 @media (max-width: 768px) {
   .chatF__fab {
-    bottom: 117px;
+    bottom: 148px;
     right: 12px;
     width: 47px;
     height: 47px;
   }
 
   .chatF__panel {
-    bottom: 170px;
+    bottom: 206px;
     right: 8px;
     left: 8px;
     width: auto;

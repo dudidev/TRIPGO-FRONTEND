@@ -51,6 +51,27 @@ export class Nav implements AfterViewInit {
     this.setNavOffset();
     setTimeout(() => this.setNavOffset(), 0);
   }
+  goHome(event: Event): void {
+  event.preventDefault();
+
+  const url = this.router.url;
+
+  const isEmpresaContext =
+    url.includes('/empresa') ||
+    url.includes('/establecimiento') ||
+    url.includes('/mis-establecimientos');
+
+  if (isEmpresaContext) {
+    this.router.navigate(['/empresa']);
+    return;
+  }
+
+  if (this.authService.isLoggedIn()) {
+    this.router.navigate(['/principal']);
+  } else {
+    this.router.navigate(['/']);
+  }
+}
 
   goToProtected(event: Event, route: string): void {
     if (this.authService.isLoggedIn()) return;

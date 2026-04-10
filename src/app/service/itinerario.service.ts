@@ -48,22 +48,53 @@ export class ItinerarioService {
     return `tripgo_itinerario_${user.id}`;
   }
 
-  add(item: ItinerarioItem) {
-    const user = this.authService.getCurrentUser();
+ add(item: ItinerarioItem) {
+  const user = this.authService.getCurrentUser();
 
-    if (!user?.id) {
-      console.warn('[ItinerarioService] Usuario no autenticado, no se guarda itinerario');
-      return;
-    }
+  if (!user?.id) {
+    console.warn('[ItinerarioService] Usuario no autenticado, no se guarda itinerario');
+    return;
+  }
 
-    const exists = this.items.some(x => x.id === item.id);
-    if (exists) return;
+  const existente = this.items.find(x => x.id === item.id);
 
-    const updated = [item, ...this.items];
+  if (existente) {
+
+    // 🔥 Si ya existe → mezclar productos
+    item.productos?.forEach(prodNuevo => {
+
+      const prodExistente = existente.productos?.find(
+        p => p.nombre === prodNuevo.nombre
+      );
+
+      if (prodExistente) {
+        // 👉 actualizar cantidad
+        prodExistente.cantidad = prodNuevo.cantidad;
+      } else {
+        // 👉 agregar nuevo producto
+        existente.productos = existente.productos ?? [];
+        existente.productos.push(prodNuevo);
+      }
+
+    });
+
+    // 👉 emitir cambios
+    const updated = [...this.items];
+    this.subject.next(updated);
+    this.save(updated);
+
+  } else {
+
+    // 👉 nuevo lugar
+    const updated = [{
+      ...item,
+      productos: item.productos ?? []
+    }, ...this.items];
+
     this.subject.next(updated);
     this.save(updated);
   }
-
+}
   remove(id: string) {
     const updated = this.items.filter(x => x.id !== id);
     this.subject.next(updated);

@@ -67,6 +67,7 @@
 
         "EMAIL_ERROR": "Ingresa un correo válido",
         "PASSWORD_ERROR": "Mínimo 6 caracteres",
+        "EMAIL_CORRECT": " ✓ Correo válido",
 
         "SHOW_PASSWORD": "Mostrar contraseña",
         "HIDE_PASSWORD": "Ocultar contraseña",
@@ -90,6 +91,51 @@
             "RATING": "Valoración",
             "TRAVELERS": "Viajeros",
             "FREE": "Gratuito"
+        },
+        "REGISTER": {
+            "HERO_SUB": "Únete y descubre el Quindío como nunca antes",
+
+            "STEPS": {
+                "STEP1": "Crea tu cuenta",
+                "STEP2": "Explora lugares",
+                "STEP3": "Arma tu itinerario"
+            },
+
+            "FORM": {
+                "BADGE": "Registro gratuito",
+                "TITLE": "Crea tu cuenta",
+                "SUB": "Completa los datos para empezar",
+
+                "NAME_LABEL": "Nombre completo",
+                "NAME_PLACEHOLDER": "Tu nombre",
+                "NAME_VALID": "Nombre válido",
+
+                "EMAIL_LABEL": "Correo electrónico",
+                "EMAIL_PLACEHOLDER": "tu@correo.com",
+                "EMAIL_VALID": "Correo válido",
+
+                "PASSWORD_LABEL": "Contraseña",
+                "PASSWORD_PLACEHOLDER": "Mín. 8 caracteres",
+                "PASSWORD_VALID": "Contraseña segura",
+
+                "CONFIRM_PASSWORD_LABEL": "Confirmar contraseña",
+                "CONFIRM_PASSWORD_PLACEHOLDER": "Repite tu contraseña",
+                "CONFIRM_PASSWORD_VALID": "Las contraseñas coinciden",
+
+                "BUTTON": "Crear cuenta",
+                "HAVE_ACCOUNT": "Ya tengo cuenta — Iniciar sesión",
+
+                "TERMS_TEXT": "Al registrarte aceptas nuestros",
+                "TERMS": "términos",
+                "PRIVACY": "privacidad"
+            },
+
+            "PASSWORD_STRENGTH": {
+                "WEAK": "Débil",
+                "MEDIUM": "Regular",
+                "STRONG": "Segura",
+                "VERY_STRONG": "Muy segura"
+            }
         }
     },
     "CONTACT": {

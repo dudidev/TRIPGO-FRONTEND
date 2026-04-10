@@ -48,6 +48,11 @@ export class EmpresaComponent implements OnInit, OnDestroy {
   // Imágenes
   uploadingImagen = false;
 
+  // ── Servicios del establecimiento ─────────────────────────────
+  loadingServicios = false;
+  menuItems: any[] = [];
+  menuAgrupado: { cat: string; items: any[] }[] = [];
+
   readonly diasSemana = [
     'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
   ];
@@ -87,6 +92,8 @@ export class EmpresaComponent implements OnInit, OnDestroy {
           this.establecimientoEdit = null;
           this.selectedId = null;
           this.modoLista = false;
+          this.menuItems = [];
+          this.menuAgrupado = [];
           this.errorMessage = 'No tienes establecimientos asignados. Contacta soporte.';
           return;
         }
@@ -165,20 +172,81 @@ export class EmpresaComponent implements OnInit, OnDestroy {
 
   seleccionarEstablecimiento(est: any, salirDeLista = true) {
     if (!est) return;
+
     const id = est.id_establecimiento ?? est.id ?? null;
     const parsedId = typeof id === 'number' ? id : Number(id);
+
     this.selectedId = parsedId;
     this.establecimientoOriginal = est;
     this.establecimientoEdit = structuredClone(est);
     this.editMode = false;
+
     this.obtenerImagenesLugar(parsedId);
+    this.cargarServicios(parsedId);
+
     if (salirDeLista) this.modoLista = false;
+  }
+
+  // ── Servicios ─────────────────────────────────────────────────
+
+  cargarServicios(id: number) {
+    if (!id) {
+      this.menuItems = [];
+      this.menuAgrupado = [];
+      return;
+    }
+
+    this.loadingServicios = true;
+    this.menuItems = [];
+    this.menuAgrupado = [];
+
+    this.establecimientoService.getServiciosByEstablecimiento(id).subscribe({
+      next: (resp: any) => {
+        const rawServicios = resp?.servicios ?? [];
+
+        this.menuItems = Array.isArray(rawServicios)
+          ? rawServicios.map((s: any) => ({
+              categoria: String(s?.categoria ?? 'Servicios'),
+              nombre: String(s?.nombre ?? 'Servicio'),
+              precio: Number(s?.precio ?? 0)
+            }))
+          : [];
+
+        this.agruparServicios();
+        this.loadingServicios = false;
+      },
+      error: (err: any) => {
+        console.error('getServiciosByEstablecimiento error:', err);
+        this.menuItems = [];
+        this.menuAgrupado = [];
+        this.loadingServicios = false;
+      }
+    });
+  }
+
+  private agruparServicios() {
+    const grupos: Record<string, any[]> = {};
+
+    this.menuItems.forEach(item => {
+      const categoria = item.categoria || 'Servicios';
+      if (!grupos[categoria]) grupos[categoria] = [];
+      grupos[categoria].push(item);
+    });
+
+    this.menuAgrupado = Object.keys(grupos).map(cat => ({
+      cat,
+      items: grupos[cat]
+    }));
   }
 
   // ── Imágenes + Slider ─────────────────────────────────────────
 
   obtenerImagenesLugar(id: number) {
-    if (!id) { this.imagenesLugar = []; return; }
+    if (!id) {
+      this.imagenesLugar = [];
+      return;
+    }
+
     this.loadingImagenes = true;
     clearInterval(this.sliderTimer);
 
@@ -214,6 +282,7 @@ export class EmpresaComponent implements OnInit, OnDestroy {
     this.sliderProgress = 0;
     let elapsed = 0;
     const step = 50;
+
     this.sliderTimer = setInterval(() => {
       elapsed += step;
       this.sliderProgress = (elapsed / this.sliderInterval) * 100;
@@ -238,6 +307,7 @@ export class EmpresaComponent implements OnInit, OnDestroy {
       next: () => {
         this.uploadingImagen = false;
         this.obtenerImagenesLugar(this.selectedId!);
+
         // Actualizar preview del mapa
         this.establecimientoService.getImagenesLugar(this.selectedId!).subscribe({
           next: (resp: any) => {
@@ -246,6 +316,7 @@ export class EmpresaComponent implements OnInit, OnDestroy {
           },
           error: () => {}
         });
+
         this.confirmService.open({
           title: '¡Imagen subida!',
           message: 'La imagen se agregó correctamente al establecimiento.',
@@ -276,6 +347,8 @@ export class EmpresaComponent implements OnInit, OnDestroy {
       this.editMode = false;
       this.establecimientoOriginal = null;
       this.establecimientoEdit = null;
+      this.menuItems = [];
+      this.menuAgrupado = [];
       clearInterval(this.sliderTimer);
     }
   }
@@ -294,6 +367,7 @@ export class EmpresaComponent implements OnInit, OnDestroy {
 
   guardarCambios() {
     if (!this.establecimientoOriginal || !this.establecimientoEdit) return;
+
     const id = this.establecimientoOriginal.id_establecimiento ?? this.selectedId;
     if (!id) {
       this.confirmService.open({
