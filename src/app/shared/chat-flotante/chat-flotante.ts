@@ -1,13 +1,23 @@
-import { Component, ViewChild, ElementRef, AfterViewChecked, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  AfterViewChecked,
+  OnInit,
+  OnDestroy
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
+
 import { AuthService } from '../../services/auth.service';
+import { AiService } from '../../services/ia.service';
 
 type ChatMessage = {
   role: 'user' | 'ai';
   text: string;
+  lugares?: any[];
 };
 
 @Component({
@@ -21,29 +31,50 @@ export class ChatFlotante implements AfterViewChecked, OnInit, OnDestroy {
 
   @ViewChild('chatBox') chatBox!: ElementRef;
 
-  // ✅ Se eliminó `isLoggedIn = false` — ahora es solo getter
   chatOpen = false;
   aiQuery = '';
   aiLoading = false;
+
   private shouldScrollChat = false;
   private routerSub!: Subscription;
 
   chatMessages: ChatMessage[] = [
-    { role: 'ai', text: '¡Hola! Soy TritanIA, tu asistente de viaje TripGo. ¿Qué tipo de experiencia buscas hoy? 🌿' }
+    {
+      role: 'ai',
+      text: '¡Hola! Soy TritanIA, tu asistente de viaje TripGo. ¿Qué tipo de experiencia buscas hoy? 🌿'
+    }
   ];
 
-  constructor(private router: Router, private authService: AuthService, private aiService: AiService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private aiService: AiService
+  ) {}
 
-  // ✅ Getter reactivo — lee el signal de AuthService directamente
   get isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }
 
+  get isEmpresaPage(): boolean {
+    const url = this.router.url;
+    return (
+      url.includes('/empresa') ||
+      url.includes('/mis-establecimientos') ||
+      url.includes('/detalle-establecimiento')
+    );
+  }
+
   ngOnInit(): void {
     this.routerSub = this.router.events
-      .pipe(filter(e => e instanceof NavigationEnd))
+      .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
-        if (!this.isLoggedIn) this.chatOpen = false;
+        if (!this.isLoggedIn) {
+          this.chatOpen = false;
+        }
+
+        if (this.isEmpresaPage) {
+          this.chatOpen = false;
+        }
       });
   }
 
@@ -59,7 +90,7 @@ export class ChatFlotante implements AfterViewChecked, OnInit, OnDestroy {
   }
 
   toggleChat(event?: Event): void {
-    if (event) event.stopPropagation();
+    event?.stopPropagation();
     this.chatOpen = !this.chatOpen;
   }
 
@@ -72,11 +103,16 @@ export class ChatFlotante implements AfterViewChecked, OnInit, OnDestroy {
     this.sendMessage();
   }
 
-  async sendMessage(): Promise<void> {
+  sendMessage(): void {
     const text = this.aiQuery.trim();
+
     if (!text || this.aiLoading) return;
 
-    this.chatMessages.push({ role: 'user', text });
+    this.chatMessages.push({
+      role: 'user',
+      text
+    });
+
     this.aiQuery = '';
     this.aiLoading = true;
     this.shouldScrollChat = true;
@@ -86,38 +122,34 @@ export class ChatFlotante implements AfterViewChecked, OnInit, OnDestroy {
         console.log('Respuesta chatbot:', response);
 
         let aiText = '';
+        let lugares: any[] = [];
 
         if (response?.tipo === 'mensaje') {
-          aiText = response.mensaje;
-        }
-
-        else if (
+          aiText = response.mensaje || 'No encontré resultados para esa búsqueda.';
+        } else if (
           response?.tipo === 'resultados' &&
           Array.isArray(response.data) &&
           response.data.length > 0
         ) {
-          aiText = 'OK! Te entiendo, entonces te recomiendo estos lugares:\n\n';
-
-          response.data.forEach((l: any) => {
-            aiText += `• ${l.nombre_establecimiento} (${l.nombre_tipo})\n`;
-          });
-        }
-
-        else {
-          aiText =
-            'No encontré resultados para esa búsqueda. Intenta con otra ubicación o tipo de lugar.';
+          aiText = 'OK! Te entiendo, entonces te recomiendo estos lugares:';
+          lugares = response.data;
+        } else {
+          aiText = 'No encontré resultados para esa búsqueda. Intenta con otra ubicación o tipo de lugar.';
         }
 
         this.chatMessages.push({
           role: 'ai',
-          text: aiText
+          text: aiText,
+          lugares
         });
 
         this.aiLoading = false;
         this.shouldScrollChat = true;
       },
 
-      error: () => {
+      error: (err) => {
+        console.error('Error chatbot:', err);
+
         this.chatMessages.push({
           role: 'ai',
           text: 'Hubo un error conectando con TritanIA. Intenta de nuevo. 😕'
@@ -129,10 +161,23 @@ export class ChatFlotante implements AfterViewChecked, OnInit, OnDestroy {
     });
   }
 
+  irALugar(lugar: any): void {
+    this.router.navigate(['/detalles', lugar.id_establecimiento], {
+      queryParams: {
+        idTipo: lugar.id_tipo,
+        townSlug: lugar.town_slug
+      }
+    });
+
+    this.closeChat();
+  }
+
   private scrollChatToBottom(): void {
     try {
-      if (this.chatBox?.nativeElement)
-        this.chatBox.nativeElement.scrollTop = this.chatBox.nativeElement.scrollHeight;
+      if (this.chatBox?.nativeElement) {
+        this.chatBox.nativeElement.scrollTop =
+          this.chatBox.nativeElement.scrollHeight;
+      }
     } catch {}
   }
 }
