@@ -4,7 +4,7 @@
       <img
         src="https://res.cloudinary.com/dtyvd3fim/image/upload/v1764678577/ChatGPT_Image_12_nov_2025_17_33_14_1_hj26hs.png"
         alt="TripGo" />
-      <a [routerLink]="isLoggedIn ? '/principal' : '/'">TripGO</a>
+      <a href="#" (click)="goHome($event)">TripGO</a>
     </div>
 
     <div class="rightActions">
@@ -12,6 +12,23 @@
       @if (isEmpresaPage) {
         <div class="OpLaterales">
           <a href="#" (click)="confirmLogout(); $event.preventDefault()">Salir</a>
+           <button type="button" class="darkToggleMobile" (click)="darkMode.toggle(); closeMenu()">
+          <span class="darkToggle__track" [class.darkToggle__track--on]="darkMode.isDark()">
+            <span class="darkToggle__thumb">
+              <svg *ngIf="!darkMode.isDark()" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+              </svg>
+              <svg *ngIf="darkMode.isDark()" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              </svg>
+            </span>
+          </span>
+          {{ darkMode.isDark() ? '' : '' }}
+        </button>
         </div>
       } @else {
 
@@ -54,7 +71,7 @@
                 <div class="itPop__body">
                   <ng-container *ngIf="(itinerario.items$ | async) as items">
                     <div class="itPop__empty" *ngIf="items.length === 0">
-                      <div class="itPop__emptyIcon">🗺️</div>
+                      <div class="itPop__emptyIcon"><i class="fas fa-map-marker-alt"></i></div>
                       <div class="itPop__emptyTitle">Sin lugares aún</div>
                       <div class="itPop__emptySub">Explora y agrega destinos a tu itinerario</div>
                     </div>
@@ -63,7 +80,7 @@
                         <div class="itPop__num">{{ i + 1 }}</div>
                         <div class="itPop__imgWrap">
                           <img *ngIf="it.imagenUrl" [src]="it.imagenUrl" class="itPop__img" [alt]="it.nombre" />
-                          <div *ngIf="!it.imagenUrl" class="itPop__imgPlaceholder">📍</div>
+                          <div *ngIf="!it.imagenUrl" class="itPop__imgPlaceholder"><i class="fas fa-map-marker-alt"></i></div>
                         </div>
                         <div class="itPop__info">
                           <div class="itPop__name">{{ it.nombre }}</div>
@@ -296,7 +313,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
         </svg>
-        <span>Recomendaciones</span>
+        <span>Recomenda...</span>
       </a>
 
       <button

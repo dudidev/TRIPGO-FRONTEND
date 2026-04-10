@@ -8,6 +8,9 @@ export class EstablecimientoService {
   private baseUrl = environment.apiBaseUrl;
 
   constructor(private http: HttpClient) {}
+  getServiciosByEstablecimiento(id: number) {
+  return this.http.get(`${environment.apiBaseUrl}/servicios/${id}`);
+}
 
   getMio(): Observable<any> {
     return this.http.get(`${this.baseUrl}/establecimientos/mio`);

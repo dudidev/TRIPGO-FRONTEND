@@ -11,112 +11,108 @@
   <div *ngIf="!loading && errorMessage" class="card card--state">
     <p class="empty">{{ errorMessage }}</p>
   </div>
-  <!-- CARDS -->
-<div
-  *ngIf="!loading && !errorMessage && establecimientos.length > 1 && !establecimientoOriginal"
-  class="card card--selector"
->
-  <div class="selector-header">
-    <div>
-      <span class="section-kicker">Panel de empresa</span>
-      <h2 class="cards-title">Selecciona el establecimiento</h2>
-      <p class="section-subtext">Administra la información de cada uno de tus establecimientos.</p>
-    </div>
-  </div>
 
-  <div class="selector-search-row">
-    <div class="search-box">
-      <svg class="search-box__svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
-        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-      </svg>
-      <input
-        type="text"
-        class="search-box__input"
-        placeholder="Buscar por nombre, ubicación, tipo o estado"
-        [(ngModel)]="searchTerm"
-        (input)="filtrarEstablecimientos()"
-      />
+  <!-- CARDS -->
+  <div
+    *ngIf="!loading && !errorMessage && establecimientos.length > 1 && !establecimientoOriginal"
+    class="card card--selector"
+  >
+    <div class="selector-header">
+      <div>
+        <span class="section-kicker">Panel de empresa</span>
+        <h2 class="cards-title">Selecciona el establecimiento</h2>
+        <p class="section-subtext">Administra la información de cada uno de tus establecimientos.</p>
+      </div>
+    </div>
+
+    <div class="selector-search-row">
+      <div class="search-box">
+        <svg class="search-box__svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input
+          type="text"
+          class="search-box__input"
+          placeholder="Buscar por nombre, ubicación o estado"
+          [(ngModel)]="searchTerm"
+          (input)="filtrarEstablecimientos()"
+        />
+        <button
+          type="button"
+          class="search-box__clear"
+          *ngIf="searchTerm"
+          (click)="limpiarBusqueda()"
+        >✕</button>
+      </div>
+      <span class="results-pill">
+        {{ establecimientosFiltrados.length }}
+        resultado{{ establecimientosFiltrados.length !== 1 ? 's' : '' }}
+      </span>
+    </div>
+
+    <div class="empty empty--search"
+      *ngIf="searchTerm.trim() && establecimientosFiltrados.length === 0">
+      No encontramos establecimientos con ese criterio.
+    </div>
+
+    <div class="cards-grid" *ngIf="establecimientosFiltrados.length > 0">
       <button
         type="button"
-        class="search-box__clear"
-        *ngIf="searchTerm"
-        (click)="limpiarBusqueda()"
-      >✕</button>
+        class="est-card"
+        [class.est-card--inactive]="(est.estado || 'activo') === 'inactivo'"
+        *ngFor="let est of establecimientosFiltrados"
+        (click)="seleccionarEstablecimiento(est)"
+      >
+        <div class="est-card__img-wrap">
+          <img
+            *ngIf="getPreviewImagen(est)"
+            [src]="getPreviewImagen(est)"
+            alt="{{ est.nombre_establecimiento }}"
+            class="est-card__img"
+          />
+          <svg
+            *ngIf="!getPreviewImagen(est)"
+            viewBox="0 0 24 24" fill="none" stroke="#0E6973"
+            stroke-width="1.5" stroke-linecap="round"
+          >
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+
+        <div class="est-card__body">
+          <div class="est-card__top">
+            <h3 class="est-card__name">{{ est.nombre_establecimiento }}</h3>
+            <span class="est-card__badge"
+              [class.est-card__badge--activo]="(est.estado || 'activo') === 'activo'"
+              [class.est-card__badge--inactivo]="est.estado === 'inactivo'"
+            >{{ est.estado || 'activo' }}</span>
+          </div>
+
+          <div class="est-card__meta-list">
+            <div class="est-card__meta-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              {{ est.ubicacion || '—' }}
+            </div>
+
+          </div>
+
+
+          <div class="est-card__footer">
+            <span class="est-card__cta">
+              Administrar
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+      </button>
     </div>
-    <span class="results-pill">
-      {{ establecimientosFiltrados.length }}
-      resultado{{ establecimientosFiltrados.length !== 1 ? 's' : '' }}
-    </span>
   </div>
-
-  <div class="empty empty--search"
-    *ngIf="searchTerm.trim() && establecimientosFiltrados.length === 0">
-    No encontramos establecimientos con ese criterio.
-  </div>
-
-  <div class="cards-grid" *ngIf="establecimientosFiltrados.length > 0">
-    <button
-      type="button"
-      class="est-card"
-      [class.est-card--inactive]="(est.estado || 'activo') === 'inactivo'"
-      *ngFor="let est of establecimientosFiltrados"
-      (click)="seleccionarEstablecimiento(est)"
-    >
-      <div class="est-card__img-wrap">
-        <img
-          *ngIf="getPreviewImagen(est)"
-          [src]="getPreviewImagen(est)"
-          alt="{{ est.nombre_establecimiento }}"
-          class="est-card__img"
-        />
-        <svg
-          *ngIf="!getPreviewImagen(est)"
-          viewBox="0 0 24 24" fill="none" stroke="#0E6973"
-          stroke-width="1.5" stroke-linecap="round"
-        >
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-          <polyline points="9 22 9 12 15 12 15 22"/>
-        </svg>
-      </div>
-
-      <div class="est-card__body">
-        <div class="est-card__top">
-          <h3 class="est-card__name">{{ est.nombre_establecimiento }}</h3>
-          <span class="est-card__badge"
-            [class.est-card__badge--activo]="(est.estado || 'activo') === 'activo'"
-            [class.est-card__badge--inactivo]="est.estado === 'inactivo'"
-          >{{ est.estado || 'activo' }}</span>
-        </div>
-
-        <div class="est-card__meta-list">
-          <div class="est-card__meta-row">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-              <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0z"/>
-              <circle cx="12" cy="10" r="3"/>
-            </svg>
-            {{ est.ubicacion || '—' }}
-          </div>
-          <div class="est-card__meta-row">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
-              <line x1="7" y1="7" x2="7.01" y2="7"/>
-            </svg>
-            {{ est.tipo || '—' }}
-          </div>
-        </div>
-
-        <div class="est-card__footer">
-          <span class="est-card__cta">
-            Administrar
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
-          </span>
-        </div>
-      </div>
-    </button>
-  </div>
-</div>
 
   <!-- EDITOR -->
   <div *ngIf="!loading && !errorMessage && establecimientoOriginal" class="empresa-panel">
@@ -131,7 +127,7 @@
         </div>
 
         <h2 class="panel-hero__title">{{ establecimientoOriginal.nombre_establecimiento }}</h2>
-        <p class="panel-hero__location">📍 {{ establecimientoOriginal.ubicacion }}</p>
+        <p class="panel-hero__location"><i class="fa-solid"></i>{{ establecimientoOriginal.ubicacion }}</p>
       </div>
 
       <div class="actions panel-hero__actions">
@@ -156,78 +152,84 @@
         </ng-container>
       </div>
     </div>
-   <section class="panel-block panel-block--gallery">
-  <div class="block-head">
-    <div class="block-head__icon">🖼️</div>
-    <div>
-      <h3>Imágenes del establecimiento</h3>
-      <p class="block-sub">Imágenes registradas para este lugar</p>
-    </div>
-  </div>
 
-  <div class="block-body">
-    <ng-container *ngIf="!loadingImagenes">
-
-      <ng-container *ngIf="imagenesLugar.length > 0; else sinImagenes">
-        <div class="sl-wrap">
-          <div class="sl-slide"
-            *ngFor="let img of imagenesLugar; let i = index"
-            [class.active]="i === sliderIndex"
-          >
-            <img [src]="img.url" alt="Imagen del establecimiento" />
-          </div>
-
-          <div class="sl-arrows">
-            <button class="sl-arrow" (click)="sliderPrev()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
-                <polyline points="15 18 9 12 15 6"/>
-              </svg>
-            </button>
-            <button class="sl-arrow" (click)="sliderNext()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
-                <polyline points="9 18 15 12 9 6"/>
-              </svg>
-            </button>
-          </div>
-
-          <div class="sl-dots">
-            <button
-              class="sl-dot"
-              *ngFor="let img of imagenesLugar; let i = index"
-              [class.active]="i === sliderIndex"
-              (click)="sliderGoTo(i)"
-            ></button>
-          </div>
-
-          <div class="sl-count">{{ sliderIndex + 1 }} / {{ imagenesLugar.length }}</div>
-          <div class="sl-progress" [style.width.%]="sliderProgress"></div>
+    <section class="panel-block panel-block--gallery">
+      <div class="block-head">
+        <div class="block-head__icon"><i class="fa-solid fa-images"></i></div>
+        <div>
+          <h3>Imágenes del establecimiento</h3>
+          <p class="block-sub">Imágenes registradas para este lugar</p>
         </div>
-      </ng-container>
+      </div>
 
-      <ng-template #sinImagenes>
-        <p class="empty">Este establecimiento aún no tiene imágenes registradas.</p>
-      </ng-template>
+      <div class="block-body">
+        <ng-container *ngIf="!loadingImagenes">
 
-      <!-- SUBIR IMAGEN (solo en editMode) -->
-      <ng-container *ngIf="editMode">
-        <label class="img-upload" [class.img-upload--loading]="uploadingImagen">
-          <input
-            type="file"
-            accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
-            (change)="onArchivoSeleccionado($event)"
-            [disabled]="uploadingImagen"
-            hidden
-          />
-          <span class="img-upload__icon">{{ uploadingImagen ? '⏳' : '📤' }}</span>
-          <span class="img-upload__label">
-            {{ uploadingImagen ? 'Subiendo imagen...' : 'Subir nueva imagen' }}
-          </span>
-        </label>
-      </ng-container>
+          <ng-container *ngIf="imagenesLugar.length > 0; else sinImagenes">
+            <div class="sl-wrap">
+              <div class="sl-slide"
+                *ngFor="let img of imagenesLugar; let i = index"
+                [class.active]="i === sliderIndex"
+              >
+                <img [src]="img.url" alt="Imagen del establecimiento" />
+              </div>
 
-    </ng-container>
-  </div>
-</section>
+              <div class="sl-arrows">
+                <button class="sl-arrow" (click)="sliderPrev()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+                    <polyline points="15 18 9 12 15 6"/>
+                  </svg>
+                </button>
+                <button class="sl-arrow" (click)="sliderNext()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+                    <polyline points="9 18 15 12 9 6"/>
+                  </svg>
+                </button>
+              </div>
+
+              <div class="sl-dots">
+                <button
+                  class="sl-dot"
+                  *ngFor="let img of imagenesLugar; let i = index"
+                  [class.active]="i === sliderIndex"
+                  (click)="sliderGoTo(i)"
+                ></button>
+              </div>
+
+              <div class="sl-count">{{ sliderIndex + 1 }} / {{ imagenesLugar.length }}</div>
+              <div class="sl-progress" [style.width.%]="sliderProgress"></div>
+            </div>
+          </ng-container>
+
+          <ng-template #sinImagenes>
+            <p class="empty">Este establecimiento aún no tiene imágenes registradas.</p>
+          </ng-template>
+
+          <!-- SUBIR IMAGEN (solo en editMode) -->
+          <ng-container *ngIf="editMode">
+            <label class="img-upload" [class.img-upload--loading]="uploadingImagen">
+              <input
+                type="file"
+                accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+                (change)="onArchivoSeleccionado($event)"
+                [disabled]="uploadingImagen"
+                hidden
+              />
+              <span class="img-upload__icon">
+                <i
+                  class="fa-solid"
+                  [ngClass]="uploadingImagen ? 'fa-spinner fa-spin' : 'fa-arrow-up-from-bracket'"
+                ></i>
+              </span>
+              <span class="img-upload__label">
+                {{ uploadingImagen ? 'Subiendo imagen...' : 'Subir nueva imagen' }}
+              </span>
+            </label>
+          </ng-container>
+
+        </ng-container>
+      </div>
+    </section>
 
     <div class="contenido">
 
@@ -236,7 +238,7 @@
 
         <section class="panel-block">
           <div class="block-head">
-            <div class="block-head__icon">📝</div>
+            <div class="block-head__icon"><i class="fa-solid fa-align-left"></i></div>
             <div>
               <h3>Descripción general</h3>
               <p class="block-sub">Presenta la información principal del establecimiento.</p>
@@ -257,9 +259,43 @@
           </div>
         </section>
 
+        <!-- NUEVA SECCIÓN: SERVICIOS -->
         <section class="panel-block">
           <div class="block-head">
-            <div class="block-head__icon">📞</div>
+            <div class="block-head__icon"><i class="fa-solid fa-star"></i></div>
+            <div>
+              <h3>Servicios del establecimiento</h3>
+              <p class="block-sub">Servicios registrados actualmente para este lugar.</p>
+            </div>
+          </div>
+
+          <div class="block-body">
+            <p *ngIf="loadingServicios" class="state-text">Cargando servicios...</p>
+
+            <ng-container *ngIf="!loadingServicios && menuAgrupado.length > 0; else sinServicios">
+              <div class="field" *ngFor="let grupo of menuAgrupado">
+                <label>{{ grupo.cat }}</label>
+
+                <div class="summary-list">
+                  <div class="summary-row" *ngFor="let item of grupo.items">
+                    <span class="summary-label">{{ item.nombre }}</span>
+                    <span class="summary-value">${{ item.precio | number:'1.0-0' }}</span>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+
+            <ng-template #sinServicios>
+              <p *ngIf="!loadingServicios" class="empty">
+                Este establecimiento no tiene servicios registrados.
+              </p>
+            </ng-template>
+          </div>
+        </section>
+
+        <section class="panel-block">
+          <div class="block-head">
+            <div class="block-head__icon"><i class="fa-solid fa-phone"></i></div>
             <div>
               <h3>Datos de contacto</h3>
               <p class="block-sub">Actualiza los canales principales de contacto.</p>
@@ -314,7 +350,7 @@
 
         <section class="box box--info">
           <div class="block-head block-head--small">
-            <div class="block-head__icon">🔒</div>
+            <div class="block-head__icon"><i class="fa-solid fa-lock"></i></div>
             <div>
               <h4>Información bloqueada</h4>
               <p class="block-sub">Datos base del establecimiento.</p>
@@ -337,16 +373,13 @@
               <span class="summary-value">{{ establecimientoOriginal.direccion || '—' }}</span>
             </div>
 
-            <div class="summary-row">
-              <span class="summary-label">Tipo</span>
-              <span class="summary-value">{{ establecimientoOriginal.tipo || '—' }}</span>
-            </div>
+          
           </div>
         </section>
 
         <section class="box box--hours">
           <div class="block-head block-head--small">
-            <div class="block-head__icon">🕒</div>
+            <div class="block-head__icon"><i class="fa-solid fa-clock"></i></div>
             <div>
               <h4>Horarios</h4>
               <p class="block-sub">Control de apertura y cierre.</p>
