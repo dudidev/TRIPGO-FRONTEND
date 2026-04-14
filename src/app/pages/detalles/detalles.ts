@@ -118,24 +118,23 @@ export class Detalles implements OnInit {
 
   ngOnInit(): void {
 
-    // ✅ combineLatest garantiza que idTipo ya está disponible
-    // antes de llamar a cargarServicios(), evitando el race condition
-    combineLatest([
-      this.route.paramMap,
-      this.route.queryParamMap
-    ]).pipe(take(1)).subscribe(([params, query]) => {
-      this.slug              = params.get('slug') || '';
-      this.idEstablecimiento = Number(this.slug);
-      this.townSlug          = query.get('townSlug') || '';
-      this.idTipo            = Number(query.get('idTipo') || 0);
+  combineLatest([
+    this.route.paramMap,
+    this.route.queryParamMap
+  ]).subscribe(([params, query]) => {
 
-      if (this.slug) {
-        this.cargarDetalle(this.slug);
-        this.cargarServicios();
-      }
-    });
+    this.slug              = params.get('slug') || '';
+    this.idEstablecimiento = Number(this.slug);
+    this.townSlug          = query.get('townSlug') || '';
+    this.idTipo            = Number(query.get('idTipo') || 0);
 
-  }
+    if (this.slug) {
+      this.cargarDetalle(this.slug);
+      this.cargarServicios();
+    }
+  });
+
+}
 
   onFavoritoClick(event: Event): void {
     event.preventDefault();

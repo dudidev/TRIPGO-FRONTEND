@@ -90,8 +90,53 @@
             "RATING": "Rating",
             "TRAVELERS": "Travelers",
             "FREE": "Free"
+        },
+        "REGISTER": {
+            "HERO_SUB": "Join and discover Quindío like never before",
+
+            "STEPS": {
+                "STEP1": "Create your account",
+                "STEP2": "Explore places",
+                "STEP3": "Build your itinerary"
+            },
+
+            "FORM": {
+                "BADGE": "Free registration",
+                "TITLE": "Create your account",
+                "SUB": "Complete the data to get started",
+
+                "NAME_LABEL": "Full name",
+                "NAME_PLACEHOLDER": "Your name",
+                "NAME_VALID": "Valid name",
+
+                "EMAIL_LABEL": "Email address",
+                "EMAIL_PLACEHOLDER": "you@email.com",
+                "EMAIL_VALID": "Valid email",
+
+                "PASSWORD_LABEL": "Password",
+                "PASSWORD_PLACEHOLDER": "Min. 8 characters",
+                "PASSWORD_VALID": "Secure password",
+
+                "CONFIRM_PASSWORD_LABEL": "Confirm password",
+                "CONFIRM_PASSWORD_PLACEHOLDER": "Repeat your password",
+                "CONFIRM_PASSWORD_VALID": "Passwords match",
+
+                "BUTTON": "Create account",
+                "HAVE_ACCOUNT": "Already have an account? Log in",
+
+                "TERMS_TEXT": "By registering you accept our",
+                "TERMS": "terms",
+                "PRIVACY": "privacy"
+            },
+
+            "PASSWORD_STRENGTH": {
+                "WEAK": "Weak",
+                "MEDIUM": "Regular",
+                "STRONG": "Secure",
+                "VERY_STRONG": "Very secure"
+            }
         }
-    },
+        },
     "CONTACT": {
         "TITLE": "Let's Talk",
         "SUBTITLE": "Tell us about your business and we will get in touch with you",
