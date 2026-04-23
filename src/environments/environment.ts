@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiBaseUrl: '/backend'
-  // apiBaseUrl: 'http://localhost:8080'
+  //apiBaseUrl: 'https://tripgo-backend-production.up.railway.app' // Cambia a la URL de tu backend en producción
+  apiBaseUrl: 'http://localhost:8080'
 };  
