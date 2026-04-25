@@ -17,8 +17,7 @@ export class AuthService {
   login(correo_usuario: string, password_u: string): Observable<any> {
     return this.http.post(
       `${environment.apiBaseUrl}/auth/login`,
-      { correo_usuario, password_u },
-      { withCredentials: true }
+      { correo_usuario, password_u }
     ).pipe(
       tap((res: any) => {
         this.currentUser.set(res.user);
@@ -27,11 +26,23 @@ export class AuthService {
     );
   }
 
+  googleLogin(token: string): Observable<any> {
+  return this.http.post(
+    `${environment.apiBaseUrl}/auth/google`,
+    { token },
+    {withCredentials: true}
+  ).pipe(
+    tap((res: any) => {
+      this.currentUser.set(res.usuario);
+      this.authChecked.set(true);
+    })
+  );
+}
+
   logout(): void {
     this.http.post(
       `${environment.apiBaseUrl}/auth/logout`,
-      {},
-      { withCredentials: true }
+      {}
     ).subscribe({
       next: () => {
         this.currentUser.set(null);
@@ -61,8 +72,7 @@ export class AuthService {
 
   restoreSession(): Observable<any> {
     return this.http.get(
-      `${environment.apiBaseUrl}/auth/me`,
-      { withCredentials: true }
+      `${environment.apiBaseUrl}/auth/me`
     ).pipe(
       tap((res: any) => {
         this.currentUser.set(res.user ?? null);
