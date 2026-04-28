@@ -98,10 +98,12 @@ export class Login {
         btn.innerHTML = ''; // limpia si había algo roto
 
         google.accounts.id.renderButton(btn, {
-          theme: 'outline',
-          size: 'large',
-          width: '100%'
-        });
+        theme: 'outline',
+        size: 'large',
+        shape: 'pill',
+        text: 'continue_with',
+        width: btn.offsetWidth || 320
+      });
       }
     });
   }
