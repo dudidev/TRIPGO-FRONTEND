@@ -26,6 +26,9 @@ export class AuthService {
       })
     );
   }
+  getAuthChecked() {
+  return this.authChecked;  // retorna el signal directamente
+}
 
   googleLogin(token: string): Observable<any> {
   return this.http.post(
